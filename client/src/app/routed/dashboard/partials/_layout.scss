@@ -1,0 +1,49 @@
+.login-bg {
+  --background: var(--deq-bg-base);
+}
+
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  pointer-events: all;
+
+  &.is-open {
+    pointer-events: none;
+    .login-form-container { opacity: 0; }
+    .door-left { transform: translateX(-100%); }
+    .door-right { transform: translateX(100%); }
+  }
+}
+
+.door {
+  height: 100%;
+  position: relative;
+  background-color: var(--deq-bg-base);
+  transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+  background-image:
+    url('/assets/login-bg.svg'),
+    var(--deq-page-gradient);
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100vw 100vh, 100vw 100vh;
+}
+
+.door-left {
+  flex: 2;
+  border-right: 1px solid var(--deq-accent-main);
+  background-position: left top, left top;
+}
+
+.door-right {
+  flex: 1;
+  border-left: 1px solid var(--deq-accent-main);
+  background-position: right top, right top;
+}
+
+.login-form-container {
+  position: absolute;
+  inset: 0;
+  z-index: 10000;
+  transition: opacity 0.5s ease-out;
+}

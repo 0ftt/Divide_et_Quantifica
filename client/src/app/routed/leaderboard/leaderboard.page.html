@@ -1,0 +1,138 @@
+<ion-header class="deq-header">
+  <ion-toolbar class="deq-toolbar">
+    <ion-title><app-breadcrumbs [current]="'leaderboard.title' | transloco"></app-breadcrumbs></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="leaderboard-dark-bg">
+  <div class="leaderboard-container">
+    <p class="subtitle">{{ 'leaderboard.subtitle' | transloco }}</p>
+
+    <div class="share-row">
+      <input class="share-label" type="text" [(ngModel)]="shareLabel"
+             [placeholder]="'leaderboard.labelPlaceholder' | transloco" maxlength="40" />
+      <ion-button class="share-btn" [disabled]="sharing" (click)="shareScore()">
+        <ion-icon slot="start" name="share-social-outline"></ion-icon>
+        {{ (sharing ? 'leaderboard.sharing' : 'leaderboard.shareBtn') | transloco }}
+      </ion-button>
+      @if (feedback) {
+        <p class="feedback">{{ feedback }}</p>
+      }
+    </div>
+
+    <ion-list class="deq-list rank-list widget-box panel" lines="none">
+      @if (loading) {
+        <ion-item class="deq-item">
+          <ion-label class="empty">{{ 'common.loading' | transloco }}</ion-label>
+        </ion-item>
+      } @else {
+        @for (entry of entries; track entry.userId + '|' + entry.label) {
+          <ion-item class="deq-item rank-row" [class.is-me]="entry.isMe">
+            <ion-badge slot="start" [color]="entry.rank <= 3 ? 'warning' : 'medium'">#{{ entry.rank }}</ion-badge>
+            <div slot="start" class="rank-avatar">
+              @if (entry.avatarDataUrl) {
+                <img [src]="entry.avatarDataUrl" alt="" />
+              } @else {
+                <ion-icon name="person-circle-outline"></ion-icon>
+              }
+            </div>
+            <ion-label>
+              <h2>
+                {{ entry.displayName }}
+                @if (entry.isMe) {
+                  <span class="you-tag">({{ 'leaderboard.you' | transloco }})</span>
+                }
+              </h2>
+              <p>@if (entry.label) { <span class="scheda-tag">{{ entry.label }}</span> · }{{ entry.sharedAt | date: 'short' }}</p>
+            </ion-label>
+            <div slot="end" class="score" [class.up]="entry.gain >= 0" [class.down]="entry.gain < 0"
+                 [title]="'leaderboard.viewTrend' | transloco" (click)="openHistory(entry, $event)">
+              {{ entry.gain >= 0 ? '+' : '' }}€{{ entry.gain.toFixed(2) }}
+            </div>
+            <ion-button slot="end" fill="clear" class="row-action" [title]="'leaderboard.reviews' | transloco"
+                        (click)="openReviews(entry, $event)">
+              <ion-icon slot="icon-only" name="chatbubble-outline"></ion-icon>
+            </ion-button>
+            <ion-button slot="end" fill="clear" class="row-action" [title]="'leaderboard.addToCartBroker' | transloco"
+                        (click)="openAddToCart(entry, $event)">
+              <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+        } @empty {
+          <ion-item class="deq-item">
+            <ion-label class="empty">{{ 'leaderboard.empty' | transloco }}</ion-label>
+          </ion-item>
+        }
+      }
+    </ion-list>
+  </div>
+
+  <app-modal [open]="historyEntry !== null"
+             [title]="historyEntry ? historyEntry.displayName + ' — ' + ('leaderboard.trend' | transloco) : ''"
+             (closed)="closeHistory()">
+    @if (historyLoading) {
+      <p class="empty">{{ 'leaderboard.loadingHistory' | transloco }}</p>
+    } @else if (historyPoints.length < 2) {
+      <p class="empty">{{ 'leaderboard.tooFewShares' | transloco }}</p>
+    } @else {
+      <app-mini-history-chart [points]="historyPoints"></app-mini-history-chart>
+    }
+  </app-modal>
+
+  <app-modal [open]="reviewsEntry !== null"
+             [title]="reviewsEntry ? reviewsEntry.displayName + ' — ' + ('leaderboard.reviews' | transloco) : ''"
+             (closed)="closeReviews()">
+    <div class="modal-form">
+      @if (reviewsLoading) {
+        <p class="empty">{{ 'leaderboard.loadingReviews' | transloco }}</p>
+      } @else {
+        <div class="reviews-list">
+          @for (r of reviews; track r.id) {
+            <div class="review-row">
+              <strong>{{ r.authorName }}</strong>
+              <p>{{ r.body }}</p>
+              <span class="review-date">{{ r.createdAt | date: 'short' }}</span>
+            </div>
+          } @empty {
+            <p class="empty">{{ 'leaderboard.noReviews' | transloco }}</p>
+          }
+        </div>
+      }
+
+      <ion-item lines="full" class="custom-input">
+        <ion-input [label]="'leaderboard.writeReview' | transloco" labelPlacement="stacked"
+                   [placeholder]="'leaderboard.reviewPlaceholder' | transloco"
+                   [(ngModel)]="newReviewBody" (keyup.enter)="submitReview()"></ion-input>
+      </ion-item>
+      @if (reviewError) {
+        <p class="modal-error">{{ reviewError }}</p>
+      }
+      <div class="modal-actions">
+        <ion-button [disabled]="!newReviewBody.trim()" (click)="submitReview()">{{ 'leaderboard.sendReview' | transloco }}</ion-button>
+      </div>
+    </div>
+  </app-modal>
+
+  <app-modal [open]="cartEntry !== null"
+             [title]="cartEntry ? ('leaderboard.addPackage' | transloco) + ' ' + cartEntry.displayName : ''"
+             (closed)="closeAddToCart()">
+    <div class="modal-form">
+      @if (cartLoading) {
+        <p class="empty">{{ 'leaderboard.loadingPositions' | transloco }}</p>
+      } @else if (cartError) {
+        <p class="modal-error">{{ cartError }}</p>
+      } @else {
+        <p>{{ 'leaderboard.addPositionsQ' | transloco }}</p>
+        <ul class="checkout-summary">
+          @for (h of cartHoldings; track h.ticker) {
+            <li>{{ h.ticker }} <strong>x{{ h.quantity }}</strong></li>
+          }
+        </ul>
+      }
+      <div class="modal-actions">
+        <ion-button fill="clear" (click)="closeAddToCart()">{{ 'common.cancel' | transloco }}</ion-button>
+        <ion-button [disabled]="!cartHoldings.length" (click)="confirmAddToCart()">{{ 'leaderboard.addToCartBroker' | transloco }}</ion-button>
+      </div>
+    </div>
+  </app-modal>
+</ion-content>

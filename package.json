@@ -1,0 +1,14 @@
+{
+  "name": "divide-et-quantifica",
+  "version": "1.0.0",
+  "description": "Divide et Quantifica: dashboard di trading simulato (client Ionic/Angular + server Node/Express + Supabase).",
+  "private": true,
+  "scripts": {
+    "dev:client": "npm --prefix client run start",
+    "dev:server": "npm --prefix server run dev",
+    "build:client": "npm --prefix client run build",
+    "build:server": "npm --prefix server run build",
+    "migrate": "npm --prefix server run migrate",
+    "install:all": "npm --prefix client install && npm --prefix server install"
+  }
+}

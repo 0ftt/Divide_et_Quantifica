@@ -1,0 +1,191 @@
+<ion-header class="deq-header">
+  <ion-toolbar class="deq-toolbar">
+    <ion-title><app-breadcrumbs [current]="'account.title' | transloco"></app-breadcrumbs></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="account-bg">
+  <div class="account-container">
+
+    @if (feedback) {
+      <div class="account-feedback">{{ feedback }}</div>
+    }
+
+    <section class="panel widget-box">
+      <h3>{{ 'account.profile' | transloco }}</h3>
+
+      <div class="avatar-row">
+        <button type="button" class="avatar-preview" (click)="triggerAvatarPick()" title="Cambia immagine profilo">
+          @if (avatarDataUrl) {
+            <img [src]="avatarDataUrl" alt="Avatar" />
+          } @else {
+            <ion-icon name="camera-outline"></ion-icon>
+          }
+        </button>
+        <input #avatarInput type="file" accept="image/*" hidden (change)="onAvatarSelected($event)" />
+        <ion-button fill="clear" (click)="triggerAvatarPick()">{{ 'account.changeImage' | transloco }}</ion-button>
+      </div>
+
+      <ion-list class="deq-list" lines="full">
+        <ion-item class="deq-item">
+          <ion-input [label]="'auth.name' | transloco" labelPlacement="stacked" [(ngModel)]="displayName"></ion-input>
+        </ion-item>
+        <ion-item class="deq-item">
+          <ion-input [label]="'auth.username' | transloco" labelPlacement="stacked"
+                     placeholder="es. trader_bull" [(ngModel)]="username"></ion-input>
+        </ion-item>
+        <ion-item class="deq-item">
+          <ion-input type="email" [label]="'account.emailLogin' | transloco" labelPlacement="stacked" [(ngModel)]="email" readonly></ion-input>
+        </ion-item>
+        <ion-item class="deq-item">
+          <ion-input type="tel" [label]="'auth.phone' | transloco" labelPlacement="stacked"
+                     placeholder="+39 …" [(ngModel)]="phone"></ion-input>
+        </ion-item>
+
+        <ion-item class="deq-item">
+          <ion-input [label]="'auth.address' | transloco" labelPlacement="stacked"
+                     [placeholder]="'auth.addressPlaceholder' | transloco" [(ngModel)]="address"></ion-input>
+        </ion-item>
+        <ion-item class="deq-item">
+          <ion-input [label]="'auth.city' | transloco" labelPlacement="stacked" [(ngModel)]="city"></ion-input>
+        </ion-item>
+        <ion-item class="deq-item">
+          <ion-input inputmode="numeric" [label]="'auth.cap' | transloco" labelPlacement="stacked"
+                     placeholder="00100" [(ngModel)]="cap"></ion-input>
+        </ion-item>
+        <ion-item class="deq-item">
+          <ion-input [label]="'account.accountId' | transloco" labelPlacement="stacked" [value]="accountId" readonly></ion-input>
+        </ion-item>
+      </ion-list>
+      @if (profileError) {
+        <p class="field-error">{{ profileError }}</p>
+      }
+      <ion-button expand="block" class="save-profile-btn" [disabled]="profileSaving" (click)="saveProfile()">
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        {{ (profileSaving ? 'account.saving' : 'account.saveProfile') | transloco }}
+      </ion-button>
+    </section>
+
+    <section class="panel widget-box">
+      <h3>{{ 'account.preferences' | transloco }}</h3>
+      <ion-list class="deq-list" lines="full">
+        <ion-item class="deq-item">
+          <ion-toggle [(ngModel)]="notificationsEnabled">{{ 'account.notifications' | transloco }}</ion-toggle>
+        </ion-item>
+        <ion-item class="deq-item">
+          <ion-toggle [(ngModel)]="darkTheme" (ionChange)="onThemeToggle()">{{ 'account.darkTheme' | transloco }}</ion-toggle>
+        </ion-item>
+        <ion-item class="deq-item" lines="none">
+          <ion-label>{{ 'account.language' | transloco }}</ion-label>
+          <app-lang-switcher slot="end"></app-lang-switcher>
+        </ion-item>
+      </ion-list>
+    </section>
+
+    <section class="panel widget-box">
+      <h3>{{ 'account.creditPurchases' | transloco }}</h3>
+
+      <ion-list class="deq-list" lines="full">
+        <ion-item class="deq-item">
+          <ion-icon slot="start" name="wallet-outline"></ion-icon>
+          <ion-label>{{ 'account.creditBalance' | transloco }}</ion-label>
+          <ion-badge slot="end" class="deq-badge deq-badge-success">€{{ credit.toFixed(2) }}</ion-badge>
+        </ion-item>
+
+        <ion-item class="deq-item">
+          <ion-input type="number" [label]="'account.rechargeLabel' | transloco" labelPlacement="stacked"
+                     placeholder="20" [(ngModel)]="rechargeAmount"></ion-input>
+        </ion-item>
+      </ion-list>
+      @if (rechargeError) {
+        <p class="field-error">{{ rechargeError }}</p>
+      }
+
+      <ion-button expand="block" color="success" (click)="ricaricaCredito()">
+        <ion-icon slot="start" name="wallet-outline"></ion-icon>
+        {{ 'account.rechargeBtn' | transloco }}
+      </ion-button>
+
+      <ion-item class="deq-item premium-row" lines="none">
+        <ion-icon slot="start" name="star-outline"></ion-icon>
+        <ion-label>
+          <h2>{{ 'account.premiumLicense' | transloco }}</h2>
+          <p>{{ 'account.premiumDesc' | transloco }}</p>
+        </ion-label>
+        <ion-badge slot="end" [color]="isPremium ? 'warning' : 'medium'">
+          {{ (isPremium ? 'account.active' : 'account.inactive') | transloco }}
+        </ion-badge>
+      </ion-item>
+
+      <ion-button expand="block" color="warning" class="premium-btn glow-btn" [disabled]="isPremium"
+                  (click)="apriModalePremium()">
+        {{ 'account.buyPremium' | transloco }}
+      </ion-button>
+    </section>
+
+    <section class="panel widget-box">
+      <h3>{{ 'account.session' | transloco }}</h3>
+      <ion-button expand="block" fill="outline" (click)="logout()">
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        {{ 'account.logout' | transloco }}
+      </ion-button>
+      <p class="danger-copy">{{ 'account.deleteWarning' | transloco }}</p>
+      <ion-button expand="block" color="danger" fill="outline" (click)="openDeleteModal()">
+        <ion-icon slot="start" name="trash-outline"></ion-icon>
+        {{ 'account.closeAccount' | transloco }}
+      </ion-button>
+    </section>
+
+  </div>
+
+  <app-modal [open]="rechargeModalOpen" [title]="'account.rechargeModalTitle' | transloco" (closed)="closeRechargeModal()">
+    <div class="modal-form">
+      <p>✅ {{ 'account.rechargedBy' | transloco }} <strong>€{{ rechargedAmount.toFixed(2) }}</strong>.</p>
+      <p class="mock-note">{{ 'account.simNote' | transloco }}</p>
+      <div class="modal-actions">
+        <ion-button (click)="closeRechargeModal()">{{ 'account.ok' | transloco }}</ion-button>
+      </div>
+    </div>
+  </app-modal>
+
+  <app-modal [open]="premiumModalOpen" [title]="'account.premiumModalTitle' | transloco" [dismissible]="!premiumBusy"
+             (closed)="closePremiumModal()">
+    <div class="modal-form">
+      <p>{{ 'account.premiumBuyQ' | transloco }}</p>
+      <p class="premium-perk">{{ 'dashboard.premiumFidelity' | transloco }}</p>
+      <div class="premium-summary">
+        <span>{{ 'account.cost' | transloco }}</span>
+        <strong>€{{ premiumPrice.toFixed(2) }}</strong>
+      </div>
+      <div class="premium-summary">
+        <span>{{ 'account.remainingCredit' | transloco }}</span>
+        <strong>€{{ credit.toFixed(2) }}</strong>
+      </div>
+      @if (premiumError) {
+        <p class="modal-error">{{ premiumError }}</p>
+      }
+      <div class="modal-actions">
+        <ion-button fill="clear" [disabled]="premiumBusy" (click)="closePremiumModal()">{{ 'common.cancel' | transloco }}</ion-button>
+        <ion-button [disabled]="premiumBusy" (click)="confirmPremiumPurchase()">
+          {{ (premiumBusy ? 'account.buying' : 'account.confirmBuy') | transloco }}
+        </ion-button>
+      </div>
+    </div>
+  </app-modal>
+
+  <app-modal [open]="deleteModalOpen" [title]="'account.deleteModalTitle' | transloco" [dismissible]="!deleteBusy"
+             (closed)="closeDeleteModal()">
+    <div class="modal-form">
+      <p>{{ 'account.deleteConfirmQ' | transloco }}</p>
+      @if (deleteError) {
+        <p class="modal-error">{{ deleteError }}</p>
+      }
+      <div class="modal-actions">
+        <ion-button fill="clear" [disabled]="deleteBusy" (click)="closeDeleteModal()">{{ 'common.cancel' | transloco }}</ion-button>
+        <ion-button color="danger" [disabled]="deleteBusy" (click)="confirmDeleteAccount()">
+          {{ (deleteBusy ? 'account.deleting' : 'account.deleteFinal') | transloco }}
+        </ion-button>
+      </div>
+    </div>
+  </app-modal>
+</ion-content>

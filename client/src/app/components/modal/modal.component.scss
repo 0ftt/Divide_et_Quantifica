@@ -1,0 +1,41 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--deq-bg-base) 55%, transparent);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  padding: 1.5rem;
+  animation: modal-fade-in 0.18s ease;
+}
+
+.modal-panel {
+  width: min(460px, 100%);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  animation: modal-pop-in 0.18s ease;
+}
+
+.modal-header {
+  cursor: default;
+}
+
+.modal-content {
+  padding: 1.1rem 1.3rem 1.4rem;
+  overflow-y: auto;
+  color: var(--deq-text-main);
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-pop-in {
+  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}

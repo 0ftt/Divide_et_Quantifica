@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <!-- Fondo trasparente (niente griglia a quadretti): sotto passa il gradiente
+       a bande della porta (.door in _login.scss); qui restano solo la rete e i nodi -->
+
+  <path d="M-100 900 Q 400 900, 960 540 T 2020 200" fill="none" stroke="#1CA9C9" stroke-width="2" opacity="0.3"/>
+  <path d="M-100 950 Q 450 950, 960 540 T 2020 300" fill="none" stroke="#00f2fe" stroke-width="4" opacity="0.8"/>
+
+  <!-- Nodo esagonale centrato sul divisore (x=1280 = 2/3 dello schermo) -->
+  <polygon points="1280,420 1384,480 1384,600 1280,660 1176,600 1176,480" fill="none" stroke="#00f2fe" stroke-width="2" opacity="0.7"/>
+  <circle cx="1280" cy="540" r="8" fill="#1CA9C9" />
+  <circle cx="1176" cy="480" r="4" fill="#00f2fe" />
+  <circle cx="1384" cy="600" r="4" fill="#00f2fe" />
+
+  <circle cx="450" cy="740" r="5" fill="#00f2fe" opacity="0.6"/>
+  <circle cx="1470" cy="340" r="5" fill="#1CA9C9" opacity="0.6"/>
+</svg>

@@ -1,0 +1,112 @@
+:root {
+  --ion-color-primary: var(--deq-accent-main);
+  --ion-color-primary-rgb: 28, 169, 201;
+  --ion-color-primary-contrast: #02121a;
+  --ion-color-primary-contrast-rgb: 2, 18, 26;
+  --ion-color-primary-shade: #1895b1;
+  --ion-color-primary-tint: #33b2cd;
+
+  --ion-background-color: var(--deq-bg-base);
+  --ion-text-color: var(--deq-text-main);
+
+  &.md, &.ios {
+    --ion-item-background: transparent;
+    --ion-item-border-color: var(--deq-border);
+    --ion-card-background: var(--deq-surface-glass);
+    --ion-toolbar-background: var(--deq-bg-base);
+    --ion-tab-bar-background: var(--deq-bg-base);
+  }
+}
+
+body.deq-light {
+  --ion-color-primary-rgb: 36, 137, 124;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #1f7669;
+  --ion-color-primary-tint: #3a9c8f;
+}
+
+.deq-header ion-toolbar,
+.deq-toolbar {
+  --background: var(--deq-bg-base);
+  --color: var(--deq-text-bright);
+  --border-color: var(--deq-border);
+  --min-height: 40px;
+}
+
+.broker-dark-bg,
+.admin-dark-bg,
+.account-bg,
+.leaderboard-dark-bg,
+.stocks-dark-bg,
+.history-dark-bg {
+  --background: var(--deq-bg-base);
+
+  &::part(background) {
+    background: var(--deq-page-gradient);
+    background-size: cover;
+  }
+}
+
+.deq-list {
+  --background: transparent;
+  --ion-background-color: transparent;
+  background: transparent;
+}
+
+.deq-item {
+  --background: transparent;
+  --color: var(--deq-text-main);
+  --inner-border-width: 0;
+  border-bottom: 1px solid var(--deq-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  h2 {
+    color: var(--deq-text-bright);
+    font-weight: 600;
+  }
+
+  p {
+    color: var(--deq-text-muted);
+  }
+
+  ion-input {
+    --color: var(--deq-text-bright);
+    --placeholder-color: var(--deq-text-muted);
+  }
+}
+
+.deq-segment {
+  --background: var(--deq-bg-base);
+  margin-bottom: 12px;
+  border: 1px solid var(--deq-border-solid);
+  border-radius: 8px;
+
+  ion-segment-button {
+    --color: var(--deq-text-muted);
+    --color-checked: var(--deq-accent-neon);
+    --indicator-color: color-mix(in srgb, var(--deq-accent-neon) 15%, transparent);
+  }
+}
+
+.deq-badge {
+  --background: transparent;
+  --color: var(--deq-text-bright);
+  --padding-start: 2px;
+  --padding-end: 2px;
+  font-weight: 700;
+
+  &-success {
+    --background: color-mix(in srgb, var(--deq-success) 22%, var(--deq-bg-base));
+  }
+}
+
+.mock-note {
+  display: block;
+  color: var(--deq-text-muted);
+  font-size: 0.78rem;
+  margin: 4px 2px 10px;
+}

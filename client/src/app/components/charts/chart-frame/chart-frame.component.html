@@ -1,0 +1,39 @@
+<section class="chart-frame" [style.background]="bg()">
+
+  <header class="frame-header" (pointerdown)="startDrag($event)">
+    <div class="frame-title">
+      <ion-icon class="frame-icon" [name]="icon"></ion-icon>
+      <span class="frame-name">{{ widget.title || (nameKey | transloco) }}</span>
+    </div>
+
+    <div class="frame-controls">
+      <ion-button fill="clear" size="small" class="frame-btn" title="Collega a un altro widget"
+                  (click)="onLink($event)">
+        <ion-icon slot="icon-only" name="git-network-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" class="frame-btn" title="Duplica"
+                  (click)="onDuplicate($event)">
+        <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" class="frame-btn" title="Minimizza"
+                  (click)="toggleMinimize($event)">
+        <ion-icon slot="icon-only"
+                  [name]="widget.minimize ? 'add-outline' : 'remove-outline'"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" class="frame-btn close" title="Chiudi"
+                  (click)="onClose($event)">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </header>
+
+  <main class="frame-body" [class.hidden]="widget.minimize"
+        [style.height.px]="bodyHeight"
+        (pointerdown)="$event.stopPropagation()">
+    <ng-content></ng-content>
+  </main>
+
+  @if (!widget.minimize) {
+    <div class="resize-handle" title="Ridimensiona" (pointerdown)="startResize($event)"></div>
+  }
+</section>

@@ -1,0 +1,24 @@
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { IonicModule } from '@ionic/angular';
+
+import { InspectorComponent } from './inspector.component';
+
+describe('InspectorComponent', () => {
+  let component: InspectorComponent;
+  let fixture: ComponentFixture<InspectorComponent>;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ InspectorComponent ],
+      imports: [IonicModule.forRoot()]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(InspectorComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

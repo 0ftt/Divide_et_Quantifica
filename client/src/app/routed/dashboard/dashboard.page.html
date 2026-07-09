@@ -1,0 +1,492 @@
+<ion-content [fullscreen]="true" [scrollX]="false" [scrollY]="false">
+
+  <div class="login-overlay" [class.is-open]="loginCompletato">
+    <div class="door door-left">
+      <div class="intro-zone">
+        <div class="intro-card">
+          <p class="text-body">{{ 'login.lead' | transloco }}</p>
+          <ul class="feature-list">
+            <li>
+              <strong>{{ 'login.card1' | transloco }}</strong>
+              <span>{{ 'login.point1' | transloco }}</span>
+            </li>
+            <li>
+              <strong>{{ 'login.card2' | transloco }}</strong>
+              <span>{{ 'login.point2' | transloco }}</span>
+            </li>
+            <li>
+              <strong>{{ 'login.card3' | transloco }}</strong>
+              <span>{{ 'login.point3' | transloco }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="door door-right"></div>
+
+    <div class="login-form-container">
+      <div class="login-container">
+        <img class="welcome-logo" src="assets/DeQlogo.png" alt="Divide et Quantifica" />
+        <ion-card class="login-card" [class.spin-error]="passwordErrata">
+          <ion-card-content>
+            <div class="card-top">
+              <app-lang-switcher></app-lang-switcher>
+            </div>
+
+            <h2 class="auth-title">
+              @switch (authMode) {
+                @case ('register') { {{ 'auth.registerTitle' | transloco }} }
+                @case ('recover') { {{ 'auth.recoverTitle' | transloco }} }
+                @default { {{ 'auth.loginTitle' | transloco }} }
+              }
+            </h2>
+
+            <form (ngSubmit)="submitAuth()">
+              @if (authMode === 'register') {
+                <ion-item lines="full" class="custom-input">
+                  <ion-input [label]="'auth.name' | transloco" labelPlacement="floating"
+                             [(ngModel)]="displayName" name="displayName"></ion-input>
+                </ion-item>
+                <ion-item lines="full" class="custom-input">
+                  <ion-input [label]="'auth.username' | transloco" labelPlacement="floating"
+                             [placeholder]="'auth.usernamePlaceholder' | transloco"
+                             [(ngModel)]="username" name="username" required></ion-input>
+                </ion-item>
+                @if (fieldError('username'); as err) { <p class="field-error">{{ err | transloco }}</p> }
+              }
+
+              <ion-item lines="full" class="custom-input">
+                <ion-input type="email" [label]="'login.email' | transloco" labelPlacement="floating"
+                           [placeholder]="'login.emailPlaceholder' | transloco"
+                           [(ngModel)]="email" name="email" required></ion-input>
+              </ion-item>
+              @if (fieldError('email'); as err) { <p class="field-error">{{ err | transloco }}</p> }
+
+              @if (authMode !== 'recover') {
+                <ion-item lines="full" class="custom-input">
+                  <ion-input type="password" [label]="'login.password' | transloco" labelPlacement="floating"
+                             [placeholder]="'login.passwordPlaceholder' | transloco"
+                             [(ngModel)]="password" name="password" required></ion-input>
+                </ion-item>
+                @if (fieldError('password'); as err) { <p class="field-error">{{ err | transloco }}</p> }
+              }
+
+              @if (authError) {
+                <p class="auth-error">{{ authError }}</p>
+              }
+              @if (recoverSent && authMode === 'recover') {
+                <p class="auth-info">{{ 'auth.recoverInfo' | transloco }}</p>
+              }
+
+              <ion-button expand="block" type="submit" class="login-btn glow-btn" [disabled]="authLoading">
+                @switch (authMode) {
+                  @case ('register') { {{ 'auth.registerBtn' | transloco }} }
+                  @case ('recover') { {{ 'auth.recoverBtn' | transloco }} }
+                  @default { {{ 'login.signIn' | transloco }} }
+                }
+              </ion-button>
+            </form>
+
+            <div class="auth-links">
+              @if (authMode === 'login') {
+                <a (click)="setAuthMode('register')">{{ 'auth.toRegister' | transloco }}</a>
+                <a (click)="setAuthMode('recover')">{{ 'auth.toRecover' | transloco }}</a>
+              } @else {
+                <a (click)="setAuthMode('login')">{{ 'auth.toLogin' | transloco }}</a>
+              }
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+
+  @if (linkFeedback) {
+    <div class="link-feedback">{{ linkFeedback }}</div>
+  }
+
+  <div class="canvas-container" (pointerdown)="startPan($event)" (wheel)="handleZoom($event)">
+
+    <canvas #bgCanvas class="trama-bg"></canvas>
+
+    <div class="btn-container">
+      <div class="tabs-control" (pointerdown)="$event.stopPropagation()">
+        <button class="floating-btn tabs-btn" [class.active]="tabsMenuOpen" (click)="toggleTabsMenu($event)" [title]="'dashboard.tManageTabs' | transloco"><ion-icon name="albums-outline"></ion-icon></button>
+        <button class="floating-btn add-tab-plus" (click)="createTabSilent()" [title]="'dashboard.tNewTab' | transloco"><ion-icon name="add-outline"></ion-icon></button>
+        @if (tabsMenuOpen) {
+          <div class="tabs-menu widget-box">
+            @for (tab of tabsList; track tab.id) {
+              <div class="tabs-menu-item" [class.active]="tab.active">
+                <ion-icon class="tab-type-icon" [name]="$first ? 'home-outline' : 'document-outline'"></ion-icon>
+                @if (renamingTabId === tab.id) {
+                  <input class="tabs-menu-input" [(ngModel)]="tab.name" (click)="$event.stopPropagation()"
+                         (keyup.enter)="renamingTabId = null" (blur)="renamingTabId = null" autofocus />
+                } @else {
+                  <span class="tabs-menu-name" (click)="selectTab(tab.id); tabsMenuOpen = false">{{ $first ? ('dashboard.homeTab' | transloco) : tab.name }}</span>
+                }
+                @if (!$first) {
+                  <ion-icon class="tabs-menu-rename" name="create-outline" [title]="'dashboard.renameTab' | transloco" (click)="startRenameTab(tab.id, $event)"></ion-icon>
+                  <ion-icon class="tabs-menu-close" name="close-outline" (click)="closeTab(tab.id, $event)"></ion-icon>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+      <button class="floating-btn leaderboard-btn" (click)="goToLeaderboard($event)" [title]="'nav.leaderboard' | transloco"><ion-icon name="trophy-outline"></ion-icon></button>
+      @if (isUserAdmin) {
+        <button class="floating-btn admin-btn" (click)="goToAdmin($event)" [title]="'dashboard.tAdmin' | transloco"><ion-icon name="shield-checkmark-outline"></ion-icon></button>
+      }
+      <button class="floating-btn settings-btn" (click)="openSettings($event)" [title]="'dashboard.tSettings' | transloco"><ion-icon name="settings-outline"></ion-icon></button>
+      @if (!isUserPremium) {
+        <button class="floating-btn premium-chest-btn" (click)="activateFreePremium($event)" [title]="'dashboard.tShop' | transloco">
+          <ion-icon name="bag-outline"></ion-icon>
+          <span class="notif-badge">1</span>
+        </button>
+      }
+      <button class="floating-btn theme-btn" (click)="toggleTheme()" [title]="'dashboard.tTheme' | transloco"><ion-icon [name]="themeIcon"></ion-icon></button>
+    </div>
+
+    <div class="header-overlay">
+      <p>
+        <span class="tier-badge" [class.is-premium]="isUserPremium">
+          {{ (isUserPremium ? 'dashboard.premiumBadge' : 'dashboard.standardBadge') | transloco }}
+        </span>
+        {{ nomeUtente }} | Zoom: {{ (canvasZoom * 100).toFixed(0) }}%
+      </p>
+    </div>
+
+    <div class="infinite-canvas"
+         [style.transform]="'translate(' + canvasX + 'px, ' + canvasY + 'px) scale(' + canvasZoom + ')'">
+
+      <div class="work-area">
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+             style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: visible; pointer-events: none; z-index: 5;">
+          @for (line of connectionLines; track line.id) {
+            <g>
+              <path [attr.id]="line.id" [attr.d]="line.pathD" class="connection-line-path" />
+              <path [attr.d]="line.pathD" class="connection-line-pulse" />
+
+              <text font-size="16" class="nautical-avatar"
+                    style="font-family: 'Segoe UI Emoji','Noto Color Emoji','Apple Color Emoji',sans-serif;">⛵
+                <animateMotion dur="18s" repeatCount="indefinite" [attr.begin]="line.boatDelay">
+                  <mpath [attr.href]="'#' + line.id" />
+                </animateMotion>
+              </text>
+              <text font-size="14" class="nautical-avatar"
+                    style="font-family: 'Segoe UI Emoji','Noto Color Emoji','Apple Color Emoji',sans-serif;">🦆
+                <animateMotion dur="42s" repeatCount="indefinite" [attr.begin]="line.duckDelay">
+                  <mpath [attr.href]="'#' + line.id" />
+                </animateMotion>
+              </text>
+
+              <circle r="4" class="flow-dot">
+                <animateMotion dur="14s" repeatCount="indefinite" [attr.begin]="line.boatDelay">
+                  <mpath [attr.href]="'#' + line.id" />
+                </animateMotion>
+              </circle>
+              <circle r="2.5" class="flow-dot flow-dot--slow">
+                <animateMotion dur="34s" repeatCount="indefinite" [attr.begin]="line.duckDelay">
+                  <mpath [attr.href]="'#' + line.id" />
+                </animateMotion>
+              </circle>
+            </g>
+          }
+        </svg>
+
+        @for (w of widgetList; track w.id) {
+          @switch (w.type) {
+
+            @case ('connectionHub') {
+              <app-connection-hub [widget]="w" [allWidgets]="widgetList" [zoomLevel]="canvasZoom"
+                                  [style.position]="'absolute'" [style.left.px]="w.posX"
+                                  [style.top.px]="w.posY" [style.z-index]="w.zIndex || 10" [attr.data-wid]="w.id"
+                                  (click)="onWidgetClick(w)"
+                                  (link)="startLink($event)"
+                                  (remove)="removeWidgetFromMemory($event)"
+                                  (duplicate)="duplicateWidget($event)"
+                                  (pointerdown)="bringToFront(w.id); $event.stopPropagation()">
+              </app-connection-hub>
+            }
+
+            @case ('chartCandlestick') {
+              <app-candlestick-widget [widget]="w" [zoomLevel]="canvasZoom" [allWidgets]="widgetList"
+                                      [style.position]="'absolute'" [style.left.px]="w.posX"
+                                      [style.top.px]="w.posY" [style.z-index]="w.zIndex || 10" [attr.data-wid]="w.id"
+                                      (click)="onWidgetClick(w)"
+                                      (link)="startLink($event)"
+                                      (remove)="removeWidgetFromMemory($event)"
+                                      (duplicate)="duplicateWidget($event)"
+                                      (pointerdown)="bringToFront(w.id); $event.stopPropagation()">
+              </app-candlestick-widget>
+            }
+
+            @case ('chartLine') {
+              <app-line-widget [widget]="w" [zoomLevel]="canvasZoom" [allWidgets]="widgetList"
+                               [style.position]="'absolute'" [style.left.px]="w.posX"
+                               [style.top.px]="w.posY" [style.z-index]="w.zIndex || 10" [attr.data-wid]="w.id"
+                               (click)="onWidgetClick(w)"
+                               (link)="startLink($event)"
+                               (remove)="removeWidgetFromMemory($event)"
+                               (duplicate)="duplicateWidget($event)"
+                               (pointerdown)="bringToFront(w.id); $event.stopPropagation()">
+              </app-line-widget>
+            }
+
+            @case ('chartArea') {
+              <app-area-widget [widget]="w" [zoomLevel]="canvasZoom" [allWidgets]="widgetList"
+                               [style.position]="'absolute'" [style.left.px]="w.posX"
+                               [style.top.px]="w.posY" [style.z-index]="w.zIndex || 10" [attr.data-wid]="w.id"
+                               (click)="onWidgetClick(w)"
+                               (link)="startLink($event)"
+                               (remove)="removeWidgetFromMemory($event)"
+                               (duplicate)="duplicateWidget($event)"
+                               (pointerdown)="bringToFront(w.id); $event.stopPropagation()">
+              </app-area-widget>
+            }
+
+            @case ('chartBar') {
+              <app-bar-widget [widget]="w" [zoomLevel]="canvasZoom" [allWidgets]="widgetList"
+                              [style.position]="'absolute'" [style.left.px]="w.posX"
+                              [style.top.px]="w.posY" [style.z-index]="w.zIndex || 10" [attr.data-wid]="w.id"
+                              (click)="onWidgetClick(w)"
+                              (link)="startLink($event)"
+                              (remove)="removeWidgetFromMemory($event)"
+                              (duplicate)="duplicateWidget($event)"
+                              (pointerdown)="bringToFront(w.id); $event.stopPropagation()">
+              </app-bar-widget>
+            }
+
+            @case ('chartPie') {
+              <app-pie-widget [widget]="w" [zoomLevel]="canvasZoom" [allWidgets]="widgetList"
+                              [style.position]="'absolute'" [style.left.px]="w.posX"
+                              [style.top.px]="w.posY" [style.z-index]="w.zIndex || 10" [attr.data-wid]="w.id"
+                              (click)="onWidgetClick(w)"
+                              (link)="startLink($event)"
+                              (remove)="removeWidgetFromMemory($event)"
+                              (duplicate)="duplicateWidget($event)"
+                              (pointerdown)="bringToFront(w.id); $event.stopPropagation()">
+              </app-pie-widget>
+            }
+
+            @case ('inventory') {
+              <app-inventory-widget [widget]="w" [zoomLevel]="canvasZoom"
+                                    [style.position]="'absolute'" [style.left.px]="w.posX"
+                                    [style.top.px]="w.posY" [style.z-index]="w.zIndex || 10" [attr.data-wid]="w.id"
+                                    (click)="onWidgetClick(w)"
+                                    (link)="startLink($event)"
+                                    (remove)="removeWidgetFromMemory($event)"
+                                    (duplicate)="duplicateWidget($event)"
+                                    (pointerdown)="bringToFront(w.id); $event.stopPropagation()">
+              </app-inventory-widget>
+            }
+
+            @default {
+              @if (w.type === 'text' || w.type === 'net' || w.type === 'average' || w.type === 'clock') {
+                <app-utility-widget [widget]="w" [zoomLevel]="canvasZoom" [allWidgets]="widgetList" [tabName]="activeTab.name"
+                                    [style.position]="'absolute'" [style.left.px]="w.posX"
+                                    [style.top.px]="w.posY" [style.z-index]="w.zIndex || 10" [attr.data-wid]="w.id"
+                                    (click)="onWidgetClick(w)"
+                                    (link)="startLink($event)"
+                                    (remove)="removeWidgetFromMemory($event)"
+                                    (duplicate)="duplicateWidget($event)"
+                                    (pointerdown)="bringToFront(w.id); $event.stopPropagation()">
+                </app-utility-widget>
+              } @else {
+                <app-widget [widget]="w" [zoomLevel]="canvasZoom"
+                            [style.position]="'absolute'" [style.left.px]="w.posX"
+                            [style.top.px]="w.posY" [style.z-index]="w.zIndex || 10" [attr.data-wid]="w.id"
+                            (click)="onWidgetClick(w)"
+                            (onLink)="startLink($event)"
+                            (pointerdown)="bringToFront(w.id); $event.stopPropagation()"
+                            (onRemove)="removeWidgetFromMemory($event)"
+                            (onDuplicate)="duplicateWidget($event)">
+                </app-widget>
+              }
+            }
+
+          }
+        }
+      </div>
+    </div>
+
+    <div class="drawer-dock" (pointerdown)="$event.stopPropagation()">
+      <div class="search-wrap" (pointerdown)="$event.stopPropagation()">
+        <button class="floating-btn search-btn" [class.active]="searchOpen" (click)="toggleSearch($event)" [title]="'dashboard.searchWidget' | transloco"><ion-icon name="search-outline"></ion-icon></button>
+        @if (searchOpen) {
+          <div class="search-panel widget-box">
+            <input type="text" class="search-input" [(ngModel)]="searchQuery" [placeholder]="'dashboard.searchPlaceholder' | transloco" autofocus />
+            @if (searchQuery.trim()) {
+              <div class="search-results">
+                @for (result of searchResults; track result.id) {
+                  <button class="search-result" (click)="selectSearchResult(result)">{{ result.title }}</button>
+                } @empty {
+                  <p class="search-empty">{{ 'dashboard.searchNoResults' | transloco }}</p>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+      <button class="floating-btn center-view-btn" (click)="centerView()" [title]="'dashboard.tCenterView' | transloco"><ion-icon name="locate-outline"></ion-icon></button>
+
+      <div class="widget-drawer" [class.open]="isDrawerOpen">
+        <div class="drawer-header" (click)="toggleDrawer()">
+          <ion-icon class="drawer-arrow" [name]="isDrawerOpen ? 'chevron-down-outline' : 'chevron-up-outline'"></ion-icon>
+        </div>
+        <div class="drawer-body">
+          <div class="drawer-item" (click)="spawnNewWidget('AAPL', 'stockInfo', 'Apple Inc.')">
+            <ion-icon class="item-icon" name="pulse-outline"></ion-icon><span class="item-name">{{ 'dashboard.wAzione' | transloco }}</span>
+          </div>
+          <div class="drawer-item" (click)="spawnNewWidget('UNLISTED', 'unlistedStock', 'Azione non quotata')">
+            <ion-icon class="item-icon" name="pricetag-outline"></ion-icon><span class="item-name">{{ 'dashboard.wUnlisted' | transloco }}</span>
+          </div>
+          <div class="drawer-item" (click)="spawnNewWidget('RADAR', 'connectionHub', '')">
+            <ion-icon class="item-icon" name="git-network-outline"></ion-icon><span class="item-name">{{ 'dashboard.wLinker' | transloco }}</span>
+          </div>
+          <div class="drawer-item" (click)="spawnNewWidget('CANDELE', 'chartCandlestick', 'Grafico a candele')">
+            <ion-icon class="item-icon" name="stats-chart-outline"></ion-icon><span class="item-name">{{ 'dashboard.wCandle' | transloco }}</span>
+          </div>
+          <div class="drawer-item" (click)="spawnNewWidget('LINEA', 'chartLine', 'Grafico a linea')">
+            <ion-icon class="item-icon" name="trending-up-outline"></ion-icon><span class="item-name">{{ 'dashboard.wLine' | transloco }}</span>
+          </div>
+          <div class="drawer-item" (click)="spawnNewWidget('AREA', 'chartArea', 'Grafico ad area')">
+            <ion-icon class="item-icon" name="analytics-outline"></ion-icon><span class="item-name">{{ 'dashboard.wArea' | transloco }}</span>
+          </div>
+          <div class="drawer-item" (click)="spawnNewWidget('VOLUMI', 'chartBar', 'Grafico a barre')">
+            <ion-icon class="item-icon" name="bar-chart-outline"></ion-icon><span class="item-name">{{ 'dashboard.wVolume' | transloco }}</span>
+          </div>
+          <div class="drawer-item" (click)="spawnNewWidget('TORTA', 'chartPie', 'Composizione portafoglio')">
+            <ion-icon class="item-icon" name="pie-chart-outline"></ion-icon><span class="item-name">{{ 'dashboard.wPie' | transloco }}</span>
+          </div>
+          <div class="drawer-item" (click)="spawnNewWidget('PORTFOLIO', 'inventory', 'Inventario')">
+            <ion-icon class="item-icon" name="wallet-outline"></ion-icon><span class="item-name">{{ 'dashboard.wInventory' | transloco }}</span>
+          </div>
+          <div class="drawer-item" (click)="spawnNewWidget('TESTO', 'text', '')">
+            <ion-icon class="item-icon" name="document-text-outline"></ion-icon><span class="item-name">{{ 'dashboard.wText' | transloco }}</span>
+          </div>
+          <div class="drawer-item" (click)="spawnNewWidget('NETTO', 'net', '')">
+            <ion-icon class="item-icon" name="swap-vertical-outline"></ion-icon><span class="item-name">{{ 'dashboard.wNet' | transloco }}</span>
+          </div>
+          <div class="drawer-item" (click)="spawnNewWidget('MEDIA', 'average', '')">
+            <ion-icon class="item-icon" name="calculator-outline"></ion-icon><span class="item-name">{{ 'dashboard.wAverage' | transloco }}</span>
+          </div>
+          <div class="drawer-item" (click)="spawnNewWidget('OROLOGIO', 'clock', '')">
+            <ion-icon class="item-icon" name="time-outline"></ion-icon><span class="item-name">{{ 'dashboard.wClock' | transloco }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="inspector-drawer" [class.open]="inspectorOpen">
+        @if (widgetService.selectedWidget) {
+          <div class="inspector-drawer-body">
+            <app-inspector [allWidgets]="widgetList" (closed)="onInspectorClosed()"></app-inspector>
+          </div>
+        }
+        <button class="floating-btn inspector-toggle-btn" [class.active]="inspectorOpen"
+                (click)="toggleInspector()" [title]="'dashboard.tInspector' | transloco"><ion-icon name="options-outline"></ion-icon></button>
+      </div>
+
+      <button class="floating-btn broker-btn" (click)="goToBroker($event)" [title]="'dashboard.tBroker' | transloco"><ion-icon name="trending-up-outline"></ion-icon></button>
+
+      <button class="floating-btn notifications-btn" (click)="openNotifications($event)" [title]="'dashboard.tNotifications' | transloco">
+        <ion-icon name="notifications-outline"></ion-icon>
+        @if (notifications.unreadCount() > 0) {
+          <span class="notif-badge">{{ notifications.unreadCount() }}</span>
+        }
+      </button>
+    </div>
+
+  </div>
+
+  <footer class="marquee-container">
+    <div class="marquee-nastro">
+      <div class="marquee-content">
+        @for (t of marqueeTickers; track t.name) {
+          <span class="ticker" [title]="'dashboard.marqueeAddTitle' | transloco" (click)="addTickerToCart(t.name, $event)">
+            <span class="tk-name">{{ t.name }}:</span>
+            <span class="tk-price">${{ t.price.toFixed(2) }}</span>
+            <span class="tk-change" [class.up]="t.change >= 0" [class.down]="t.change < 0">
+              {{ t.change >= 0 ? '▲' : '▼' }} {{ t.change >= 0 ? '+' : '' }}{{ t.change }}%
+            </span>
+          </span>
+        }
+      </div>
+      <div class="marquee-content" aria-hidden="true">
+        @for (t of marqueeTickers; track t.name) {
+          <span class="ticker" [title]="'dashboard.marqueeAddTitle' | transloco" (click)="addTickerToCart(t.name, $event)">
+            <span class="tk-name">{{ t.name }}:</span>
+            <span class="tk-price">${{ t.price.toFixed(2) }}</span>
+            <span class="tk-change" [class.up]="t.change >= 0" [class.down]="t.change < 0">
+              {{ t.change >= 0 ? '▲' : '▼' }} {{ t.change >= 0 ? '+' : '' }}{{ t.change }}%
+            </span>
+          </span>
+        }
+      </div>
+    </div>
+  </footer>
+
+  <app-modal [open]="tabModalOpen" [title]="'dashboard.newTab' | transloco" (closed)="closeTabModal()">
+    <div class="modal-form">
+      <ion-item lines="full" class="custom-input">
+        <ion-input [label]="'dashboard.tabNameLabel' | transloco" labelPlacement="stacked"
+                   [placeholder]="'dashboard.tabNamePlaceholder' | transloco"
+                   [(ngModel)]="newTabName" (keyup.enter)="confirmCreateTab()"></ion-input>
+      </ion-item>
+      <div class="modal-actions">
+        <ion-button fill="clear" (click)="closeTabModal()">{{ 'common.cancel' | transloco }}</ion-button>
+        <ion-button [disabled]="!newTabName.trim()" (click)="confirmCreateTab()">{{ 'dashboard.createTab' | transloco }}</ion-button>
+      </div>
+    </div>
+  </app-modal>
+
+  <app-modal [open]="premiumModalOpen" [title]="'dashboard.shopTitle' | transloco" [dismissible]="!premiumBusy"
+             (closed)="closePremiumModal()">
+    <div class="modal-form">
+      <p>{{ 'dashboard.premiumBuyQ' | transloco }}</p>
+      <p class="premium-perk">{{ 'dashboard.premiumFidelity' | transloco }}</p>
+      <div class="premium-summary">
+        <span>{{ 'dashboard.cost' | transloco }}</span>
+        <strong>€{{ premiumPrice.toFixed(2) }}</strong>
+      </div>
+      <div class="premium-summary">
+        <span>{{ 'dashboard.remainingCredit' | transloco }}</span>
+        <strong>{{ premiumCredit === null ? '…' : '€' + premiumCredit.toFixed(2) }}</strong>
+      </div>
+      @if (premiumError) {
+        <p class="modal-error">{{ premiumError }}</p>
+      }
+      <div class="modal-actions">
+        <ion-button fill="clear" [disabled]="premiumBusy" (click)="closePremiumModal()">{{ 'common.cancel' | transloco }}</ion-button>
+        <ion-button [disabled]="premiumBusy" (click)="confirmPremiumPurchase()">
+          {{ (premiumBusy ? 'dashboard.buying' : 'dashboard.confirmBuy') | transloco }}
+        </ion-button>
+      </div>
+    </div>
+  </app-modal>
+
+  <app-modal [open]="notificationsOpen" [title]="'dashboard.notifications' | transloco" (closed)="closeNotifications()">
+    <div class="notif-list">
+      @for (n of notifications.notifications(); track n.id) {
+        <div class="notif-row" [class]="'notif-' + n.type">
+          <p>{{ n.message }}</p>
+          <span class="notif-date">{{ n.createdAt | date: 'short' }}</span>
+        </div>
+      } @empty {
+        <p class="empty">{{ 'dashboard.noReviews' | transloco }}</p>
+      }
+    </div>
+  </app-modal>
+
+  <app-modal [open]="marqueeAddModalOpen" [title]="'dashboard.marqueeAddTitle' | transloco" (closed)="closeMarqueeAddModal()">
+    <div class="modal-form">
+      <p>{{ 'dashboard.marqueeAddQ' | transloco: { ticker: marqueeAddTicker } }}</p>
+      <div class="modal-actions">
+        <ion-button fill="clear" (click)="closeMarqueeAddModal()">{{ 'common.cancel' | transloco }}</ion-button>
+        <ion-button (click)="confirmMarqueeAdd()">{{ 'dashboard.add' | transloco }}</ion-button>
+      </div>
+    </div>
+  </app-modal>
+
+</ion-content>

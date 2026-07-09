@@ -1,0 +1,58 @@
+:host {
+  position: absolute;
+  display: block;
+  z-index: 10;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  &:active {
+    z-index: 100;
+    transform: scale(1.015);
+    .widget-box {
+      border-color: var(--deq-accent-neon);
+      box-shadow: 0 15px 45px color-mix(in srgb, var(--deq-accent-neon) 18%, transparent);
+    }
+  }
+}
+
+.widget-box {
+  min-width: 240px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+header.widget-header { cursor: move; }
+
+.terminal-body {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  max-height: 180px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar { width: 3px; }
+  &::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--deq-accent-neon) 20%, transparent); border-radius: 2px; }
+}
+
+.terminal-id-row {
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 0.75rem;
+  color: var(--deq-text-bright);
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--deq-text-bright) 3%, transparent);
+  letter-spacing: 0.5px;
+
+  &:last-child { border-bottom: none; }
+  &:hover {
+    background: color-mix(in srgb, var(--deq-accent-neon) 5%, transparent);
+    color: var(--deq-accent-neon);
+  }
+}
+
+.terminal-empty {
+  font-family: "SF Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--deq-text-muted);
+  padding: 0.8rem 0.7rem;
+  font-style: italic;
+}

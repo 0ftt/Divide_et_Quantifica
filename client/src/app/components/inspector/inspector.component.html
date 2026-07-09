@@ -1,0 +1,168 @@
+@if (selectedWidget) {
+  <div class="widget-box inspector-panel" (mousedown)="$event.stopPropagation()">
+    <header class="widget-header inspector-header">
+      <div class="header-info">
+        <span class="ticker-name">INSPECTOR</span>
+      </div>
+      <div class="widget-controls">
+        <ion-button fill="clear" size="small" class="control-btn close" title="Chiudi"
+                    (click)="chiudiPannello()">
+          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </header>
+
+    <div class="inspector-body">
+
+      <div class="section-title">Proprietà Base</div>
+
+      <div class="property-table">
+        <div class="property-row">
+          <label>ID</label>
+          <div class="static-val">{{ selectedWidget.id }}</div>
+        </div>
+
+        <div class="property-row">
+          <label>Tipo</label>
+          <div class="static-val">{{ selectedWidget.type }}</div>
+        </div>
+
+        <div class="property-row">
+          <label>Titolo</label>
+          <div>
+            <input type="text" [(ngModel)]="selectedWidget.title" placeholder="Nome del nodo" />
+            @if (titleError) {
+              <p class="field-error">Il titolo non puo' essere vuoto.</p>
+            }
+          </div>
+        </div>
+
+        <div class="property-row">
+          <label>Sfondo</label>
+          <app-color-picker
+            [color]="selectedWidget.color" [opacity]="selectedWidget.opacity"
+            (colorChange)="selectedWidget.color = $event"
+            (opacityChange)="selectedWidget.opacity = $event">
+          </app-color-picker>
+        </div>
+
+        <div class="property-row">
+          <label>Pos X</label>
+          <input type="number" [(ngModel)]="selectedWidget.posX" />
+        </div>
+
+        <div class="property-row">
+          <label>Pos Y</label>
+          <input type="number" [(ngModel)]="selectedWidget.posY" />
+        </div>
+      </div>
+
+      <div class="section-title">Parametri Modulo</div>
+
+      @if (isStock) {
+        <div class="property-table">
+          <div class="property-row" style="grid-column: 1 / -1;">
+            <label>Azione</label>
+            <div class="asset-picker">
+              <input type="text" class="asset-search" [(ngModel)]="assetFilter"
+                     placeholder="Cerca ticker o nome…" />
+              <div class="asset-list">
+                @for (asset of filteredAssets; track asset.ticker) {
+                  <button type="button" class="asset-option"
+                          [class.selected]="asset.ticker === selectedWidget.ticker"
+                          (click)="onTickerChange(asset.ticker)">
+                    <span class="opt-ticker">{{ asset.ticker }}</span>
+                    <span class="opt-name">{{ asset.name }}</span>
+                  </button>
+                } @empty {
+                  <p class="asset-empty">Nessun risultato</p>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (isUnlisted) {
+        <div class="property-table">
+          <div class="property-row">
+            <label>Prezzo</label>
+            <input type="number" [(ngModel)]="selectedWidget.price" />
+          </div>
+        </div>
+      }
+
+      @if (isChart) {
+        <div class="property-table">
+          <div class="property-row" style="grid-column: 1 / -1;">
+            <label class="connections-label">SORGENTE DATI (ID)</label>
+
+            <div class="connections-manager">
+              @for (cid of selectedWidget.connectedIDs; track cid) {
+                <div class="id-tag">
+                  <span class="tag-text">{{ cid }}</span>
+                  <button class="remove-tag-btn" (click)="rimuoviID(cid)">×</button>
+                </div>
+              }
+
+              <div class="add-id-row">
+                <input type="text" placeholder="Es. w-123" [(ngModel)]="nuovoID" />
+                <button class="add-id-btn" (click)="aggiungiID()">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="property-row">
+            <label>Timeframe</label>
+            <ion-select [(ngModel)]="selectedWidget.timeframe" interface="popover" placeholder="Scegli timeframe">
+              @for (opt of timeframeOptions; track opt.value) {
+                <ion-select-option [value]="opt.value">{{ opt.label }}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+        </div>
+      }
+
+      @if (isNews) {
+        <div class="property-table">
+          <div class="property-row">
+            <label>Sorgente</label>
+            <input type="text" [(ngModel)]="selectedWidget.source" placeholder="Es. Bloomberg" />
+          </div>
+          <div class="property-row">
+            <label>Limite</label>
+            <div>
+              <input type="number" [(ngModel)]="selectedWidget.limit" />
+              @if (limitError) {
+                <p class="field-error">Deve essere un numero intero positivo.</p>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (isHub) {
+        <div class="property-table">
+          <div class="property-row" style="grid-column: 1 / -1;">
+            <label class="connections-label">NODI COLLEGATI</label>
+
+            <div class="connections-manager">
+              @for (cid of selectedWidget.connectedIDs; track cid) {
+                <div class="id-tag">
+                  <span class="tag-text">{{ cid }}</span>
+                  <button class="remove-tag-btn" (click)="rimuoviID(cid)">×</button>
+                </div>
+              }
+
+              <div class="add-id-row">
+                <input type="text" placeholder="Es. w-123" [(ngModel)]="nuovoID" />
+                <button class="add-id-btn" (click)="aggiungiID()">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+    </div>
+  </div>
+}

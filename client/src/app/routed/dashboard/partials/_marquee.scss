@@ -1,0 +1,74 @@
+.marquee-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10000;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 3px 0;
+  background: color-mix(in srgb, var(--deq-bg-base) 95%, transparent);
+  border-top: 1px solid var(--deq-border);
+}
+
+.marquee-nastro {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.95rem;
+  font-weight: bold;
+  line-height: 1;
+  margin-top: 3px;
+  animation: scrollTicker 85s linear infinite;
+}
+
+@keyframes scrollTicker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-content {
+  display: flex;
+  align-items: center;
+}
+
+.ticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 3rem;
+  white-space: nowrap;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: color-mix(in srgb, var(--deq-accent-neon) 10%, transparent);
+  }
+}
+
+.tk-name {
+  color: var(--deq-text-bright);
+}
+
+.tk-price {
+  color: var(--deq-text-main);
+}
+
+.tk-change {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: bold;
+
+  &.up {
+    color: var(--deq-success);
+  }
+
+  &.down {
+    color: var(--deq-error);
+  }
+}

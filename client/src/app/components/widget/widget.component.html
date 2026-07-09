@@ -1,0 +1,48 @@
+<section class="widget-box" [style.background]="bg()" [style.width.px]="widget().width"
+         [style.height.px]="widget().height || null" (pointerdown)="beginDrag($event)">
+
+  <header class="widget-header">
+    <div class="header-info">
+      <ion-icon class="widget-type-icon" [name]="typeIcon()"></ion-icon>
+      <span class="ticker-name">{{ widget().ticker || widget().title || (nameKey | transloco) }}</span>
+    </div>
+
+    <div class="widget-controls">
+      <ion-button fill="clear" size="small" class="control-btn" title="Collega a un grafico/hub"
+                  (click)="requestLink($event)">
+        <ion-icon slot="icon-only" name="git-network-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" class="control-btn" title="Duplica widget"
+                  (click)="duplicateWidgetClick($event)">
+        <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" class="control-btn" title="Minimizza"
+                  (click)="toggleMinimize($event)">
+        <ion-icon slot="icon-only" name="remove-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" class="control-btn close" title="Chiudi"
+                  (click)="deleteWidget($event)">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </header>
+
+  <main class="widget-content" [class.hidden]="widget().minimize" [class.scaled]="!!widget().height">
+    @if (!isUnlisted()) {
+      <div class="company-row">
+        <span class="company-name">{{ widget().company }}</span>
+      </div>
+    }
+
+    <div class="price-row">
+      <span class="main-price">{{ priceLabel() }}</span>
+      @if (isUnlisted()) {
+        <span class="trend-flat">UNLISTED</span>
+      } @else {
+        <span [class.trend-down]="changeDown()" [class.trend-up]="!changeDown()">{{ changeLabel() }}</span>
+      }
+    </div>
+  </main>
+
+  <div class="resize-handle" appResize [appResizeTarget]="widget()" [appResizeZoom]="zoomLevel()"></div>
+</section>

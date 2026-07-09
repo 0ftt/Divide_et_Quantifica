@@ -1,0 +1,68 @@
+<ion-header class="deq-header">
+  <ion-toolbar class="deq-toolbar">
+    <ion-title><app-breadcrumbs [current]="'history.title' | transloco"></app-breadcrumbs></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="history-dark-bg">
+  <div class="history-container">
+    <section class="panel widget-box">
+      <div class="panel-head">
+        <h3>{{ 'history.title' | transloco }}</h3>
+        <ion-badge class="deq-badge count-badge">{{ filteredTransactions.length }}</ion-badge>
+      </div>
+
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input type="text" [(ngModel)]="search" (ngModelChange)="onSearch()"
+               [placeholder]="'history.searchPlaceholder' | transloco" />
+      </div>
+
+      @if (error) {
+        <p class="asset-error">{{ error }}</p>
+      }
+
+      <ion-list class="deq-list" lines="none">
+        @if (loading) {
+          <ion-item class="deq-item">
+            <ion-label class="empty">{{ 'history.loading' | transloco }}</ion-label>
+          </ion-item>
+        } @else {
+          @for (t of pagedTransactions; track t.id) {
+            <ion-item class="deq-item">
+              <ion-badge slot="start" class="type-badge" [class.buy]="t.type === 'buy'"
+                         [class.sell]="t.type === 'sell'" [class.recharge]="t.type === 'recharge'"
+                         [class.premium]="t.type === 'premium'">
+                {{ typeLabel(t.type) }}
+              </ion-badge>
+              <ion-label>
+                <h2>{{ t.ticker || t.note }}</h2>
+                <p>{{ t.createdAt | date: 'dd/MM/yyyy HH:mm' }}@if (t.quantity) { &middot; {{ t.quantity }}x }</p>
+              </ion-label>
+              <span slot="end" class="tx-amount" [class.up]="isInflow(t)" [class.down]="!isInflow(t)">
+                {{ isInflow(t) ? '+' : '-' }}€{{ t.amount | number: '1.2-2' }}
+              </span>
+            </ion-item>
+          } @empty {
+            <ion-item class="deq-item">
+              <ion-label class="empty">{{ 'history.empty' | transloco }}</ion-label>
+            </ion-item>
+          }
+        }
+      </ion-list>
+
+      <div class="asset-pager">
+        <ion-button fill="clear" [disabled]="page === 0" (click)="prevPage()">
+          <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <span class="pager-label">{{ page + 1 }} / {{ totalPages }}</span>
+        <ion-button fill="clear" [disabled]="page >= totalPages - 1" (click)="nextPage()">
+          <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" class="pager-refresh" (click)="load()">
+          <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </section>
+  </div>
+</ion-content>

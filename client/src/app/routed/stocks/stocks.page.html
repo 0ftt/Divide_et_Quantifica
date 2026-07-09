@@ -1,0 +1,94 @@
+<ion-header class="deq-header">
+  <ion-toolbar class="deq-toolbar">
+    <ion-title><app-breadcrumbs [current]="'stocks.title' | transloco"></app-breadcrumbs></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="stocks-dark-bg">
+  <div class="stocks-container">
+    <div class="stocks-grid">
+
+      <section class="panel widget-box">
+        <div class="panel-head">
+          <h3>{{ 'stocks.poolTitle' | transloco }}</h3>
+          <ion-badge class="deq-badge count-badge">{{ filteredAssets.length }}</ion-badge>
+        </div>
+
+        <div class="search-box">
+          <ion-icon name="search-outline"></ion-icon>
+          <input type="text" [(ngModel)]="search" (ngModelChange)="onSearch()"
+                 [placeholder]="'stocks.searchPlaceholder' | transloco" />
+        </div>
+
+        @if (loadError) {
+          <p class="asset-error">{{ loadError }}</p>
+        }
+
+        <ion-list class="deq-list" lines="none">
+          @if (loading) {
+            <ion-item class="deq-item">
+              <ion-label class="empty">{{ 'stocks.loading' | transloco }}</ion-label>
+            </ion-item>
+          } @else {
+            @for (asset of pagedAssets; track asset.ticker) {
+              <ion-item class="deq-item">
+                <ion-icon slot="start" name="pulse-outline" class="row-icon"></ion-icon>
+                <ion-label>
+                  <h2>{{ asset.ticker }}</h2>
+                  <p>{{ asset.name }}</p>
+                </ion-label>
+                <ion-badge slot="end" class="deq-badge">{{ asset.price.toFixed(2) }} {{ asset.currency }}</ion-badge>
+                <ion-button slot="end" fill="clear" class="create-btn" [title]="'stocks.createWidget' | transloco"
+                            (click)="createWidget(asset.ticker)">
+                  <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+                </ion-button>
+                @if (isAdmin) {
+                  <ion-button slot="end" fill="clear" color="danger" [title]="'stocks.remove' | transloco"
+                              (click)="removeAsset(asset.ticker)">
+                    <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                  </ion-button>
+                }
+              </ion-item>
+            } @empty {
+              <ion-item class="deq-item">
+                <ion-label class="empty">{{ 'stocks.empty' | transloco }}</ion-label>
+              </ion-item>
+            }
+          }
+        </ion-list>
+
+        <div class="asset-pager">
+          <ion-button fill="clear" [disabled]="page === 0" (click)="prevPage()">
+            <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+          </ion-button>
+          <span class="pager-label">{{ page + 1 }} / {{ totalPages }}</span>
+          <ion-button fill="clear" [disabled]="page >= totalPages - 1" (click)="nextPage()">
+            <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" class="pager-refresh" (click)="loadAssets()">
+            <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </section>
+
+      @if (isAdmin) {
+        <section class="panel widget-box">
+          <h3>{{ 'stocks.adminAdd' | transloco }}</h3>
+          <ion-list class="deq-list" lines="none">
+            <ion-item class="deq-item">
+              <ion-input [label]="'stocks.ticker' | transloco" labelPlacement="stacked"
+                         [placeholder]="'stocks.tickerPlaceholder' | transloco" [(ngModel)]="newTicker"></ion-input>
+            </ion-item>
+          </ion-list>
+          @if (addError) {
+            <p class="field-error">{{ addError }}</p>
+          }
+          <ion-button expand="block" color="primary" [disabled]="adding" (click)="addAsset()">
+            {{ (adding ? 'stocks.adding' : 'stocks.searchAdd') | transloco }}
+          </ion-button>
+        </section>
+      }
+
+    </div>
+  </div>
+</ion-content>

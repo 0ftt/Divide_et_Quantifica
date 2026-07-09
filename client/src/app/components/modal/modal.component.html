@@ -1,0 +1,24 @@
+@if (open) {
+  <div class="modal-backdrop" (mousedown)="requestClose()">
+    <section class="widget-box modal-panel" (mousedown)="$event.stopPropagation()">
+      @if (title) {
+        <header class="widget-header modal-header">
+          <div class="header-info">
+            <span class="ticker-name">{{ title }}</span>
+          </div>
+          @if (dismissible) {
+            <div class="widget-controls">
+              <ion-button fill="clear" size="small" class="control-btn close" title="Chiudi"
+                          (click)="requestClose()">
+                <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+              </ion-button>
+            </div>
+          }
+        </header>
+      }
+      <div class="modal-content">
+        <ng-content></ng-content>
+      </div>
+    </section>
+  </div>
+}

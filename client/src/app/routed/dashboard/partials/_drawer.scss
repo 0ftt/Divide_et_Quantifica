@@ -1,0 +1,163 @@
+.drawer-dock {
+  position: absolute;
+  bottom: 26px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: fit-content;
+  z-index: 210;
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+
+  .search-btn,
+  .center-view-btn,
+  .inspector-toggle-btn,
+  .broker-btn,
+  .notifications-btn {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .search-wrap {
+    display: flex;
+    align-items: center;
+    height: 36px;
+  }
+
+  .inspector-toggle-btn.active,
+  .search-btn.active {
+    color: var(--deq-accent-neon);
+  }
+}
+
+.widget-drawer {
+  position: relative;
+  z-index: 210;
+  width: 48px;
+  background: color-mix(in srgb, var(--deq-bg-base) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--deq-accent-neon) 20%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+
+  .drawer-header {
+    height: 36px;
+    flex: 0 0 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+
+    .drawer-arrow {
+      color: var(--deq-accent-neon);
+      font-size: 0.75rem;
+    }
+  }
+
+  .drawer-body {
+    position: fixed;
+    bottom: 74px;
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    width: 296px;
+    padding: 0.6rem;
+    display: grid;
+    grid-template-columns: repeat(3, 85px);
+    gap: 0.6rem;
+    background: color-mix(in srgb, var(--deq-bg-base) 92%, transparent);
+    border: 1px solid color-mix(in srgb, var(--deq-accent-neon) 20%, transparent);
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+
+    .drawer-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 85px;
+      height: 75px;
+      border-radius: 6px;
+      border: 1px dashed color-mix(in srgb, var(--deq-accent-neon) 15%, transparent);
+      background: color-mix(in srgb, var(--deq-bg-base) 20%, transparent);
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      .item-icon {
+        font-size: 1.2rem;
+        margin-bottom: 0.1rem;
+
+        color: var(--deq-text-main);
+      }
+
+      .item-name {
+        font-size: 0.62rem;
+        font-family: monospace;
+        color: var(--deq-text-muted);
+        font-weight: bold;
+      }
+
+      &:hover {
+        border-style: solid;
+        border-color: var(--deq-accent-neon);
+        background: color-mix(in srgb, var(--deq-accent-neon) 4%, transparent);
+
+        .item-icon { color: var(--deq-accent-neon); }
+        .item-name { color: var(--deq-accent-neon); }
+      }
+    }
+  }
+
+  &.open .drawer-body {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.inspector-drawer {
+  position: relative;
+  z-index: 210;
+  width: 48px;
+  background: color-mix(in srgb, var(--deq-bg-base) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--deq-accent-neon) 20%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .inspector-drawer-body {
+    position: fixed;
+    bottom: 74px;
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    width: min(340px, 92vw);
+    max-width: calc(100vw - 40px);
+    max-height: 62vh;
+    z-index: 220;
+    background: color-mix(in srgb, var(--deq-bg-base) 92%, transparent);
+    border: 1px solid color-mix(in srgb, var(--deq-accent-neon) 20%, transparent);
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  &.open .inspector-drawer-body {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+}

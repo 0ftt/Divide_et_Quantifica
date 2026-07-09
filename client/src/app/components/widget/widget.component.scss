@@ -1,0 +1,183 @@
+:host {
+  position: absolute;
+  display: block;
+  z-index: 10;
+  transition: box-shadow 0.3s ease,
+              transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.is-killing {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+  }
+
+  &:active {
+    z-index: 100;
+    transform: scale(1.015);
+    .widget-box {
+      border-color: var(--deq-accent-neon);
+      box-shadow: 0 15px 45px color-mix(in srgb, var(--deq-accent-neon) 18%, transparent);
+    }
+  }
+}
+
+.widget-box {
+  min-width: 240px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  flex-direction: column;
+}
+
+header.widget-header { cursor: move; }
+
+main.widget-content {
+  padding: 0.6rem 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+  min-height: 0;
+
+  &.hidden { display: none; }
+
+  &.scaled {
+    container-type: size;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    .company-name { font-size: clamp(0.72rem, 7cqmin, 2.2rem); }
+    .price-row { flex-wrap: wrap; justify-content: center; }
+    .main-price { font-size: clamp(1.8rem, 24cqmin, 9rem); line-height: 1.05; }
+    .trend-flat { font-size: clamp(0.7rem, 6cqmin, 1.8rem); }
+    .trend-up,
+    .trend-down { font-size: clamp(0.95rem, 8cqmin, 2.6rem); }
+  }
+
+  .company-row { line-height: 1; }
+
+  .company-name {
+    font-size: 0.72rem;
+    color: var(--deq-success-muted);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-family: "SF Mono", Consolas, monospace;
+    margin-top: 0.1rem;
+  }
+
+  .main-price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--deq-accent-neon);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--deq-accent-neon) 30%, transparent);
+  }
+
+  .trend-down {
+    color: var(--deq-error);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .trend-up {
+    color: var(--deq-success);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .trend-flat {
+    color: var(--deq-text-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    align-self: center;
+  }
+
+  .range-compass {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: "SF Mono", monospace;
+    font-size: 0.68rem;
+    color: var(--deq-text-muted);
+
+    .range-bound { min-width: 35px; }
+
+    .compass-track {
+      position: relative;
+      flex-grow: 1;
+      height: 2px;
+      background: var(--deq-border);
+      border-radius: 1px;
+    }
+
+    .compass-pointer {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--deq-accent-neon);
+      font-size: 0.8rem;
+      text-shadow: 0 0 4px var(--deq-accent-neon);
+    }
+  }
+
+  .volume-pressure {
+    display: flex;
+    height: 2px;
+    width: 100%;
+    border-radius: 1px;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--deq-text-bright) 3%, transparent);
+
+    .pressure-bar {
+      height: 100%;
+      transition: width 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+      &.buy { background: color-mix(in srgb, var(--deq-accent-neon) 60%, transparent); }
+      &.sell { background: var(--deq-error-glow); }
+    }
+  }
+
+  .market-time {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--deq-text-muted);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-top: 1px dashed var(--deq-border);
+    padding-top: 0.45rem;
+    margin-top: 0.15rem;
+
+    .sync-led {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--deq-text-muted);
+
+      &.active {
+        background: var(--deq-accent-neon);
+        box-shadow: 0 0 6px var(--deq-accent-neon);
+        animation: radarPulse 2s infinite ease-in-out;
+      }
+    }
+
+    .time-text { white-space: nowrap; }
+  }
+}
+
+@keyframes radarPulse {
+  0% { opacity: 0.35; }
+  50% { opacity: 1; }
+  100% { opacity: 0.35; }
+}

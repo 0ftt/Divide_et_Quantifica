@@ -1,0 +1,282 @@
+<ion-header class="deq-header">
+  <ion-toolbar class="deq-toolbar">
+    <ion-title><app-breadcrumbs [current]="'broker.title' | transloco"></app-breadcrumbs></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="broker-dark-bg">
+  <div class="broker-container">
+
+    <ion-segment [(ngModel)]="tab" class="deq-segment broker-tabs" scrollable>
+      <ion-segment-button value="terminal">
+        <ion-icon name="trending-up-outline"></ion-icon>
+        <ion-label>{{ 'broker.tabTerminal' | transloco }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="cart">
+        <ion-icon name="cart-outline"></ion-icon>
+        <ion-label>{{ 'broker.tabCart' | transloco }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="history">
+        <ion-icon name="receipt-outline"></ion-icon>
+        <ion-label>{{ 'broker.tabHistory' | transloco }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    @switch (tab) {
+
+      @case ('terminal') {
+        <section class="trading-layout">
+          <div class="panel widget-box">
+            <ion-segment [(ngModel)]="activeTab" class="deq-segment">
+              <ion-segment-button value="BUY">
+                <ion-label>{{ 'broker.buy' | transloco }}</ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="SELL">
+                <ion-label>{{ 'broker.sell' | transloco }}</ion-label>
+              </ion-segment-button>
+            </ion-segment>
+
+            <div class="order-form">
+              <ion-item class="deq-item" lines="full">
+                <ion-input [label]="'broker.ticker' | transloco" labelPlacement="stacked"
+                           [placeholder]="'broker.selectTicker' | transloco" [(ngModel)]="orderTicker"></ion-input>
+              </ion-item>
+
+              <ion-item class="deq-item" lines="full">
+                <ion-input type="number" [label]="'broker.quantity' | transloco" labelPlacement="stacked"
+                           placeholder="0" [(ngModel)]="orderQuantity"></ion-input>
+              </ion-item>
+              @if (orderError) {
+                <p class="field-error">{{ orderError }}</p>
+              }
+
+              @if (selectedPrice !== null) {
+                <p class="order-price">{{ 'broker.price' | transloco }}: ${{ selectedPrice }}</p>
+              }
+
+              <ion-button expand="block"
+                          [color]="activeTab === 'BUY' ? 'success' : 'danger'"
+                          (click)="submitOrder()">
+                {{ (activeTab === 'BUY' ? 'broker.buy' : 'broker.sell') | transloco }}
+              </ion-button>
+
+              <div class="listino-head">
+                <h3>{{ 'stocks.poolTitle' | transloco }}</h3>
+                <ion-badge class="deq-badge count-badge">{{ filteredAssets.length }}</ion-badge>
+              </div>
+
+              <div class="search-box">
+                <ion-icon name="search-outline"></ion-icon>
+                <input type="text" [(ngModel)]="search" (ngModelChange)="onSearch()"
+                       [placeholder]="'stocks.searchPlaceholder' | transloco" />
+              </div>
+
+              <ion-list class="deq-list market-list" lines="none">
+                @if (loading) {
+                  <ion-item class="deq-item"><ion-label class="empty">{{ 'stocks.loading' | transloco }}</ion-label></ion-item>
+                } @else {
+                  @for (asset of pagedAssets; track asset.ticker) {
+                    <ion-item button class="deq-item" (click)="selectAsset(asset.ticker)">
+                      <ion-icon slot="start" name="pulse-outline" class="row-icon"></ion-icon>
+                      <ion-label>
+                        <h2>{{ asset.ticker }}</h2>
+                        <p>{{ asset.name }}</p>
+                      </ion-label>
+                      <div slot="end" class="price-data">
+                        <ion-badge class="deq-badge">{{ asset.price.toFixed(2) }} {{ asset.currency }}</ion-badge>
+                        @if (asset.change != null) {
+                          <span class="row-change" [class.up]="asset.change >= 0" [class.down]="asset.change < 0">
+                            {{ asset.change >= 0 ? '▲' : '▼' }} {{ asset.change >= 0 ? '+' : '' }}{{ asset.change }}%
+                          </span>
+                        }
+                      </div>
+                      <ion-button slot="end" fill="clear" class="place-btn" [title]="'stocks.createWidget' | transloco"
+                                  (click)="placeWidget(asset.ticker, $event)">
+                        <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+                      </ion-button>
+                      <ion-button slot="end" fill="clear" class="cart-add-btn" [title]="'broker.addToCart' | transloco"
+                                  (click)="addToCart(asset.ticker, $event)">
+                        <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
+                      </ion-button>
+                      <ion-button slot="end" fill="clear" class="history-btn" [title]="'broker.trendPreview' | transloco"
+                                  (click)="openHistory(asset.ticker, $event)">
+                        <ion-icon slot="icon-only" name="stats-chart-outline"></ion-icon>
+                      </ion-button>
+                    </ion-item>
+                  } @empty {
+                    <ion-item class="deq-item"><ion-label class="empty">{{ 'stocks.empty' | transloco }}</ion-label></ion-item>
+                  }
+                }
+              </ion-list>
+
+              <div class="asset-pager">
+                <ion-button fill="clear" [disabled]="page === 0" (click)="prevPage()">
+                  <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+                </ion-button>
+                <span class="pager-label">{{ page + 1 }} / {{ totalPages }}</span>
+                <ion-button fill="clear" [disabled]="page >= totalPages - 1" (click)="nextPage()">
+                  <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" class="pager-refresh" (click)="loadAssets()">
+                  <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+                </ion-button>
+              </div>
+
+              @if (isAdmin) {
+                <div class="add-listing">
+                  <h4>{{ 'stocks.adminAdd' | transloco }}</h4>
+                  <ion-item class="deq-item" lines="none">
+                    <ion-input [label]="'stocks.ticker' | transloco" labelPlacement="stacked"
+                               [placeholder]="'stocks.tickerPlaceholder' | transloco" [(ngModel)]="newTicker"></ion-input>
+                  </ion-item>
+                  @if (addError) {
+                    <p class="field-error">{{ addError }}</p>
+                  }
+                  <ion-button expand="block" color="primary" [disabled]="adding" (click)="addAsset()">
+                    {{ (adding ? 'stocks.adding' : 'stocks.searchAdd') | transloco }}
+                  </ion-button>
+                </div>
+              }
+            </div>
+          </div>
+
+          <aside class="side-column">
+            <div class="panel widget-box">
+              <h3>{{ 'broker.inventory' | transloco }}</h3>
+              <div class="credit-row">
+                <span>{{ 'broker.credit' | transloco }}</span>
+                <strong>€{{ credit.toFixed(2) }}</strong>
+              </div>
+              <ion-list class="deq-list" lines="none">
+                @for (holding of inventory; track holding.ticker) {
+                  <ion-item class="deq-item">
+                    <ion-label>{{ holding.ticker }}</ion-label>
+                    <ion-badge slot="end" class="deq-badge">{{ holding.quantity }}</ion-badge>
+                  </ion-item>
+                } @empty {
+                  <ion-item class="deq-item">
+                    <ion-label class="empty">{{ 'broker.noPositions' | transloco }}</ion-label>
+                  </ion-item>
+                }
+              </ion-list>
+            </div>
+          </aside>
+        </section>
+      }
+
+      @case ('cart') {
+        <section class="panel widget-box cart-panel">
+          <div class="panel-head">
+            <h3>{{ 'broker.cart' | transloco }}</h3>
+            <ion-badge class="deq-badge count-badge">{{ cart.totalQuantity() }}</ion-badge>
+          </div>
+          <ion-list class="deq-list" lines="none">
+            @for (line of cart.items(); track line.ticker) {
+              <ion-item class="deq-item">
+                <ion-label>{{ line.ticker }}</ion-label>
+                <ion-badge slot="end" class="deq-badge">x{{ line.quantity }}</ion-badge>
+                <ion-button slot="end" fill="clear" color="danger" (click)="cart.remove(line.ticker)">
+                  <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                </ion-button>
+              </ion-item>
+            } @empty {
+              <ion-item class="deq-item">
+                <ion-label class="empty">{{ 'broker.cartEmpty' | transloco }}</ion-label>
+              </ion-item>
+            }
+          </ion-list>
+          <ion-button expand="block" color="success" [disabled]="!cart.items().length" (click)="openCheckout()">
+            {{ 'broker.confirmCart' | transloco }} ({{ cart.totalQuantity() }})
+          </ion-button>
+        </section>
+      }
+
+      @case ('history') {
+        <section class="panel widget-box history-panel">
+          <div class="panel-head">
+            <h3>{{ 'history.title' | transloco }}</h3>
+            <ion-badge class="deq-badge count-badge">{{ filteredTransactions.length }}</ion-badge>
+          </div>
+
+          <div class="search-box">
+            <ion-icon name="search-outline"></ion-icon>
+            <input type="text" [(ngModel)]="txSearch" (ngModelChange)="onTxSearch()"
+                   [placeholder]="'history.searchPlaceholder' | transloco" />
+          </div>
+
+          @if (txError) {
+            <p class="asset-error">{{ txError }}</p>
+          }
+
+          <ion-list class="deq-list" lines="none">
+            @if (txLoading) {
+              <ion-item class="deq-item"><ion-label class="empty">{{ 'history.loading' | transloco }}</ion-label></ion-item>
+            } @else {
+              @for (t of pagedTransactions; track t.id) {
+                <ion-item class="deq-item">
+                  <ion-badge slot="start" class="type-badge" [class.buy]="t.type === 'buy'"
+                             [class.sell]="t.type === 'sell'" [class.recharge]="t.type === 'recharge'"
+                             [class.premium]="t.type === 'premium'">
+                    {{ typeLabel(t.type) }}
+                  </ion-badge>
+                  <ion-label>
+                    <h2>{{ t.ticker || t.note }}</h2>
+                    <p>{{ t.createdAt | date: 'dd/MM/yyyy HH:mm' }}@if (t.quantity) { &middot; {{ t.quantity }}x }</p>
+                  </ion-label>
+                  <span slot="end" class="tx-amount" [class.up]="isInflow(t)" [class.down]="!isInflow(t)">
+                    {{ isInflow(t) ? '+' : '-' }}€{{ t.amount | number: '1.2-2' }}
+                  </span>
+                </ion-item>
+              } @empty {
+                <ion-item class="deq-item"><ion-label class="empty">{{ 'history.empty' | transloco }}</ion-label></ion-item>
+              }
+            }
+          </ion-list>
+
+          <div class="asset-pager">
+            <ion-button fill="clear" [disabled]="txPage === 0" (click)="txPrevPage()">
+              <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+            </ion-button>
+            <span class="pager-label">{{ txPage + 1 }} / {{ txTotalPages }}</span>
+            <ion-button fill="clear" [disabled]="txPage >= txTotalPages - 1" (click)="txNextPage()">
+              <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" class="pager-refresh" (click)="loadTransactions()">
+              <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </section>
+      }
+    }
+
+  </div>
+
+  <app-modal [open]="historyTicker !== null"
+             [title]="historyTicker ? historyTicker + ' — ' + ('broker.priceHistory' | transloco) : ''"
+             (closed)="closeHistory()">
+    @if (historyTicker !== null) {
+      @if (historyLoading) {
+        <p class="empty">{{ 'broker.loadingHistory' | transloco }}</p>
+      } @else if (historyError) {
+        <p class="asset-error">{{ historyError }}</p>
+      } @else {
+        <app-mini-history-chart [points]="historyPoints"></app-mini-history-chart>
+      }
+    }
+  </app-modal>
+
+  <app-modal [open]="checkoutModalOpen" [title]="'broker.confirmPurchases' | transloco" (closed)="closeCheckout()">
+    <div class="modal-form">
+      <p>{{ 'broker.confirmPurchasesQ' | transloco }}</p>
+      <ul class="checkout-summary">
+        @for (line of cart.items(); track line.ticker) {
+          <li>{{ line.ticker }} <strong>x{{ line.quantity }}</strong></li>
+        }
+      </ul>
+      <div class="modal-actions">
+        <ion-button fill="clear" (click)="closeCheckout()">{{ 'common.cancel' | transloco }}</ion-button>
+        <ion-button color="success" (click)="confirmCheckout()">{{ 'common.confirm' | transloco }}</ion-button>
+      </div>
+    </div>
+  </app-modal>
+</ion-content>

@@ -1,0 +1,221 @@
+<ion-header class="deq-header">
+  <ion-toolbar class="deq-toolbar">
+    <ion-title><app-breadcrumbs [current]="'admin.title' | transloco"></app-breadcrumbs></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="admin-dark-bg">
+  <div class="admin-container">
+
+    <ion-segment [(ngModel)]="tab" class="deq-segment admin-tabs" scrollable>
+      <ion-segment-button value="users">
+        <ion-icon name="people-outline"></ion-icon>
+        <ion-label>{{ 'admin.tabUsers' | transloco }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="assets">
+        <ion-icon name="list-outline"></ion-icon>
+        <ion-label>{{ 'admin.tabAssets' | transloco }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="finance">
+        <ion-icon name="cash-outline"></ion-icon>
+        <ion-label>{{ 'admin.tabFinance' | transloco }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="system">
+        <ion-icon name="settings-outline"></ion-icon>
+        <ion-label>{{ 'admin.tabSystem' | transloco }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    @switch (tab) {
+
+      @case ('users') {
+        <section class="panel widget-box">
+          <h3>{{ 'admin.userManagement' | transloco }}</h3>
+          <ion-list class="deq-list" lines="none">
+            @for (user of users; track user.id) {
+              <ion-item class="deq-item">
+                <ion-label>
+                  <h2>{{ user.name }}</h2>
+                  <p>{{ user.email }}</p>
+                </ion-label>
+                <ion-badge slot="end" class="deq-badge">{{ user.role }}</ion-badge>
+                <ion-button slot="end" fill="clear" color="danger" (click)="deleteUser(user.id)">
+                  <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                </ion-button>
+              </ion-item>
+            }
+          </ion-list>
+        </section>
+      }
+
+      @case ('assets') {
+        <div class="two-col">
+
+          <section class="panel widget-box">
+            <div class="panel-head">
+              <h3>{{ 'admin.assetList' | transloco }}</h3>
+              <ion-badge class="deq-badge count-badge">{{ filteredAssets.length }}</ion-badge>
+            </div>
+
+            <div class="search-box">
+              <ion-icon name="search-outline"></ion-icon>
+              <input type="text" [(ngModel)]="assetSearch" (ngModelChange)="onAssetSearch()"
+                     [placeholder]="'admin.searchAssets' | transloco" />
+            </div>
+
+            @if (assetError) {
+              <p class="asset-error">{{ assetError }}</p>
+            }
+
+            <ion-list class="deq-list" lines="none">
+              @if (loadingAssets) {
+                <ion-item class="deq-item"><ion-label class="empty">{{ 'admin.loading' | transloco }}</ion-label></ion-item>
+              } @else {
+                @for (asset of pagedAssets; track asset.ticker) {
+                  <ion-item class="deq-item">
+                    <ion-label>
+                      <h2>{{ asset.ticker }}</h2>
+                      <p>{{ asset.name }}</p>
+                    </ion-label>
+                    <ion-badge slot="end" class="deq-badge">{{ asset.price.toFixed(2) }} {{ asset.currency }}</ion-badge>
+                    <ion-button slot="end" fill="clear" color="danger" (click)="deleteAsset(asset.ticker)">
+                      <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                } @empty {
+                  <ion-item class="deq-item"><ion-label class="empty">{{ 'admin.noAssets' | transloco }}</ion-label></ion-item>
+                }
+              }
+            </ion-list>
+
+            <div class="asset-pager">
+              <ion-button fill="clear" [disabled]="assetPage === 0" (click)="prevPage()">
+                <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+              </ion-button>
+              <span class="pager-label">{{ assetPage + 1 }} / {{ totalPages }}</span>
+              <ion-button fill="clear" [disabled]="assetPage >= totalPages - 1" (click)="nextPage()">
+                <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" class="pager-refresh" (click)="loadAssets()">
+                <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+              </ion-button>
+            </div>
+          </section>
+
+          <div class="side-stack">
+            <section class="panel widget-box">
+              <h3>{{ 'admin.newAsset' | transloco }}</h3>
+              <ion-list class="deq-list" lines="none">
+                <ion-item class="deq-item">
+                  <ion-input [label]="'admin.ticker' | transloco" labelPlacement="stacked"
+                             [placeholder]="'admin.tickerPlaceholder' | transloco" [(ngModel)]="newTicker"></ion-input>
+                </ion-item>
+              </ion-list>
+              @if (newTickerError) { <p class="field-error">{{ newTickerError }}</p> }
+              <ion-button expand="block" color="primary" [disabled]="addingAsset" (click)="createAsset()">
+                {{ (addingAsset ? 'admin.searching' : 'admin.searchAdd') | transloco }}
+              </ion-button>
+              <p class="seed-hint">{{ 'admin.seedHint' | transloco }}</p>
+              <ion-button expand="block" fill="outline" [disabled]="seeding" (click)="seedPool()">
+                <ion-icon slot="start" name="cloud-download-outline"></ion-icon>
+                {{ (seeding ? 'admin.seeding' : 'admin.seedBtn') | transloco }}
+              </ion-button>
+              @if (seedMsg) { <p class="seed-msg">{{ seedMsg }}</p> }
+            </section>
+
+            <section class="panel widget-box">
+              <h3>{{ 'admin.assetHistory' | transloco }}</h3>
+              <ion-list class="deq-list" lines="none">
+                @for (ev of stackedEvents; track ev.ticker + ev.action) {
+                  <ion-item class="deq-item">
+                    <ion-badge slot="start" class="evt-badge" [class.add]="ev.action === 'add'"
+                               [class.remove]="ev.action === 'remove'">
+                      {{ (ev.action === 'add' ? 'admin.evtAdd' : 'admin.evtRemove') | transloco }}
+                    </ion-badge>
+                    <ion-label>
+                      <h2>{{ ev.ticker }}</h2>
+                      <p>{{ ev.actor }} &middot; {{ ev.createdAt | date: 'dd/MM HH:mm' }}</p>
+                    </ion-label>
+                    @if (ev.count > 1) {
+                      <ion-badge slot="end" class="deq-badge stack-count">&times;{{ ev.count }}</ion-badge>
+                    }
+                  </ion-item>
+                } @empty {
+                  <ion-item class="deq-item"><ion-label class="empty">{{ 'admin.noAssetEvents' | transloco }}</ion-label></ion-item>
+                }
+              </ion-list>
+            </section>
+          </div>
+        </div>
+      }
+
+      @case ('finance') {
+        <section class="panel widget-box">
+          <h3>{{ 'admin.appCredit' | transloco }}</h3>
+          <ion-list class="deq-list" lines="none">
+            <ion-item class="deq-item">
+              <ion-label>{{ 'admin.revenueTotal' | transloco }}</ion-label>
+              <ion-badge slot="end" class="deq-badge deq-badge-success">€{{ revenue.total.toFixed(2) }}</ion-badge>
+            </ion-item>
+            <ion-item class="deq-item">
+              <ion-label>{{ 'admin.revenuePremium' | transloco }}</ion-label>
+              <ion-badge slot="end" class="deq-badge">€{{ revenue.premium.toFixed(2) }}</ion-badge>
+            </ion-item>
+            <ion-item class="deq-item">
+              <ion-label>{{ 'admin.revenueFees' | transloco }}</ion-label>
+              <ion-badge slot="end" class="deq-badge">€{{ revenue.fees.toFixed(2) }}</ion-badge>
+            </ion-item>
+          </ion-list>
+        </section>
+      }
+
+      @case ('system') {
+        <div class="two-col">
+          <section class="panel widget-box">
+            <h3>{{ 'admin.systemStatus' | transloco }}</h3>
+            <ion-list class="deq-list" lines="none">
+              <ion-item class="deq-item">
+                <ion-label>{{ 'admin.uptime' | transloco }}</ion-label>
+                <ion-badge slot="end" class="deq-badge deq-badge-success">99.9%</ion-badge>
+              </ion-item>
+              <ion-item class="deq-item">
+                <ion-label>{{ 'admin.activeUsers' | transloco }}</ion-label>
+                <ion-badge slot="end" class="deq-badge">{{ users.length }}</ion-badge>
+              </ion-item>
+              <ion-item class="deq-item">
+                <ion-label>{{ 'admin.marketAssets' | transloco }}</ion-label>
+                <ion-badge slot="end" class="deq-badge">{{ marketAssets.length }}</ion-badge>
+              </ion-item>
+            </ion-list>
+          </section>
+
+          <section class="panel widget-box clock-panel">
+            <h3>{{ 'admin.autoUpdate' | transloco }}</h3>
+            <div class="clock">
+              <svg viewBox="0 0 100 100" class="clock-ring">
+                <circle cx="50" cy="50" r="42" class="ring-track" />
+                <circle cx="50" cy="50" r="42" class="ring-progress" [style.stroke-dashoffset]="ringOffset" />
+              </svg>
+              <div class="clock-center">
+                <span class="clock-time">{{ countdownLabel }}</span>
+                <span class="clock-sub">{{ 'admin.nextUpdate' | transloco }}</span>
+              </div>
+            </div>
+            <p class="clock-meta">
+              {{ 'admin.autoEvery' | transloco: { minutes: market?.intervalMinutes ?? 20 } }}
+            </p>
+            <p class="clock-meta">
+              {{ 'admin.lastUpdate' | transloco }}:
+              {{ market?.lastUpdate ? (market!.lastUpdate | date: 'dd/MM HH:mm:ss') : ('admin.never' | transloco) }}
+            </p>
+            <ion-button expand="block" fill="outline" [disabled]="refreshingMarket" (click)="refreshMarket()">
+              <ion-icon slot="start" name="sync-outline"></ion-icon>
+              {{ (refreshingMarket ? 'admin.refreshing' : 'admin.refreshNow') | transloco }}
+            </ion-button>
+          </section>
+        </div>
+      }
+    }
+
+  </div>
+</ion-content>

@@ -1,0 +1,27 @@
+<div class="cp">
+  <button type="button" class="cp-swatch" (click)="toggle($event)" title="Colore e trasparenza">
+    <span class="cp-fill" [style.background]="preview"></span>
+  </button>
+
+  @if (open) {
+    <div class="cp-pop" (click)="$event.stopPropagation()">
+      <div class="cp-line">
+        <input type="color" class="cp-native" [ngModel]="hex" (ngModelChange)="setColor($event)" />
+        <span class="cp-hex">{{ hex }}</span>
+      </div>
+
+      <div class="cp-line cp-alpha-head">
+        <span class="cp-tag">Trasparenza</span>
+        <span class="cp-val">{{ alpha }}%</span>
+      </div>
+
+      <div class="cp-alpha-wrap">
+        <span class="cp-alpha-grad" [style.background]="alphaGradient"></span>
+        <input type="range" min="0" max="100" class="cp-alpha"
+               [ngModel]="alpha" (ngModelChange)="setAlpha($event)" />
+      </div>
+
+      <button type="button" class="cp-reset" (click)="reset()">Ripristina</button>
+    </div>
+  }
+</div>
