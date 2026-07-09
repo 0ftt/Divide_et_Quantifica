@@ -449,6 +449,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
       tabs?: Array<Partial<TabData> & { widgets?: WidgetData[] }>;
     };
     if (!s || !Array.isArray(s.tabs) || !s.tabs.length) {
+      this.resetWorkspaceToDefault();
       return;
     }
     this.tabsList = s.tabs.map((t) => ({
@@ -468,19 +469,31 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     this.loadCameraFromTab(this.activeTab);
   }
 
+  private resetWorkspaceToDefault(): void {
+    this.tabsMenuOpen = false;
+    this.renamingTabId = null;
+    this.inspectorOpen = false;
+    this.isDrawerOpen = false;
+    this.widgetService.deselectWidget();
+    this.tabsList = [
+      {
+        id: `tab-${Date.now()}`,
+        name: 'Board 1',
+        active: true,
+        maxZIndex: 10,
+        cameraX: 0,
+        cameraY: 0,
+        cameraZoom: 1,
+        deletedWidgets: [],
+        widgets: [],
+      },
+    ];
+    this.loadCameraFromTab(this.activeTab);
+  }
+
   private loadWorkspace(): void {
-    if (this.isOfflineSession()) {
-      const raw = localStorage.getItem('deq-workspace');
-      if (raw) {
-        try {
-          this.restoreWorkspace(JSON.parse(raw));
-        } catch {
-                  }
-      }
-      this.lastSavedJson = JSON.stringify(this.serializeWorkspace());
-      this.startAutosave();
-      return;
-    }
+    this.stopAutosave();
+    this.resetWorkspaceToDefault();
     this.workspaceService.get().subscribe({
       next: (res) => {
         this.restoreWorkspace(res.state);
@@ -499,6 +512,13 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     this.autosaveTimer = setInterval(() => this.flushWorkspace(), 5000);
+  }
+
+  private stopAutosave(): void {
+    if (this.autosaveTimer) {
+      clearInterval(this.autosaveTimer);
+      this.autosaveTimer = undefined;
+    }
   }
 
   private flushWorkspace(): void {
