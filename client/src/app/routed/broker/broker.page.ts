@@ -16,6 +16,7 @@ import {
   IonItem,
   IonInput,
   IonBadge,
+  ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -135,6 +136,7 @@ export class BrokerPage implements OnInit {
   private widgetService = inject(WidgetService);
   private txService = inject(TransactionService);
   private transloco = inject(TranslocoService);
+  private toastCtrl = inject(ToastController);
   credit = 0;
 
   constructor(private router: Router, private marketService: MarketService) {
@@ -240,6 +242,19 @@ export class BrokerPage implements OnInit {
     this.router.navigate(['/dashboard']);
   }
 
+  private async showOrderError(err: unknown): Promise<void> {
+    const message =
+      (err as { error?: { error?: string } })?.error?.error ||
+      this.transloco.translate('broker.orderFailed');
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 3000,
+      color: 'danger',
+      position: 'top',
+    });
+    await toast.present();
+  }
+
   quickBuy(ticker: string): void {
     const price = this.assets.find((a) => a.ticker === ticker)?.price ?? 0;
     this.portfolioService.buy({ ticker, quantity: 1 }).subscribe({
@@ -247,7 +262,7 @@ export class BrokerPage implements OnInit {
         this.recordFee(price);
         this.loadPortfolio();
       },
-      error: () => undefined,
+      error: (err) => this.showOrderError(err),
     });
   }
 
@@ -258,7 +273,7 @@ export class BrokerPage implements OnInit {
         this.recordFee(price);
         this.loadPortfolio();
       },
-      error: () => undefined,
+      error: (err) => this.showOrderError(err),
     });
   }
 
@@ -366,6 +381,7 @@ export class BrokerPage implements OnInit {
       },
       error: (err) => {
         this.orderError = err?.error?.error || this.transloco.translate('broker.orderFailed');
+        this.showOrderError(err);
       },
     });
   }
@@ -465,7 +481,10 @@ export class BrokerPage implements OnInit {
         }
         this.loadPortfolio();
       },
-      error: () => this.loadPortfolio(),
+      error: (err) => {
+        this.showOrderError(err);
+        this.loadPortfolio();
+      },
     });
     this.cart.clear();
     this.checkoutModalOpen = false;
