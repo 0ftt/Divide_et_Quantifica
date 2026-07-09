@@ -9,4 +9,4 @@ export const tickerSchema = z
   .max(15)
   .regex(/^[A-Za-z0-9.\-]+$/);
 
-export const rechargeAmountSchema = z.coerce.number().positive().max(100000);
+export const rechargeAmountSchema = z.coerce.number().positive();

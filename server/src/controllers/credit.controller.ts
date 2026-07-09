@@ -4,7 +4,7 @@ import { query, queryOne } from '../db/pool';
 import { processMockCharge } from '../services/stripe-mock.service';
 
 const rechargeSchema = z.object({
-  amount: z.number().positive().max(100000),
+  amount: z.number().positive(),
 });
 
 export async function rechargeCredit(req: Request, res: Response): Promise<void> {

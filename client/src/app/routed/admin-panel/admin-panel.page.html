@@ -20,32 +20,69 @@
         <ion-icon name="cash-outline"></ion-icon>
         <ion-label>{{ 'admin.tabFinance' | transloco }}</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="system">
-        <ion-icon name="settings-outline"></ion-icon>
-        <ion-label>{{ 'admin.tabSystem' | transloco }}</ion-label>
-      </ion-segment-button>
     </ion-segment>
 
     @switch (tab) {
 
       @case ('users') {
-        <section class="panel widget-box">
-          <h3>{{ 'admin.userManagement' | transloco }}</h3>
-          <ion-list class="deq-list" lines="none">
-            @for (user of users; track user.id) {
-              <ion-item class="deq-item">
-                <ion-label>
-                  <h2>{{ user.name }}</h2>
-                  <p>{{ user.email }}</p>
-                </ion-label>
-                <ion-badge slot="end" class="deq-badge">{{ user.role }}</ion-badge>
-                <ion-button slot="end" fill="clear" color="danger" (click)="deleteUser(user.id)">
-                  <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-                </ion-button>
-              </ion-item>
-            }
-          </ion-list>
-        </section>
+        <div class="two-col">
+          <section class="panel widget-box">
+            <div class="panel-head">
+              <h3>{{ 'admin.userManagement' | transloco }}</h3>
+              <ion-badge class="deq-badge count-badge">{{ users.length }}</ion-badge>
+            </div>
+            @if (userError) { <p class="asset-error">{{ userError }}</p> }
+            <ion-list class="deq-list" lines="none">
+              @if (usersLoading) {
+                <ion-item class="deq-item"><ion-label class="empty">{{ 'admin.loading' | transloco }}</ion-label></ion-item>
+              } @else {
+                @for (user of users; track user.id) {
+                  <ion-item class="deq-item">
+                    <ion-label>
+                      <h2>{{ user.displayName }}</h2>
+                      <p>{{ user.email }} &middot; €{{ user.credit.toFixed(2) }}</p>
+                    </ion-label>
+                    @if (user.isPremium) {
+                      <ion-badge slot="end" class="deq-badge deq-badge-success">Premium</ion-badge>
+                    }
+                    <ion-badge slot="end" class="deq-badge">{{ (user.role === 'admin' ? 'admin.roleAdmin' : 'admin.roleUser') | transloco }}</ion-badge>
+                    <ion-button slot="end" fill="clear" color="danger" [disabled]="user.role === 'admin'"
+                                (click)="deleteUser(user.id)">
+                      <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                } @empty {
+                  <ion-item class="deq-item"><ion-label class="empty">{{ 'admin.noUsers' | transloco }}</ion-label></ion-item>
+                }
+              }
+            </ion-list>
+          </section>
+
+          <section class="panel widget-box clock-panel">
+            <h3>{{ 'admin.autoUpdate' | transloco }}</h3>
+            <div class="clock">
+              <svg viewBox="0 0 100 100" class="clock-ring">
+                <circle cx="50" cy="50" r="42" class="ring-track" />
+                <circle cx="50" cy="50" r="42" class="ring-progress" [style.stroke-dashoffset]="ringOffset" />
+              </svg>
+              <div class="clock-center">
+                <span class="clock-time">{{ countdownLabel }}</span>
+                <span class="clock-sub">{{ 'admin.nextUpdate' | transloco }}</span>
+              </div>
+            </div>
+            <p class="clock-meta">
+              {{ 'admin.autoEvery' | transloco: { minutes: market?.intervalMinutes ?? 20 } }}
+            </p>
+            <p class="clock-meta">
+              {{ 'admin.lastUpdate' | transloco }}:
+              {{ market?.lastUpdate ? (market!.lastUpdate | date: 'dd/MM HH:mm:ss') : ('admin.never' | transloco) }}
+            </p>
+            <ion-button expand="block" fill="outline" [disabled]="refreshingMarket" (click)="refreshMarket()">
+              <ion-icon slot="start" name="sync-outline"></ion-icon>
+              {{ (refreshingMarket ? 'admin.refreshing' : 'admin.refreshNow') | transloco }}
+            </ion-button>
+          </section>
+        </div>
       }
 
       @case ('assets') {
@@ -169,52 +206,6 @@
         </section>
       }
 
-      @case ('system') {
-        <div class="two-col">
-          <section class="panel widget-box">
-            <h3>{{ 'admin.systemStatus' | transloco }}</h3>
-            <ion-list class="deq-list" lines="none">
-              <ion-item class="deq-item">
-                <ion-label>{{ 'admin.uptime' | transloco }}</ion-label>
-                <ion-badge slot="end" class="deq-badge deq-badge-success">99.9%</ion-badge>
-              </ion-item>
-              <ion-item class="deq-item">
-                <ion-label>{{ 'admin.activeUsers' | transloco }}</ion-label>
-                <ion-badge slot="end" class="deq-badge">{{ users.length }}</ion-badge>
-              </ion-item>
-              <ion-item class="deq-item">
-                <ion-label>{{ 'admin.marketAssets' | transloco }}</ion-label>
-                <ion-badge slot="end" class="deq-badge">{{ marketAssets.length }}</ion-badge>
-              </ion-item>
-            </ion-list>
-          </section>
-
-          <section class="panel widget-box clock-panel">
-            <h3>{{ 'admin.autoUpdate' | transloco }}</h3>
-            <div class="clock">
-              <svg viewBox="0 0 100 100" class="clock-ring">
-                <circle cx="50" cy="50" r="42" class="ring-track" />
-                <circle cx="50" cy="50" r="42" class="ring-progress" [style.stroke-dashoffset]="ringOffset" />
-              </svg>
-              <div class="clock-center">
-                <span class="clock-time">{{ countdownLabel }}</span>
-                <span class="clock-sub">{{ 'admin.nextUpdate' | transloco }}</span>
-              </div>
-            </div>
-            <p class="clock-meta">
-              {{ 'admin.autoEvery' | transloco: { minutes: market?.intervalMinutes ?? 20 } }}
-            </p>
-            <p class="clock-meta">
-              {{ 'admin.lastUpdate' | transloco }}:
-              {{ market?.lastUpdate ? (market!.lastUpdate | date: 'dd/MM HH:mm:ss') : ('admin.never' | transloco) }}
-            </p>
-            <ion-button expand="block" fill="outline" [disabled]="refreshingMarket" (click)="refreshMarket()">
-              <ion-icon slot="start" name="sync-outline"></ion-icon>
-              {{ (refreshingMarket ? 'admin.refreshing' : 'admin.refreshNow') | transloco }}
-            </ion-button>
-          </section>
-        </div>
-      }
     }
 
   </div>

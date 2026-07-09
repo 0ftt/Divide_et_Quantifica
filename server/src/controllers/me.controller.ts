@@ -124,3 +124,41 @@ export async function deleteMe(req: Request, res: Response): Promise<void> {
   await query('delete from users where id = $1', [req.user!.sub]);
   res.json({ message: 'Account eliminato.' });
 }
+
+interface AdminUserRow {
+  id: string;
+  email: string;
+  display_name: string;
+  role: 'user' | 'admin';
+  credit: string;
+  is_premium: boolean;
+}
+
+export async function listUsers(_req: Request, res: Response): Promise<void> {
+  const rows = await query<AdminUserRow>(
+    'select id, email, display_name, role, credit, is_premium from users order by role desc, display_name asc',
+  );
+  res.json(
+    rows.map((u) => ({
+      id: u.id,
+      email: u.email,
+      displayName: u.display_name,
+      role: u.role,
+      credit: Number(u.credit),
+      isPremium: u.is_premium || u.role === 'admin',
+    })),
+  );
+}
+
+export async function adminDeleteUser(req: Request, res: Response): Promise<void> {
+  const id = req.params.id;
+  if (id === req.user!.sub) {
+    throw new AppError(400, 'Non puoi eliminare il tuo account da qui.');
+  }
+  const existing = await queryOne<{ id: string }>('select id from users where id = $1', [id]);
+  if (!existing) {
+    throw new AppError(404, 'Utente non trovato.');
+  }
+  await query('delete from users where id = $1', [id]);
+  res.json({ message: 'Utente eliminato.' });
+}

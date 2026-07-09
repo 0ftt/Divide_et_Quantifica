@@ -23,6 +23,9 @@ api.post('/auth/reset', asyncHandler(auth.reset));
 api.get('/workspace', requireAuth, asyncHandler(workspace.getWorkspace));
 api.put('/workspace', requireAuth, asyncHandler(workspace.saveWorkspace));
 
+api.get('/admin/users', requireAuth, requireAdmin, asyncHandler(me.listUsers));
+api.delete('/admin/users/:id', requireAuth, requireAdmin, asyncHandler(me.adminDeleteUser));
+
 api.get('/me', requireAuth, asyncHandler(me.getMe));
 api.patch('/me', requireAuth, asyncHandler(me.updateMe));
 api.delete('/me', requireAuth, asyncHandler(me.deleteMe));

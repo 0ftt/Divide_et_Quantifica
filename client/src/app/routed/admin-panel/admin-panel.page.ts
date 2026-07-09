@@ -28,7 +28,6 @@ import {
   peopleOutline,
   listOutline,
   cashOutline,
-  settingsOutline,
   searchOutline,
 } from 'ionicons/icons';
 import { BreadcrumbsComponent } from '$components/breadcrumbs/breadcrumbs.component';
@@ -38,14 +37,8 @@ import { AssetService } from '$core/services/asset.service';
 import { CreditService, AppRevenue } from '$core/services/credit.service';
 import { TransactionService, AssetEvent } from '$core/services/transaction.service';
 import { MarketService, MarketStatus } from '$core/services/market.service';
+import { AdminUserService, AdminUser } from '$core/services/admin-user.service';
 import { tickerSchema } from '$core/validation/forms.schema';
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
 
 interface StackedEvent {
   ticker: string;
@@ -83,12 +76,11 @@ interface StackedEvent {
 })
 export class AdminPanelPage implements OnInit, OnDestroy {
 
-  tab: 'users' | 'assets' | 'finance' | 'system' = 'assets';
+  tab: 'users' | 'assets' | 'finance' = 'assets';
 
-  users: User[] = [
-    { id: 1, name: 'Giovanni Luca', email: 'giovanni@unipa.it', role: 'Admin' },
-    { id: 2, name: 'Mario Rossi', email: 'mario@email.it', role: 'User' },
-  ];
+  users: AdminUser[] = [];
+  usersLoading = false;
+  userError: string | null = null;
 
   marketAssets: Asset[] = [];
   loadingAssets = false;
@@ -120,6 +112,7 @@ export class AdminPanelPage implements OnInit, OnDestroy {
     private creditService: CreditService,
     private txService: TransactionService,
     private marketService: MarketService,
+    private adminUserService: AdminUserService,
     private transloco: TranslocoService,
   ) {
     addIcons({
@@ -132,12 +125,12 @@ export class AdminPanelPage implements OnInit, OnDestroy {
       peopleOutline,
       listOutline,
       cashOutline,
-      settingsOutline,
       searchOutline,
     });
   }
 
   ngOnInit(): void {
+    this.loadUsers();
     this.loadAssets();
     this.creditService.getAppRevenue().subscribe({
       next: (r) => (this.revenue = r),
@@ -147,6 +140,21 @@ export class AdminPanelPage implements OnInit, OnDestroy {
     this.loadMarketStatus();
 
     this.clockTimer = setInterval(() => (this.now = Date.now()), 1000);
+  }
+
+  loadUsers(): void {
+    this.usersLoading = true;
+    this.userError = null;
+    this.adminUserService.list().subscribe({
+      next: (users) => {
+        this.users = users;
+        this.usersLoading = false;
+      },
+      error: () => {
+        this.userError = this.transloco.translate('admin.usersLoadError');
+        this.usersLoading = false;
+      },
+    });
   }
 
   ngOnDestroy(): void {
@@ -350,8 +358,16 @@ export class AdminPanelPage implements OnInit, OnDestroy {
     return circumference * (1 - this.progressFraction);
   }
 
-  deleteUser(userId: number): void {
-    this.users = this.users.filter((u) => u.id !== userId);
+  deleteUser(userId: string): void {
+    this.userError = null;
+    this.adminUserService.remove(userId).subscribe({
+      next: () => {
+        this.users = this.users.filter((u) => u.id !== userId);
+      },
+      error: (err) => {
+        this.userError = err?.error?.error || this.transloco.translate('admin.userDeleteError');
+      },
+    });
   }
 
   goBack(): void {

@@ -150,20 +150,39 @@ export async function listAssetEvents(_req: Request, res: Response): Promise<voi
   );
 }
 
-const SEED_TICKERS = [
-  'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'NVDA', 'TSLA', 'BRK-B', 'JPM', 'V',
-  'MA', 'UNH', 'JNJ', 'WMT', 'PG', 'HD', 'XOM', 'CVX', 'KO', 'PEP',
-  'MCD', 'DIS', 'NFLX', 'ADBE', 'CRM', 'INTC', 'AMD', 'CSCO', 'ORCL', 'IBM',
-  'BA', 'NKE', 'PFE', 'ABBV', 'BAC', 'WFC', 'GS', 'COST', 'T', 'VZ',
+const SEED_UNIVERSE = [
+  'AAPL', 'MSFT', 'GOOGL', 'GOOG', 'AMZN', 'META', 'NVDA', 'TSLA', 'BRK-B', 'JPM',
+  'V', 'MA', 'UNH', 'JNJ', 'WMT', 'PG', 'HD', 'XOM', 'CVX', 'KO',
+  'PEP', 'MCD', 'DIS', 'NFLX', 'ADBE', 'CRM', 'INTC', 'AMD', 'CSCO', 'ORCL',
+  'IBM', 'BA', 'NKE', 'PFE', 'ABBV', 'BAC', 'WFC', 'GS', 'COST', 'T',
+  'VZ', 'QCOM', 'TXN', 'AVGO', 'AMAT', 'MU', 'PYPL', 'SQ', 'SHOP', 'UBER',
+  'ABNB', 'SBUX', 'CMCSA', 'PM', 'MDT', 'AMGN', 'HON', 'CAT', 'GE', 'MMM',
+  'LMT', 'RTX', 'DE', 'F', 'GM', 'DAL', 'UAL', 'MAR', 'BKNG', 'LOW',
+  'TGT', 'CVS', 'CI', 'TMO', 'DHR', 'LLY', 'MRK', 'BMY', 'GILD', 'MRNA',
+  'C', 'MS', 'AXP', 'BLK', 'SCHW', 'SPGI', 'NOW', 'SNOW', 'PLTR', 'CRWD',
+  'PANW', 'DDOG', 'NET', 'ZM', 'ROKU', 'SPOT', 'PINS', 'SNAP', 'COIN', 'HOOD',
+  'BABA', 'TSM', 'ASML', 'SAP', 'TM', 'SONY', 'NVO', 'SHEL', 'BP', 'HSBC',
+  'ENEL.MI', 'ENI.MI', 'ISP.MI', 'UCG.MI', 'STLAM.MI', 'RACE.MI', 'G.MI', 'TIT.MI', 'LDO.MI', 'MB.MI',
 ];
 
+const SEED_COUNT = 40;
+
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+
+function pickRandomTickers(count: number): string[] {
+  const pool = [...SEED_UNIVERSE];
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, Math.min(count, pool.length));
+}
 
 export async function seedAssets(req: Request, res: Response): Promise<void> {
   const added: string[] = [];
   const failed: string[] = [];
 
-  for (const ticker of SEED_TICKERS) {
+  for (const ticker of pickRandomTickers(SEED_COUNT)) {
     try {
       const quote = await getQuote(ticker);
       await query(
