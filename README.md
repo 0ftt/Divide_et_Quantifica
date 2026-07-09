@@ -25,25 +25,32 @@ Assicurati di avere installato sul tuo computer:
 1. Clonare il progetto
 Apri il terminale e clona la repository sul tuo computer:
 
-Bash
+```Bash
 git clone [https://github.com/0ftt/Divide_et_Quantifica.git](https://github.com/0ftt/Divide_et_Quantifica.git)
 cd Divide_et_Quantifica
+```
+
 2. Avviare il Server (Backend)
 Apri il terminale nella cartella del server e digita:
 
-Bash
+```Bash
 cd server
 npm install
-npm run dev
+npm run dev o npm run start
+```
+
 Il server si avvierà in modalità di sviluppo tramite tsx (di default sulla porta configurata nel file .env).
 
 3. Avviare il Client (Frontend)
 Apri un nuovo terminale sempre nella cartella principale del progetto e digita:
 
-Bash
+```Bash
 cd client
 npm install
-ionic serve
+ionic serve o ionic serve --external
+```
+
+Utilizzare --external permette al frontend di essere accessibile tramite la rete a cui è allacciato il pc. Utile per testare su mobile.
 L'applicazione aprirà automaticamente una scheda nel tuo browser (di default su http://localhost:8100).
 
 📊 Schema dei Dati
