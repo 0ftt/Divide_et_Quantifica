@@ -23,6 +23,7 @@ import {
   chatbubbleOutline,
   cartOutline,
   personCircleOutline,
+  trashOutline,
 } from 'ionicons/icons';
 import { BreadcrumbsComponent } from '$components/breadcrumbs/breadcrumbs.component';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -98,6 +99,7 @@ export class LeaderboardPage implements OnInit {
       chatbubbleOutline,
       cartOutline,
       personCircleOutline,
+      trashOutline,
     });
   }
 
@@ -133,9 +135,23 @@ export class LeaderboardPage implements OnInit {
         });
         this.loadLeaderboard();
       },
-      error: () => {
+      error: (err) => {
         this.sharing = false;
-        this.feedback = this.transloco.translate('leaderboard.shareError');
+        this.feedback = err?.error?.error || this.transloco.translate('leaderboard.shareError');
+      },
+    });
+  }
+
+  unshare(entry: LeaderboardEntry, event: MouseEvent): void {
+    event.stopPropagation();
+    this.feedback = null;
+    this.leaderboardService.unshare(entry.label).subscribe({
+      next: () => {
+        this.feedback = this.transloco.translate('leaderboard.unshared');
+        this.loadLeaderboard();
+      },
+      error: () => {
+        this.feedback = this.transloco.translate('leaderboard.unshareError');
       },
     });
   }

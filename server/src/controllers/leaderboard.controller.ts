@@ -89,11 +89,13 @@ export async function shareScore(req: Request, res: Response): Promise<void> {
   const rows = await query<LeaderboardRow>(
     `insert into leaderboard_entries (user_id, display_name, label, score, shared_at)
      values ($1, $2, $3, $4, now())
-     on conflict (user_id, label)
-     do update set display_name = excluded.display_name, score = excluded.score, shared_at = now()
+     on conflict (user_id, label) do nothing
      returning user_id, display_name, label, score, shared_at`,
     [userId, displayName, entryLabel, score],
   );
+  if (!rows.length) {
+    throw new AppError(409, `Hai già condiviso una scheda chiamata "${entryLabel}". Rescindila prima di ricondividerla.`);
+  }
   const saved = rows[0];
 
   await query('insert into leaderboard_history (user_id, score, shared_at) values ($1, $2, now())', [
@@ -120,6 +122,15 @@ export async function shareScore(req: Request, res: Response): Promise<void> {
       isMe: true,
     },
   });
+}
+
+const unshareSchema = z.object({ label: z.string().max(40) });
+
+export async function unshareScore(req: Request, res: Response): Promise<void> {
+  const userId = req.user!.sub;
+  const { label } = unshareSchema.parse(req.body ?? {});
+  await query('delete from leaderboard_entries where user_id = $1 and label = $2', [userId, label]);
+  res.json({ ok: true });
 }
 
 export async function getHistory(req: Request, res: Response): Promise<void> {

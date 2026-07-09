@@ -23,6 +23,10 @@ export class LeaderboardService {
     return this.http.post<ShareScoreResult>(`${this.base}/leaderboard/share`, { label });
   }
 
+  unshare(label: string): Observable<{ ok: boolean }> {
+    return this.http.delete<{ ok: boolean }>(`${this.base}/leaderboard/share`, { body: { label } });
+  }
+
   getHistory(userId: string): Observable<{ points: LeaderboardHistoryPoint[] }> {
     return this.http.get<{ points: LeaderboardHistoryPoint[] }>(
       `${this.base}/leaderboard/${userId}/history`,

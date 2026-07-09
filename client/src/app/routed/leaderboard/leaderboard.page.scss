@@ -108,6 +108,10 @@
       --color: var(--deq-accent-neon);
     }
   }
+
+  .row-action-danger:hover {
+    --color: var(--ion-color-danger, #eb445a);
+  }
 }
 
 .empty {

@@ -57,6 +57,12 @@
                         (click)="openAddToCart(entry, $event)">
               <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
             </ion-button>
+            @if (entry.isMe) {
+              <ion-button slot="end" fill="clear" class="row-action row-action-danger" [title]="'leaderboard.unshare' | transloco"
+                          (click)="unshare(entry, $event)">
+                <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+              </ion-button>
+            }
           </ion-item>
         } @empty {
           <ion-item class="deq-item">

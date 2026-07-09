@@ -56,6 +56,7 @@ api.post('/portfolio/sell', requireAuth, asyncHandler(portfolio.sell));
 
 api.get('/leaderboard', requireAuth, asyncHandler(leaderboard.listLeaderboard));
 api.post('/leaderboard/share', requireAuth, asyncHandler(leaderboard.shareScore));
+api.delete('/leaderboard/share', requireAuth, asyncHandler(leaderboard.unshareScore));
 api.get('/leaderboard/:userId/history', requireAuth, asyncHandler(leaderboard.getHistory));
 api.get('/leaderboard/:userId/reviews', requireAuth, asyncHandler(leaderboard.listReviews));
 api.post('/leaderboard/:userId/reviews', requireAuth, asyncHandler(leaderboard.addReview));
