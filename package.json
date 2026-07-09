@@ -10,5 +10,8 @@
     "build:server": "npm --prefix server run build",
     "migrate": "npm --prefix server run migrate",
     "install:all": "npm --prefix client install && npm --prefix server install"
+  },
+  "dependencies": {
+    "texlive": "^1.2.0"
   }
 }

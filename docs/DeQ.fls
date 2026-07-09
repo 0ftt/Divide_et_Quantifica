@@ -1,0 +1,7 @@
+PWD m:\DeQ\ionic\Divide_et_Quantifica\docs
+INPUT C:\Users\giang\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
+INPUT m:\DeQ\ionic\Divide_et_Quantifica\docs\DeQ.tex
+OUTPUT DeQ.log
+INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx10.tfm
+INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmss10.tfm
+INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmssbx10.tfm
