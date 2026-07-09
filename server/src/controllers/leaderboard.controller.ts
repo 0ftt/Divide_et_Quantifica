@@ -12,8 +12,8 @@ interface LeaderboardRow {
 }
 
 interface LeaderboardGainRow extends LeaderboardRow {
-  credit: string;
   invested: string | null;
+  cost_basis: string | null;
   avatar_data_url: string | null;
 }
 
@@ -25,19 +25,21 @@ export async function listLeaderboard(req: Request, res: Response): Promise<void
 
   const rows = await query<LeaderboardGainRow>(
     `select le.user_id, le.display_name, le.label, le.score, le.shared_at,
-            u.credit, u.avatar_data_url,
+            u.avatar_data_url,
             coalesce((select sum(h.quantity * a.last_price)
                         from holdings h
                         join assets a on a.ticker = h.ticker
-                       where h.user_id = le.user_id), 0) as invested
+                       where h.user_id = le.user_id), 0) as invested,
+            coalesce((select sum(h.quantity * h.avg_price)
+                        from holdings h
+                       where h.user_id = le.user_id), 0) as cost_basis
        from leaderboard_entries le
        join users u on u.id = le.user_id`,
   );
 
   const entries = rows
     .map((r) => {
-      const current = Number(r.credit) + Number(r.invested ?? 0);
-      const gain = +(current - Number(r.score)).toFixed(2);
+      const gain = +(Number(r.invested ?? 0) - Number(r.cost_basis ?? 0)).toFixed(2);
       return {
         rank: 0,
         userId: r.user_id,
@@ -69,14 +71,17 @@ export async function shareScore(req: Request, res: Response): Promise<void> {
     throw new AppError(404, 'Utente non trovato.');
   }
 
-  const investedRow = await queryOne<{ invested: string | null }>(
-    `select sum(h.quantity * a.last_price) as invested
+  const investedRow = await queryOne<{ invested: string | null; cost_basis: string | null }>(
+    `select sum(h.quantity * a.last_price) as invested,
+            sum(h.quantity * h.avg_price) as cost_basis
        from holdings h
        join assets a on a.ticker = h.ticker
       where h.user_id = $1`,
     [userId],
   );
   const invested = Number(investedRow?.invested ?? 0);
+  const costBasis = Number(investedRow?.cost_basis ?? 0);
+  const gain = +(invested - costBasis).toFixed(2);
   const score = +(Number(user.credit) + invested).toFixed(2);
   const displayName = user.display_name || 'Trader anonimo';
   const entryLabel = (label && label.trim()) || 'Principale';
@@ -110,7 +115,7 @@ export async function shareScore(req: Request, res: Response): Promise<void> {
       label: saved.label,
       avatarDataUrl: user.avatar_data_url,
       score: Number(saved.score),
-      gain: 0,
+      gain,
       sharedAt: saved.shared_at,
       isMe: true,
     },
