@@ -122,21 +122,6 @@
                 </ion-button>
               </div>
 
-              @if (isAdmin) {
-                <div class="add-listing">
-                  <h4>{{ 'stocks.adminAdd' | transloco }}</h4>
-                  <ion-item class="deq-item" lines="none">
-                    <ion-input [label]="'stocks.ticker' | transloco" labelPlacement="stacked"
-                               [placeholder]="'stocks.tickerPlaceholder' | transloco" [(ngModel)]="newTicker"></ion-input>
-                  </ion-item>
-                  @if (addError) {
-                    <p class="field-error">{{ addError }}</p>
-                  }
-                  <ion-button expand="block" color="primary" [disabled]="adding" (click)="addAsset()">
-                    {{ (adding ? 'stocks.adding' : 'stocks.searchAdd') | transloco }}
-                  </ion-button>
-                </div>
-              }
             </div>
           </div>
 
@@ -152,6 +137,18 @@
                   <ion-item class="deq-item">
                     <ion-label>{{ holding.ticker }}</ion-label>
                     <ion-badge slot="end" class="deq-badge">{{ holding.quantity }}</ion-badge>
+                    <ion-button slot="end" fill="clear" size="small" class="inv-buy" [title]="'broker.buy' | transloco"
+                                (click)="quickBuy(holding.ticker)">
+                      <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button slot="end" fill="clear" size="small" class="inv-sell" [title]="'broker.sell' | transloco"
+                                (click)="quickSell(holding.ticker)">
+                      <ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button slot="end" fill="clear" size="small" class="inv-cart" [title]="'broker.addToCart' | transloco"
+                                (click)="addToCart(holding.ticker, $event)">
+                      <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
+                    </ion-button>
                   </ion-item>
                 } @empty {
                   <ion-item class="deq-item">

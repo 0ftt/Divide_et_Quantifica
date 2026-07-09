@@ -82,6 +82,11 @@
 .cart-add-btn:hover { --color: var(--deq-success); }
 .place-btn:hover { --color: var(--deq-success); }
 
+.inv-buy { --color: var(--deq-success); }
+.inv-sell { --color: var(--deq-error); }
+.inv-cart { --color: var(--deq-text-muted); }
+.inv-cart:hover { --color: var(--deq-accent-neon); }
+
 .listino-head {
   display: flex;
   align-items: center;

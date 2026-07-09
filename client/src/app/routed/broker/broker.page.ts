@@ -23,6 +23,7 @@ import {
   trashOutline,
   cartOutline,
   addCircleOutline,
+  removeCircleOutline,
   refreshOutline,
   pulseOutline,
   searchOutline,
@@ -35,7 +36,7 @@ import { BreadcrumbsComponent } from '$components/breadcrumbs/breadcrumbs.compon
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { forkJoin } from 'rxjs';
 import { Asset, Candle, OrderRequest } from '$shared';
-import { quantitySchema, tickerSchema } from '$core/validation/forms.schema';
+import { quantitySchema } from '$core/validation/forms.schema';
 import { MarketService } from '$core/services/market.service';
 import { AssetService } from '$core/services/asset.service';
 import { PortfolioService } from '$core/services/portfolio.service';
@@ -106,10 +107,6 @@ export class BrokerPage implements OnInit {
   page = 0;
   readonly pageSize = 8;
 
-  newTicker = '';
-  adding = false;
-  addError: string | null = null;
-
   inventory: Holding[] = [];
 
   transactions: Transaction[] = [];
@@ -146,6 +143,7 @@ export class BrokerPage implements OnInit {
       trashOutline,
       cartOutline,
       addCircleOutline,
+      removeCircleOutline,
       refreshOutline,
       pulseOutline,
       searchOutline,
@@ -242,28 +240,25 @@ export class BrokerPage implements OnInit {
     this.router.navigate(['/dashboard']);
   }
 
-  addAsset(): void {
-    this.addError = null;
-    if (this.adding) {
-      return;
-    }
-    const parsed = tickerSchema.safeParse(this.newTicker);
-    if (!parsed.success) {
-      this.addError = this.transloco.translate('stocks.tickerInvalid');
-      return;
-    }
-    const ticker = parsed.data;
-    this.adding = true;
-    this.assetService.add(ticker).subscribe({
+  quickBuy(ticker: string): void {
+    const price = this.assets.find((a) => a.ticker === ticker)?.price ?? 0;
+    this.portfolioService.buy({ ticker, quantity: 1 }).subscribe({
       next: () => {
-        this.newTicker = '';
-        this.adding = false;
-        this.loadAssets();
+        this.recordFee(price);
+        this.loadPortfolio();
       },
-      error: () => {
-        this.addError = this.transloco.translate('stocks.addError', { ticker });
-        this.adding = false;
+      error: () => undefined,
+    });
+  }
+
+  quickSell(ticker: string): void {
+    const price = this.assets.find((a) => a.ticker === ticker)?.price ?? 0;
+    this.portfolioService.sell({ ticker, quantity: 1 }).subscribe({
+      next: () => {
+        this.recordFee(price);
+        this.loadPortfolio();
       },
+      error: () => undefined,
     });
   }
 
