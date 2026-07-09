@@ -51,7 +51,7 @@ ionic serve o ionic serve --external
 ```
 
 Utilizzare --external permette al frontend di essere accessibile tramite la rete a cui è allacciato il pc. Utile per testare su mobile.
-L'applicazione aprirà automaticamente una scheda nel tuo browser (di default su http://localhost:8100).
+L'applicazione aprirà automaticamente una scheda nel tuo browser (di default su http://localhost:8100 o anche http://localhost:4200).
 
 📊 Schema dei Dati
 L'infrastruttura di persistenza è modellata su PostgreSQL. Oltre al link esterno alla board visuale su DrawSQL, di seguito è riportato lo schema logico e relazionale del database.
