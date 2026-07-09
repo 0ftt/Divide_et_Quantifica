@@ -49,7 +49,7 @@ L'applicazione aprirà automaticamente una scheda nel tuo browser (di default su
 📊 Schema dei Dati
 L'infrastruttura di persistenza è modellata su PostgreSQL. Oltre al link esterno alla board visuale su DrawSQL, di seguito è riportato lo schema logico e relazionale del database.
 
-Snippet di codice
+```mermaid
 erDiagram
     users ||--o{ holdings : possiede
     users ||--o{ transactions : registra
@@ -185,6 +185,8 @@ erDiagram
         numeric price
         timestamptz recorded_at
     }
+```
+
 🔑 Legenda Relazioni e Vincoli
 Propagazione Eliminazioni (ON DELETE CASCADE): Eliminando un utente dalla tabella users, vengono eliminati a cascata i record associati in holdings, transactions, workspaces, leaderboard_entries, leaderboard_history, password_resets e leaderboard_reviews (sia come autore che come utente recensito). L'eliminazione di un asset distrugge le relative holdings.
 
