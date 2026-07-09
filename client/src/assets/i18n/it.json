@@ -39,7 +39,10 @@
     "recoverInfo": "Se l'account esiste, riceverai via email le istruzioni per il recupero. (funzione dimostrativa)",
     "failed": "Autenticazione fallita. Riprova.",
     "invalidEmail": "Inserisci un'email valida.",
-    "weakPassword": "La password deve avere almeno 6 caratteri."
+    "weakPassword": "La password deve avere almeno 6 caratteri.",
+    "confirmPassword": "Ripeti password",
+    "confirmPasswordPlaceholder": "Reinserisci la password",
+    "passwordMismatch": "Le password non coincidono."
   },
   "nav": {
     "dashboard": "Dashboard",

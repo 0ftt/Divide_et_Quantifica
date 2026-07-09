@@ -120,6 +120,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
 
   email = '';
   password = '';
+  confirmPassword = '';
   nomeUtente = 'Giovanni Luca';
   passwordErrata = false;
   isUserPremium = false;
@@ -304,6 +305,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     this.authMode = mode;
     this.authError = null;
     this.recoverSent = false;
+    this.confirmPassword = '';
   }
 
   submitAuth(): void {
@@ -372,6 +374,10 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
 
   private doRegister(): void {
     if (!this.email || !this.password) {
+      return;
+    }
+    if (this.password !== this.confirmPassword) {
+      this.authError = this.transloco.translate('auth.passwordMismatch');
       return;
     }
     const parsed = registerSchema.safeParse({

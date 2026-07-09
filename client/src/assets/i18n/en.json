@@ -39,7 +39,10 @@
     "recoverInfo": "If the account exists, you will receive recovery instructions by email. (demo feature)",
     "failed": "Authentication failed. Please try again.",
     "invalidEmail": "Enter a valid email address.",
-    "weakPassword": "Password must be at least 6 characters."
+    "weakPassword": "Password must be at least 6 characters.",
+    "confirmPassword": "Repeat password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "passwordMismatch": "Passwords do not match."
   },
   "nav": {
     "dashboard": "Dashboard",
