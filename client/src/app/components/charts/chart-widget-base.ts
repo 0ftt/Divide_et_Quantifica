@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import * as echarts from 'echarts';
 import { TranslocoService } from '@jsverse/transloco';
-import { WidgetData, isChartWidget } from '$core/models/widget.model';
+import { WidgetData } from '$core/models/widget.model';
 import { MarketService } from '$core/services/market.service';
 import { Candle, generateCandles } from '$core/charts/chart-data';
 
@@ -93,8 +93,7 @@ export abstract class ChartWidgetBase implements AfterViewInit, OnDestroy, DoChe
             out.add(t.toUpperCase());
           }
         }
-      } else if (w.type === 'connectionHub' || isChartWidget(w)) {
-
+      } else if (w.type === 'connectionHub') {
         for (const sid of w.connectedIDs ?? []) {
           collect(this.allWidgets.find((x) => x.id === sid));
         }

@@ -72,7 +72,7 @@ export class WidgetService {
       return { consumer: b, source: a };
     }
 
-    const forwardsBundle = (w: WidgetData) => w.type === 'connectionHub' || isChartWidget(w);
+    const forwardsBundle = (w: WidgetData) => w.type === 'connectionHub';
     const aggregatesBundle = (w: WidgetData) =>
       isChartWidget(w) || w.type === 'average' || w.type === 'net';
     if (aggregatesBundle(a) && forwardsBundle(b) && a.id !== b.id) {

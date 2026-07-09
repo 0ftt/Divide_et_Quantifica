@@ -24,7 +24,7 @@ import {
   timeOutline,
 } from 'ionicons/icons';
 import { TranslocoModule } from '@jsverse/transloco';
-import { WidgetData, widgetBackground, widgetIcon, widgetNameKey, isChartWidget } from '$core/models/widget.model';
+import { WidgetData, widgetBackground, widgetIcon, widgetNameKey } from '$core/models/widget.model';
 import { ResizeHandleDirective } from '$core/directives/resize-handle.directive';
 import { generateCandles } from '$core/charts/chart-data';
 
@@ -55,9 +55,11 @@ const NET_REFRESH_SECS = 5;
           <span class="ticker-name">{{ widget.title || (nameKey | transloco) }}</span>
         </div>
         <div class="widget-controls">
-          <ion-button fill="clear" size="small" class="control-btn" title="Collega" (click)="requestLink($event)">
-            <ion-icon slot="icon-only" name="git-network-outline"></ion-icon>
-          </ion-button>
+          @if (widget.type === 'net' || widget.type === 'average') {
+            <ion-button fill="clear" size="small" class="control-btn" title="Collega" (click)="requestLink($event)">
+              <ion-icon slot="icon-only" name="git-network-outline"></ion-icon>
+            </ion-button>
+          }
           <ion-button fill="clear" size="small" class="control-btn" title="Duplica" (click)="requestDuplicate($event)">
             <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
           </ion-button>
@@ -340,7 +342,7 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
             out.add(t.toUpperCase());
           }
         }
-      } else if (w.type === 'connectionHub' || isChartWidget(w)) {
+      } else if (w.type === 'connectionHub') {
         for (const sid of w.connectedIDs ?? []) {
           collect(this.allWidgets.find((x) => x.id === sid));
         }
