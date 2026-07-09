@@ -194,6 +194,8 @@ erDiagram
     }
 ```
 
+In alternativa è visualizzabile da https://drawsql.app/teams/0ftt/diagrams/deq
+
 🔑 Legenda Relazioni e Vincoli
 Propagazione Eliminazioni (ON DELETE CASCADE): Eliminando un utente dalla tabella users, vengono eliminati a cascata i record associati in holdings, transactions, workspaces, leaderboard_entries, leaderboard_history, password_resets e leaderboard_reviews (sia come autore che come utente recensito). L'eliminazione di un asset distrugge le relative holdings.
 
