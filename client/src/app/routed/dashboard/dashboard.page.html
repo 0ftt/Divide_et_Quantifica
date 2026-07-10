@@ -50,6 +50,7 @@
                 <ion-item lines="full" class="custom-input">
                   <ion-input [label]="'auth.username' | transloco" labelPlacement="floating"
                              [placeholder]="'auth.usernamePlaceholder' | transloco" autocomplete="username"
+                             autocapitalize="off" autocorrect="off" spellcheck="false"
                              [(ngModel)]="username" name="username" required></ion-input>
                 </ion-item>
                 @if (fieldError('username'); as err) { <p class="field-error">{{ err | transloco }}</p> }
@@ -58,6 +59,7 @@
               <ion-item lines="full" class="custom-input">
                 <ion-input type="email" [label]="'login.email' | transloco" labelPlacement="floating"
                            [placeholder]="'login.emailPlaceholder' | transloco" autocomplete="email"
+                           autocapitalize="off" autocorrect="off" spellcheck="false"
                            [(ngModel)]="email" name="email" required></ion-input>
               </ion-item>
               @if (fieldError('email'); as err) { <p class="field-error">{{ err | transloco }}</p> }

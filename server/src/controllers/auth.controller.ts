@@ -51,7 +51,7 @@ const usernameSchema = z
   .regex(/^[a-zA-Z0-9_]+$/, 'Username: solo lettere, numeri e underscore (3-20).');
 
 const registerSchema = z.object({
-  email: z.string().email(),
+  email: z.string().trim().toLowerCase().email(),
   password: z.string().min(6),
   displayName: z.string().trim().optional(),
   username: usernameSchema,
@@ -63,7 +63,7 @@ const registerSchema = z.object({
 });
 
 const loginSchema = z.object({
-  email: z.string().email(),
+  email: z.string().trim().toLowerCase().email(),
   password: z.string().min(1),
 });
 
@@ -71,7 +71,7 @@ export async function register(req: Request, res: Response): Promise<void> {
   const { email, password, displayName, username, phone, address, city, postalCode } =
     registerSchema.parse(req.body);
 
-  const existing = await queryOne<UserRow>('select * from users where email = $1', [email]);
+  const existing = await queryOne<UserRow>('select * from users where lower(email) = $1', [email]);
   if (existing) {
     throw new AppError(409, 'Email gia registrata.');
   }
@@ -112,7 +112,7 @@ export async function register(req: Request, res: Response): Promise<void> {
 export async function login(req: Request, res: Response): Promise<void> {
   const { email, password } = loginSchema.parse(req.body);
 
-  const user = await queryOne<UserRow>('select * from users where email = $1', [email]);
+  const user = await queryOne<UserRow>('select * from users where lower(email) = $1', [email]);
   if (!user || !(await verifyPassword(password, user.password_hash))) {
     throw new AppError(401, 'Credenziali non valide.');
   }
@@ -130,12 +130,12 @@ export async function login(req: Request, res: Response): Promise<void> {
   res.json({ token, user: toPublicUser(user) });
 }
 
-const recoverSchema = z.object({ email: z.string().trim().email() });
+const recoverSchema = z.object({ email: z.string().trim().toLowerCase().email() });
 const resetSchema = z.object({ token: z.string().min(10), password: z.string().min(6) });
 
 export async function recover(req: Request, res: Response): Promise<void> {
   const { email } = recoverSchema.parse(req.body);
-  const user = await queryOne<{ id: string }>('select id from users where email = $1', [email]);
+  const user = await queryOne<{ id: string }>('select id from users where lower(email) = $1', [email]);
   if (user) {
     const token = randomBytes(32).toString('hex');
     const tokenHash = createHash('sha256').update(token).digest('hex');
