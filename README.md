@@ -85,8 +85,11 @@ npm audit fix
 ionic serve o ionic serve --external
 ```
 
-Utilizzare --external permette al frontend di essere accessibile tramite la rete a cui è allacciato il pc. Utile per testare su mobile.
-L'applicazione aprirà automaticamente una scheda nel tuo browser (di default su http://localhost:8100 o anche http://localhost:4200, per accedere da un dispositivo nella rete bisogna sostituire localhost con l'indirizzo IPv4 del dispositivo dove il frontend è localizzato, ad oggi non so se sulla rete di Unipa funziona).
+Usare `--external` (oppure `ng serve --host 0.0.0.0`) rende il frontend raggiungibile dalla rete a cui è collegato il PC: utile per testare da mobile.
+
+L'applicazione si apre automaticamente nel browser su `http://localhost:8100` (o `http://localhost:4200`). **Per accedere da un altro dispositivo** (es. il telefono, sulla stessa rete Wi-Fi) usa l'indirizzo **IPv4 indicato nella console all'avvio del client**: all'avvio, `ionic serve` / `ng serve` elenca gli URL di rete (voce *Network* / *On Your Network*). Se il PC ha più schede di rete ne compaiono **due — una per l'ethernet e una per il wireless**: usa quella dell'interfaccia collegata alla stessa rete del dispositivo (di solito il wireless), ad esempio `http://192.168.1.58:8100`.
+
+> Il backend non richiede alcuna configurazione dell'IP: il frontend deriva in automatico l'indirizzo dell'API dall'host da cui viene aperto.
 
 ## 🧪 Account di Test
 

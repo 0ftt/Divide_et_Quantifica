@@ -90,6 +90,9 @@ In pratica: si copia \texttt{.env.example} in \texttt{.env} e si incollano \text
 \subsection{Inizializzazione del database}
 Un database Supabase appena creato è vuoto: le tabelle \textbf{non} vengono generate all'avvio del server. La prima volta (o dopo aver cambiato database) va quindi eseguito il comando \texttt{npm run migrate} nella cartella \texttt{server/}, che applica in ordine gli script SQL in \texttt{server/src/db/migrations/} e crea l'intero schema. Le migrazioni sono \textit{idempotenti} (usano \texttt{CREATE TABLE IF NOT EXISTS}), quindi si possono rilanciare senza rischi; una di esse inserisce anche alcune azioni di default nel listino. Su un database nuovo non esistono gli account di prova: il primo utente che si registra diventa automaticamente amministratore. Fatto questo, il server parte con \texttt{npm run dev}.
 
+\subsection{Accesso da altri dispositivi (rete locale)}
+Il client viene servito su \texttt{localhost}, ma avviandolo con \texttt{ionic serve -\/-external} (o \texttt{ng serve -\/-host 0.0.0.0}) è raggiungibile anche dagli altri dispositivi collegati alla stessa rete, ad esempio uno smartphone per i test. L'indirizzo IPv4 da usare è quello che il client mostra nella \textbf{console all'avvio}, alla voce \textit{Network}: se il computer ha più schede di rete ne compaiono \textbf{due}, una per l'\textit{ethernet} e una per il \textit{wireless}; va scelta quella dell'interfaccia connessa alla stessa rete del dispositivo (di norma il wireless). Il backend non richiede alcuna configurazione dell'indirizzo: il frontend ricava automaticamente l'URL dell'API dall'host da cui viene aperto.
+
 % ==========================================
 \section{Attori del Sistema}
 % ==========================================
