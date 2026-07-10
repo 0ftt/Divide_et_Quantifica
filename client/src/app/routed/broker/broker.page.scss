@@ -56,12 +56,6 @@
   }
 }
 
-.card-separator {
-  height: 1px;
-  background: var(--deq-border);
-  margin: 1.2rem 0;
-}
-
 .side-column { display: flex; flex-direction: column; gap: 1.5rem; overflow-y: auto; }
 
 .panel { padding: 1.5rem; overflow-y: auto; }
@@ -135,14 +129,6 @@
   ion-button { --color: var(--deq-text-muted); margin: 0; }
   ion-button:hover { --color: var(--deq-accent-neon); }
   .pager-refresh { margin-left: auto; }
-}
-
-.add-listing {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--deq-border);
-
-  h4 { color: var(--deq-accent-neon); margin: 0 0 0.6rem; font-size: 0.95rem; }
 }
 
 .asset-error { color: var(--deq-error); font-size: 0.85rem; }

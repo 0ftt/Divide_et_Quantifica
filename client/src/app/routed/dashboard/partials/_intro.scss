@@ -16,25 +16,6 @@
     0 0 24px rgba(2, 6, 23, 0.7);
 }
 
-.intro-title {
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: 800;
-  color: var(--deq-text-bright);
-  letter-spacing: 1px;
-  margin: 0;
-
-  span {
-    color: var(--deq-accent-neon);
-    font-style: italic;
-  }
-}
-
-.intro-tagline {
-  font-size: clamp(1rem, 1.6vw, 1.3rem);
-  color: var(--deq-accent-main);
-  margin: 0;
-}
-
 .intro-card {
   border: 1px solid var(--deq-border);
   background: var(--deq-surface-glass);
