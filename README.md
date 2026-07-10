@@ -40,14 +40,15 @@ cd server
 cp .env.example .env      # su Windows PowerShell: Copy-Item .env.example .env
 ```
 
-Poi apri `.env` e inserisci le tue chiavi. Le uniche **obbligatorie** sono:
+Poi apri `.env` e inserisci le tue chiavi. Le tre da procurarsi sono:
 
-| Variabile | Come procurarsela |
-| :--- | :--- |
-| `DATABASE_URL` | Stringa di connessione a un database PostgreSQL. Crea un progetto gratuito su [Supabase](https://supabase.com) e copia la connection string da *Project Settings → Database*. |
-| `JWT_SECRET` | Stringa casuale lunga per firmare i token di accesso. Generala tu, ad es. con `openssl rand -hex 32` oppure `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`. |
+| Variabile | Obbligatoria | Come procurarsela |
+| :--- | :---: | :--- |
+| `DATABASE_URL` | Sì | Stringa di connessione a un database PostgreSQL. Crea un progetto gratuito su [Supabase](https://supabase.com) e copia la connection string da *Project Settings → Database* (deve includere `?sslmode=require`). |
+| `JWT_SECRET` | Sì | Stringa casuale lunga per firmare i token di accesso. Generala tu, ad es. con `openssl rand -hex 32` oppure `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`. |
+| `MAIL_USER` / `MAIL_PASS` / `MAIL_FROM` | No | Credenziali Gmail per l'invio delle email di recupero password. `MAIL_USER` è l'indirizzo Gmail; `MAIL_PASS` **non** è la password normale ma una *App Password* di 16 caratteri: prima attiva la **verifica in due passaggi** sull'account Google, poi generala da *Account Google → Sicurezza → Password per le app*. `MAIL_FROM` è il mittente mostrato (di solito lo stesso indirizzo). Senza queste, l'app funziona comunque: solo l'invio email resta disattivato. |
 
-Le variabili `MAIL_USER` / `MAIL_PASS` / `MAIL_FROM` sono **opzionali**: servono solo all'invio delle email di recupero password (un account **Gmail** con una *App Password* generata da *Account Google → Sicurezza → Password per le app*). Senza, l'app funziona lo stesso, solo quella funzione resta disattivata. Le altre variabili (`PORT`, `CORS_ORIGIN`, `PREMIUM_PRICE`, `QUOTE_CACHE_MINUTES`, `JWT_EXPIRES_IN`, `FRONTEND_URL`) hanno già un valore di default.
+Le altre variabili (`PORT`, `CORS_ORIGIN`, `PREMIUM_PRICE`, `QUOTE_CACHE_MINUTES`, `JWT_EXPIRES_IN`, `FRONTEND_URL`) hanno già un valore di default.
 
 ### 3. Avviare il Server (Backend)
 Apri il terminale nella cartella del server e digita:
