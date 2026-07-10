@@ -31,7 +31,7 @@ cd Divide_et_Quantifica
 ```
 
 2. Avviare il Server (Backend)
-Apri il terminale nella cartella del r e digita:
+Apri il terminale nella cartella del server e digita:
 
 ```Bash
 cd server
