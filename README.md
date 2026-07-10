@@ -59,7 +59,7 @@ Al fine di consentire una rapida valutazione del sistema e delle logiche di auto
 
 | Email | Password | Ruolo | Scopo del Test |
 | :--- | :--- | :---: | :--- |
-| **`admin@gmail.com`** | `admin` | Admin | Account principale. Accesso completo al Pannello Admin per la gestione degli utenti e del listino asset. |
+| **`admin@gmail.com`** | `adminadmin` | Admin | Account principale. Accesso completo al Pannello Admin per la gestione degli utenti e del listino asset. |
 | **`adminriserva@gmail.com`** | `adminriserva` | Admin | Account di backup con privilegi amministrativi elevati. |
 | **`carola@gmail.com`** | `carolauser` | Utente | Account standard. Ideale per testare la creazione di workspace sulla canvas, l'acquisto simulato nel Terminale Broker e la pubblicazione nella Leaderboard. |
 | **`emanuele@gmail.com`** | `emanueleuser` | Utente | Account standard secondario. Essenziale per testare le interazioni tra utenti (es. scrivere recensioni sulle schede condivise) e la concorrenza. |
