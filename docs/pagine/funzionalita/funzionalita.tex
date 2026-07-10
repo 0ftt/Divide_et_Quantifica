@@ -3,52 +3,50 @@
 % ==========================================
 
 \subsection{Overview}
-Il \textbf{sistema} proposto, denominato \textbf{``DeQ: Divide et Quantifica''}, è stato progettato per superare le rigidità delle piattaforme di analisi finanziaria tradizionali, offrendo un ecosistema ibrido che unisce l'esplorazione dei dati di mercato, la costruzione logica di strategie e la simulazione transazionale. 
+\textbf{DeQ (Divide et Quantifica)} è un'applicazione web per l'analisi dei mercati e il trading simulato. A differenza delle dashboard classiche a griglia fissa, offre una tela infinita su cui l'utente dispone e collega liberamente dei moduli, i \textit{widget}: azioni, grafici, nodi di calcolo.
 
-L'elemento di maggiore innovazione architetturale è la transizione dal classico paradigma a griglia fissa (\textit{fixed-grid dashboard}) al concetto di \textbf{``Infinite Workspace''}. L'utente non si limita a osservare grafici preimpostati, ma costruisce la propria architettura analitica posizionando e collegando liberamente moduli interattivi (\textit{widget}) su una tela vettoriale sconfinata.
+Accanto all'analisi c'è un \textbf{Terminale Broker} simulato, dove si comprano e vendono asset con un credito virtuale e una commissione dell'1\% su ogni operazione.
 
-Parallelamente all'analisi, il sistema integra un \textbf{Terminale Broker simulato}, che permette all'utente di testare le proprie strategie operando acquisti e vendite sul mercato tramite un credito virtuale, con addebito realistico delle commissioni di rete. 
-
-L'\textbf{obiettivo finale} è quello di offrire uno strumento digitale, sia desktop che \textit{mobile-first}, che consenta a trader, analisti e studenti di quantificare e validare matematicamente le proprie intuizioni finanziarie. Questo obiettivo è supportato da un modulo di \textbf{gamification e condivisione selettiva} (Leaderboard), dove gli utenti possono esporre le proprie schede per competere sul guadagno/perdita non realizzato (P\&L) delle posizioni e confrontarsi con la community.
+L'app funziona su desktop e mobile ed è pensata per trader, analisti e studenti. Una \textbf{Classifica (Leaderboard)} permette di condividere le proprie schede e confrontarsi con gli altri sul guadagno o la perdita delle posizioni.
 
 \subsection{Requisiti Funzionali}
-Nel corso dell'analisi dei requisiti è emersa la necessità di progettare un ambiente unificato che permetta all'utente di gestire in totale autonomia il ciclo di vita della propria strategia finanziaria: dall'ideazione teorica all'esecuzione simulata, fino alla condivisione pubblica.
+Il sistema deve permettere all'utente di seguire tutta la propria strategia: idearla, provarla con operazioni simulate e infine condividerla.
 
-Il sistema prevede due principali tipologie di attori umani: l'\textbf{Utente Standard (Trader)} e l'\textbf{Amministratore (Admin)}. È esclusa l'interazione per gli utenti non autenticati (Guest): per accedere agli strumenti di calcolo e al listino di mercato è \textbf{obbligatoria la registrazione} alla piattaforma.
+Ci sono due tipi di utente: l'\textbf{Utente Standard (Trader)} e l'\textbf{Amministratore}. Chi non è registrato non può usare l'app: per accedere agli strumenti e al listino bisogna registrarsi.
 
-Per quanto concerne il ruolo dell'\textbf{Utente}, il sistema deve consentire:
+L'\textbf{Utente} deve poter:
 \begin{itemize}[itemsep=-2pt]
-    \item La \textbf{creazione e gestione di workspace multipli}, salvati in automatico per garantire la continuità operativa tra dispositivi diversi.
-    \item L'\textbf{inserimento e il collegamento logico di widget} (es. sorgenti dati, grafici, nodi matematici) sulla canvas.
-    \item L'\textbf{esecuzione di transazioni simulate} (acquisto/vendita di asset) tramite un listino in tempo reale.
-    \item La \textbf{pubblicazione in classifica} (Leaderboard) di specifiche strategie, con la possibilità di interagire tramite recensioni con gli altri membri della community.
+    \item creare e gestire più \textbf{workspace}, salvati in automatico e quindi disponibili su qualsiasi dispositivo;
+    \item mettere \textbf{widget} sulla canvas (sorgenti dati, grafici, nodi di calcolo) e collegarli tra loro;
+    \item \textbf{comprare e vendere} asset in modo simulato, su un listino aggiornato;
+    \item \textbf{pubblicare le proprie schede in classifica} e lasciare recensioni agli altri utenti.
 \end{itemize}
 
-Per l'\textbf{Amministratore}, il sistema deve fornire un \textbf{Pannello di Controllo} dedicato per la gestione dell'anagrafica utenti, la manutenzione del listino asset interrogabile (aggiunta/rimozione ticker) e il monitoraggio delle entrate fittizie generate dall'applicazione.
+All'\textbf{Amministratore} serve un \textbf{Pannello di Controllo} per gestire gli utenti, aggiungere o togliere titoli dal listino e vedere i ricavi (fittizi) dell'app.
 
 \subsection{Requisiti Non Funzionali}
 
 \subsubsection{Prestazioni e Architettura}
 \begin{itemize}
-    \item \textbf{Consistenza in Tempo Reale e Autosave:} Il sistema deve garantire il salvataggio silente e incrementale (\textit{dirty-check}) della topologia del workspace. Qualsiasi variazione geometrica o logica dei nodi deve essere serializzata in formato JSON e persistita sul database relazionale senza interrompere il flusso di lavoro dell'utente.
-    \item \textbf{Smart API Caching:} Per prevenire il superamento dei limiti di interrogazione (\textit{rate-limiting}) imposti dai provider esterni (es. Yahoo Finance), il backend Node.js deve fungere da strato intermedio di caching. Le quotazioni e le serie storiche devono essere archiviate temporaneamente e servite agli utenti per un periodo di validità prestabilito, riducendo il carico di rete.
+    \item \textbf{Salvataggio automatico:} ogni modifica al workspace viene salvata in background, senza interrompere il lavoro. Lo stato della canvas è convertito in JSON e memorizzato nel database.
+    \item \textbf{Cache delle quotazioni:} per non superare i limiti di richieste di Yahoo Finance, il backend conserva per un po' le quotazioni già scaricate e le riusa, riducendo le chiamate esterne.
 \end{itemize}
 
 \subsubsection{Sicurezza e Privacy}
 \begin{itemize}
-    \item \textbf{Autenticazione Stateless (Single-Session):} L'accesso deve essere governato da token JWT. Il sistema deve implementare un meccanismo di tracciamento della versione del token (\texttt{token\_version}) per garantire la disconnessione automatica dai dispositivi secondari qualora avvenga un nuovo login, prevenendo l'uso condiviso non autorizzato dell'account.
-    \item \textbf{Recupero Credenziali Sicuro:} Le procedure di reset della password devono basarsi su token crittografici inviati via email (SMTP), con validità temporale limitata (es. 1 ora) e meccanismi anti-replay (flag di utilizzo) per scongiurare attacchi malevoli.
+    \item \textbf{Sessione singola (JWT):} l'accesso usa token JWT. A ogni nuovo login il token precedente viene invalidato (\texttt{token\_version}), così l'account non resta aperto su più dispositivi.
+    \item \textbf{Recupero password sicuro:} il reset avviene tramite un token inviato via email, valido un'ora e utilizzabile una sola volta.
 \end{itemize}
 
 \subsubsection{Usabilità e Design}
 \begin{itemize}
-    \item \textbf{Navigazione Vettoriale Fluida:} L'interfaccia principale deve supportare nativamente i \textit{Pointer Events} (mouse, touch, pen) per garantire operazioni di \textit{pan}, \textit{pinch-to-zoom} e \textit{scroll} senza latenza percettibile, operando su un motore ibrido DOM/Canvas.
-    \item \textbf{Gestione degli Errori (Graceful Degradation):} In caso di indisponibilità dei dati di mercato o di inserimento di parametri errati, l'interfaccia non deve esporre \textit{stack trace} tecnici, ma fornire feedback contestuali parlanti all'utente.
+    \item \textbf{Navigazione fluida:} l'interfaccia gestisce mouse, touch e pennino (\textit{Pointer Events}) per pan, zoom e scorrimento senza scatti.
+    \item \textbf{Errori leggibili:} se i dati di mercato non sono disponibili o si inserisce un valore sbagliato, l'app mostra un messaggio chiaro invece di errori tecnici.
 \end{itemize}
 
-\subsubsection{Considerazioni Legislative e Conformità}
+\subsubsection{Conformità normativa}
 \begin{itemize}
-    \item \textbf{Conformità GDPR (Regolamento UE 2016/679):} Il sistema deve implementare rigorosamente la propagazione delle eliminazioni. La cancellazione di un account utente deve innescare la distruzione a cascata (\texttt{CASCADE}) di tutti i dati personali, portafogli, transazioni e workspace associati, garantendo il ``Diritto all'Oblio''.
+    \item \textbf{GDPR (Regolamento UE 2016/679):} eliminando un account vengono cancellati a cascata (\texttt{CASCADE}) tutti i suoi dati: profilo, portafoglio, transazioni e workspace (``diritto all'oblio'').
 \end{itemize}
 
 % ==========================================
@@ -56,42 +54,41 @@ Per l'\textbf{Amministratore}, il sistema deve fornire un \textbf{Pannello di Co
 % ==========================================
 
 \subsection{Autenticazione \& Welcome Page}
-Il portale di accesso al servizio. Gestisce la registrazione degli utenti richiedendo inizialmente solo i campi essenziali (nome, username, email, password con relativa conferma di sicurezza), delegando il completamento del profilo (indirizzo, telefono) a una fase successiva. Include un sistema di recupero password sicuro tramite token temporizzato inviato via email (SMTP). Dalla medesima schermata è possibile richiedere il recupero dell'indirizzo email associato all'account.
+È la pagina d'accesso. Per registrarsi bastano nome, username, email e password (con conferma); indirizzo e telefono si aggiungono dopo, dal profilo. C'è anche il recupero della password via email e, dalla stessa schermata, il recupero dell'email collegata all'account.
 
-\subsection{Dashboard Analitica (Infinite Workspace)}
-Il cuore operativo di DeQ. Un ambiente vettoriale sconfinato dove l'utente costruisce la propria architettura di analisi, caratterizzato da un'interfaccia reattiva e da un design system \textit{Dark Neon}.
+\subsection{Dashboard (Infinite Workspace)}
+Il cuore di DeQ: una tela infinita dove l'utente costruisce la propria analisi, con un'interfaccia scura in stile neon.
 \begin{itemize}[itemsep=-2pt]
-    \item \textbf{Canvas Vettoriale Infinito:} Motore di navigazione avanzato con supporto unificato ai \textit{Pointer Events}. Permette \textit{pan}, \textit{zoom} con rotella e \textit{pinch-to-zoom} fluidi, su uno sfondo a griglia animata.
-    \item \textbf{Gestione Workspace a Schede (Tabs):} Sistema multi-scheda per separare diverse strategie. Include l'autosave in background (\textit{dirty-check}) che serializza l'intera canvas e la invia al backend. L'espansione del numero di schede simultanee è legata ai privilegi della licenza Premium.
-    \item \textbf{Gestione dello Stato (Undo):} Implementazione di uno stack logico che traccia la cronologia delle azioni, permettendo all'utente di annullare operazioni distruttive e ripristinare istantaneamente un widget o un collegamento eliminato accidentalmente, tramite l'utilizzo delle scorciatoie da tastiera standard (\texttt{Ctrl+Z} o \texttt{Cmd+Z}).
-    \item \textbf{Catalogo Widget:} Un cassetto overlay centrato per il \textit{deployment} rapido di moduli \textit{drag-and-drop}. I widget scalano la tipografia internamente in base al livello di zoom e condividono un'estetica \textit{glassmorphism}. Il catalogo include:
+    \item \textbf{Canvas infinito:} pan, zoom con la rotella e pinch-to-zoom fluidi, su uno sfondo a griglia animata.
+    \item \textbf{Schede (tab):} più schede per separare le strategie, con salvataggio automatico in background. Il numero di schede aperte insieme dipende dalla licenza Premium.
+    \item \textbf{Annulla (Undo):} l'app tiene la cronologia delle azioni; con \texttt{Ctrl+Z} (o \texttt{Cmd+Z}) si annulla l'ultima operazione e si recupera un widget o un collegamento cancellato per sbaglio.
+    \item \textbf{Catalogo widget:} un pannello da cui trascinare i moduli sulla canvas. I widget adattano il testo al livello di zoom e hanno un look \textit{glassmorphism}. Comprende:
     \begin{itemize}
-        \item \textbf{Azione:} Tracciamento dei singoli asset (quotati e unlisted) con dati reali.
-        \item \textbf{Grafici ECharts:} Rendering visivo interattivo (Candele, Linea, Area, Volumi, Torta).
-        \item \textbf{Aggregatori:} Nodi logici per computazioni matematiche (Calcolo del Netto, Media di Carico).
-        \item \textbf{Utility:} Nodi informativi quali Inventario, Orologio Locale e blocchi Testo.
+        \item \textbf{Azione:} segue un singolo titolo (quotato o personalizzato) con dati reali.
+        \item \textbf{Grafici (ECharts):} candele, linea, area, volumi e torta.
+        \item \textbf{Aggregatori:} nodi di calcolo (netto delle posizioni, prezzo medio d'acquisto).
+        \item \textbf{Utility:} inventario, orologio e blocchi di testo.
     \end{itemize}
-    \item \textbf{Sistema di Linking \& Dynamic Routing:} Meccanismo \textit{click-to-connect} per far fluire i dati dalle sorgenti ai consumatori. I collegamenti generano percorsi vettoriali SVG animati e sono supervisionati da algoritmi di \textit{loop protection} per prevenire cicli infiniti.
-    \item \textbf{Inspector:} Console contestuale a scomparsa (mutuamente esclusiva con il cassetto widget) che si adatta al nodo selezionato. Permette di gestire i \textit{timeframe} di mercato (da 1 giorno a 5 anni), forzare le connessioni manuali e applicare temi cromatici personalizzati.
+    \item \textbf{Collegamenti:} si clicca per collegare una sorgente a un consumatore; i dati passano lungo linee animate. Un controllo evita i cicli infiniti.
+    \item \textbf{Inspector:} un pannello laterale che cambia in base al widget selezionato. Da qui si scelgono i \textit{timeframe} (da 1 giorno a 5 anni), si forzano le connessioni e si cambiano i colori.
 \end{itemize}
 
-\subsection{Terminale Broker \& Marquee}
-L'ambiente di transizione dall'analisi all'azione (simulata).
+\subsection{Terminale Broker \& Nastro di mercato}
+Il punto in cui l'analisi diventa azione (simulata).
 \begin{itemize}[itemsep=-2pt]
-    \item \textbf{Terminale e Carrello:} Listino live alimentato e validato, ricerca asset, e checkout per acquisti multipli tramite credito virtuale. Il sistema scala automaticamente il saldo, registra la transazione e applica una commissione di rete simulata dell'1\%.
-    \item \textbf{Gestione Inventario \& Storico:} Schede dedicate per consultare gli ordini effettuati (con mini-grafici storici di andamento) e operare direttamente sulle posizioni possedute. Ogni riga dell'inventario espone pulsanti rapidi per comprare, vendere o aggiungere l'asset al carrello senza passare dalla ricerca del listino, con feedback immediato in caso di credito insufficiente.
-    \item \textbf{Market Marquee:} Nastro scorrevole persistente collocato in basso nell'interfaccia, progettato per mostrare le variazioni percentuali in tempo reale e consentire l'aggiunta rapida di un titolo al carrello tramite click.
+    \item \textbf{Terminale e carrello:} listino aggiornato, ricerca dei titoli e checkout per acquisti multipli col credito virtuale. Il saldo si aggiorna da solo, l'operazione viene registrata e si applica l'1\% di commissione.
+    \item \textbf{Inventario e storico:} schede per rivedere gli ordini fatti (con mini-grafici) e operare sulle posizioni. Da ogni riga dell'inventario si può comprare, vendere o aggiungere al carrello al volo; se manca il credito appare subito un avviso.
+    \item \textbf{Nastro di mercato:} la striscia in basso mostra le variazioni percentuali in tempo reale; cliccando un titolo lo si aggiunge al carrello.
 \end{itemize}
 
-\subsection{Classifica Globale (Leaderboard)}
-Modulo di gamification competitivo per la condivisione pubblica delle strategie.
-Gli utenti possono pubblicare specifiche schede della propria strategia. La classifica calcola e ordina i partecipanti in base al guadagno/perdita non realizzato (P\&L) delle posizioni, calcolato in valore assoluto come differenza tra il prezzo di mercato attuale e il prezzo medio di carico, ignorando il patrimonio totale dell'utente al fine di garantire l'equità statistica. Ogni utente può condividere più schede distinte (identificate da un'etichetta) e rescindere una condivisione in qualsiasi momento; non è consentito pubblicare due volte la medesima scheda. Il modulo supporta la personalizzazione del profilo tramite avatar, lo scambio di recensioni tra utenti e l'acquisto in blocco simulato dei portafogli altrui.
+\subsection{Classifica (Leaderboard)}
+Serve a condividere le strategie e confrontarsi con gli altri. L'utente pubblica una o più schede; la classifica le ordina in base al guadagno o alla perdita delle posizioni, cioè la differenza tra il prezzo attuale e il prezzo medio d'acquisto, senza contare il patrimonio totale. Ogni scheda ha un'etichetta e può essere ritirata quando si vuole; non si può pubblicare due volte la stessa. Si può personalizzare il profilo con un avatar, lasciare recensioni agli altri e comprare in blocco il portafoglio di un altro utente (sempre simulato).
 
 \subsection{Pannello Admin}
-La torre di controllo dell'ecosistema, inaccessibile agli utenti standard.
+Il pannello riservato all'amministratore.
 \begin{itemize}[itemsep=-2pt]
-    \item \textbf{Gestione Piattaforma:} Dashboard riservata che elenca gli utenti reali registrati e ne consente l'eliminazione diretta dal database, gestisce l'inclusione o la rimozione di ticker approvati nel listino globale interfacciato con Yahoo Finance e permette il popolamento rapido del listino tramite estrazione casuale di titoli da un ampio paniere predefinito. Integra inoltre il monitoraggio dello \textit{scheduler} di mercato, con countdown al prossimo aggiornamento automatico e possibilità di forzare manualmente il refresh delle quotazioni.
-    \item \textbf{Analisi Finanze:} Resoconto aggregato dei ricavi simulati della piattaforma, che quantifica gli introiti derivanti dalle licenze Premium sottoscritte e il volume totale generato dalle trattenute sulle commissioni di trading.
+    \item \textbf{Gestione piattaforma:} elenca gli utenti registrati e permette di eliminarli, aggiungere o togliere titoli dal listino (collegato a Yahoo Finance) e riempirlo in fretta con titoli scelti a caso da un ampio elenco. Mostra anche lo stato dell'aggiornamento automatico dei prezzi, con conto alla rovescia e possibilità di forzarlo.
+    \item \textbf{Finanze:} riepilogo dei ricavi simulati, tra licenze Premium e commissioni sulle operazioni.
 \end{itemize}
 
 % ==========================================
@@ -106,13 +103,13 @@ La torre di controllo dell'ecosistema, inaccessibile agli utenti standard.
 \hline
 \rowcolor[HTML]{3B3766}
 \textcolor{white}{\textbf{Termine}} & \textcolor{white}{\textbf{Descrizione}} \\ \hline
-\textbf{Utente (Trader)} & Individuo autenticato che utilizza la piattaforma per costruire strategie e simulare operazioni finanziarie. \\ \hline
-\textbf{Workspace (Canvas)} & L'ambiente vettoriale infinito, navigabile tramite inerzia (pan e zoom), in cui l'utente posiziona e collega i nodi per formare la propria dashboard analitica. \\ \hline
-\textbf{Widget (Nodo)} & Modulo logico e visivo autonomo (es. Azione, Grafico, Orologio, Media) inseribile sulla canvas. Può scambiare informazioni agendo da sorgente dati o da consumatore tramite il sistema di linking. \\ \hline
-\textbf{Terminale Broker} & L'ambiente transazionale dell'applicativo, suddiviso in listino asset, carrello, inventario e storico transazioni, dove l'utente spende il proprio credito virtuale. \\ \hline
-\textbf{Leaderboard Entry} & La scheda pubblica condivisa da un utente per competere nella classifica globale. La metrica di valutazione si basa sul guadagno/perdita non realizzato (P\&L) delle posizioni, calcolato in valore assoluto come differenza tra il prezzo di mercato attuale e il prezzo medio di carico. \\ \hline
-\textbf{Provider Dati} & Servizio esterno (es. Yahoo Finance) interrogato automaticamente dal backend per ottenere quotazioni e serie storiche necessarie ad alimentare i grafici e il listino. \\ \hline
-\textbf{Token JWT} & Strumento crittografico utilizzato per il sistema di autenticazione stateless. Include un meccanismo di versioning per garantire un accesso single-session, invalidando in automatico l'accesso su dispositivi secondari. \\ \hline
-\textbf{Modale} & Elemento dell'interfaccia grafica che compare in sovrimpressione rispetto alla schermata corrente, disabilitando temporaneamente l'interazione con l'applicazione sottostante. L'utente è obbligato a interagirvi (ad esempio per confermare un ordine di acquisto) prima di poter tornare alla dashboard. \\ \hline
+\textbf{Utente (Trader)} & Persona registrata che usa la piattaforma per creare strategie e simulare operazioni. \\ \hline
+\textbf{Workspace (Canvas)} & La tela infinita, navigabile con pan e zoom, dove l'utente dispone e collega i nodi per comporre la sua dashboard. \\ \hline
+\textbf{Widget (Nodo)} & Modulo autonomo (Azione, Grafico, Orologio, Media\ldots) da mettere sulla canvas. Può fare da sorgente o da destinazione dei dati tramite i collegamenti. \\ \hline
+\textbf{Terminale Broker} & La parte per comprare e vendere: listino, carrello, inventario e storico, dove si spende il credito virtuale. \\ \hline
+\textbf{Leaderboard Entry} & La scheda che un utente rende pubblica per la classifica. Il punteggio è il guadagno o la perdita delle posizioni, cioè la differenza tra prezzo attuale e prezzo medio d'acquisto. \\ \hline
+\textbf{Provider Dati} & Servizio esterno (es. Yahoo Finance) da cui il backend prende quotazioni e serie storiche per grafici e listino. \\ \hline
+\textbf{Token JWT} & Il token usato per l'accesso. Grazie a un numero di versione garantisce una sola sessione: un nuovo login disconnette gli altri dispositivi. \\ \hline
+\textbf{Modale} & Finestra che appare sopra la schermata e blocca il resto finché non ci si interagisce (es. per confermare un acquisto). \\ \hline
 \end{tabularx}
 \end{table}

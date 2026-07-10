@@ -2,17 +2,17 @@
 \section{Introduzione}
 % ==========================================
 \subsection{Obiettivi del sistema}
-Il progetto ``DeQ: Divide et Quantifica'' nasce con lo scopo di ingegnerizzare e rilasciare un ecosistema software ibrido espressamente dedicato all'analisi quantitativa visiva e alla simulazione di trading. L'applicativo si propone come l'ambiente digitale di riferimento per analisti, trader e studenti che necessitano di flessibilità, prestazioni e controllo totale sui flussi di dati di mercato.
+``DeQ: Divide et Quantifica'' è un'applicazione per l'analisi visiva dei mercati e il trading simulato, pensata per analisti, trader e studenti che vogliono libertà nel comporre i propri strumenti.
 
-L'obiettivo cardine del sistema consiste nel superare la rigidità delle tradizionali dashboard a griglia fissa, trasformando l'ambiente analitico in uno spazio di lavoro vettoriale infinito. Lo strumento aggrega in un unico ecosistema protetto l'esplorazione dei dati di mercato in tempo reale, la costruzione di architetture logiche personalizzate tramite nodi visivi e un terminale di compravendita simulato.
+L'idea di base è superare le dashboard a griglia fissa: al loro posto c'è uno spazio di lavoro infinito, dove si esplorano i dati in tempo reale, si costruiscono i propri schemi collegando dei nodi e si compra e vende in modo simulato.
 
-Nello specifico, il sistema persegue i seguenti traguardi strategici e operativi:
+In particolare, il sistema punta a:
 
 \begin{itemize}[itemsep=-8pt]
-    \item \textbf{Analisi Visiva Modulare:} Superare la frammentazione degli strumenti analitici offrendo un catalogo di widget drag-and-drop (azioni, grafici avanzati, aggregatori) collegabili tra loro per far fluire e calcolare i dati in tempo reale.
-    \item \textbf{Simulazione Finanziaria Realistica:} Fornire un Terminale Broker integrato e connesso a provider esterni, permettendo all'utente di testare l'acquisto e la vendita di asset (calcolando le spese di commissione) senza alcun rischio di capitale reale.
-    \item \textbf{Gamification e Condivisione:} Abilitare canali di condivisione pubblica tramite una Classifica Globale (Leaderboard), dove gli utenti possono esporre le proprie strategie, competere sul guadagno/perdita non realizzato delle posizioni e scambiarsi recensioni.
-    \item \textbf{Persistenza e Scalabilità Architetturale:} Configurare un'infrastruttura tecnologica asincrona capace di salvare in background la complessa topologia della canvas su un database relazionale, limitando al contempo il carico di rete tramite sistemi di Smart API Caching.
+    \item \textbf{Analisi modulare:} un catalogo di widget (azioni, grafici, aggregatori) da trascinare e collegare per far scorrere e calcolare i dati in tempo reale.
+    \item \textbf{Trading simulato realistico:} un Terminale Broker collegato a dati esterni, per provare acquisti e vendite (con commissioni) senza rischiare denaro vero.
+    \item \textbf{Classifica e condivisione:} una Leaderboard dove gli utenti pubblicano le proprie strategie, si confrontano sul guadagno o la perdita delle posizioni e si scambiano recensioni.
+    \item \textbf{Salvataggio e prestazioni:} salvataggio automatico della canvas sul database e una cache delle quotazioni per ridurre le chiamate esterne.
 \end{itemize}
 
 
@@ -22,20 +22,20 @@ Nello specifico, il sistema persegue i seguenti traguardi strategici e operativi
 \begin{tabularx}{\textwidth}{|c|X|}
 \hline
 \headerTabella{Termine}{Descrizione}
-\rigaTabella{Utente (Trader)}{Individuo autenticato che utilizza la piattaforma per costruire strategie e simulare operazioni finanziarie.}
-\rigaTabella{Workspace (Canvas)}{L'ambiente vettoriale infinito, navigabile tramite inerzia (pan e zoom), in cui l'utente posiziona e collega i nodi per formare la propria dashboard analitica.}
-\rigaTabella{Widget (Nodo)}{Modulo logico e visivo autonomo (es. Azione, Grafico, Orologio, Media) inseribile sulla canvas. Può scambiare informazioni agendo da sorgente dati o da consumatore tramite il sistema di linking.}
-\rigaTabella{Terminale Broker}{L'ambiente transazionale dell'applicativo, suddiviso in listino asset, carrello, inventario e storico transazioni, dove l'utente spende il proprio credito virtuale.}
-\rigaTabella{Leaderboard Entry}{La scheda pubblica condivisa da un utente per competere nella classifica globale. La metrica di valutazione si basa sul guadagno/perdita non realizzato delle posizioni, calcolato in valore assoluto come differenza tra il prezzo di mercato attuale e il prezzo medio di carico.}
-\rigaTabella{Provider Dati}{Servizio esterno (es. Yahoo Finance) interrogato automaticamente dal backend per ottenere quotazioni e serie storiche necessarie ad alimentare i grafici e il listino.}
-\rigaTabella{Token JWT}{Strumento crittografico utilizzato per il sistema di autenticazione stateless. Include un meccanismo di versioning per garantire un accesso single-session, invalidando in automatico l'accesso su dispositivi secondari.}
-\rigaTabella{Modale}{Elemento dell'interfaccia grafica che compare in sovrimpressione rispetto alla schermata corrente, disabilitando temporaneamente l'interazione con l'applicazione sottostante. L'utente è obbligato a interagirvi (ad esempio per confermare un ordine di acquisto) prima di poter tornare alla dashboard.}
+\rigaTabella{Utente (Trader)}{Persona registrata che usa la piattaforma per creare strategie e simulare operazioni.}
+\rigaTabella{Workspace (Canvas)}{La tela infinita, navigabile con pan e zoom, dove l'utente dispone e collega i nodi per comporre la sua dashboard.}
+\rigaTabella{Widget (Nodo)}{Modulo autonomo (Azione, Grafico, Orologio, Media\ldots) da mettere sulla canvas. Può fare da sorgente o da destinazione dei dati tramite i collegamenti.}
+\rigaTabella{Terminale Broker}{La parte per comprare e vendere: listino, carrello, inventario e storico, dove si spende il credito virtuale.}
+\rigaTabella{Leaderboard Entry}{La scheda che un utente rende pubblica per la classifica. Il punteggio è il guadagno o la perdita delle posizioni, cioè la differenza tra prezzo attuale e prezzo medio d'acquisto.}
+\rigaTabella{Provider Dati}{Servizio esterno (es. Yahoo Finance) da cui il backend prende quotazioni e serie storiche per grafici e listino.}
+\rigaTabella{Token JWT}{Il token usato per l'accesso. Grazie a un numero di versione garantisce una sola sessione: un nuovo login disconnette gli altri dispositivi.}
+\rigaTabella{Modale}{Finestra che appare sopra la schermata e blocca il resto finché non ci si interagisce (es. per confermare un acquisto).}
 \end{tabularx}
 
 % ==========================================
 \section{Account di Test e Credenziali}
 % ==========================================
-Al fine di consentire una corretta valutazione del sistema e delle logiche di autorizzazione, vengono di seguito fornite le credenziali degli account di collaudo pre-configurati nel database. 
+Di seguito le credenziali degli account di prova già presenti nel database, per valutare il sistema e i diversi permessi.
 
 \begin{table}[H]
 \centering
@@ -47,10 +47,10 @@ Al fine di consentire una corretta valutazione del sistema e delle logiche di au
 \textcolor{white}{\textbf{Email}} & \textcolor{white}{\textbf{Password}} & \textcolor{white}{\textbf{Ruolo}} & \textcolor{white}{\textbf{Scopo del Test}} \\ \hline
 \textbf{\texttt{admin@gmail.com}} & \texttt{adminadmin} & Admin & Account principale. Accesso completo al Pannello Admin per la gestione degli utenti e del listino asset. \\ \hline
 \textbf{\texttt{adminriserva@gmail.com}} & \texttt{adminriserva} & Utente & Account standard di riserva, utile come profilo secondario di collaudo. \\ \hline
-\textbf{\texttt{carola@gmail.com}} & \texttt{carolauser} & Utente & Account standard. Ideale per testare la creazione di workspace sulla canvas, l'acquisto simulato nel Terminale Broker e la pubblicazione nella Leaderboard. \\ \hline
-\textbf{\texttt{emanuele@gmail.com}} & \texttt{emanueleuser} & Utente & Account standard secondario. Essenziale per testare le interazioni tra utenti (es. scrivere recensioni sulle schede condivise) e la concorrenza. \\ \hline
-\textbf{\texttt{daniela@gmail.com}} & \texttt{danielauser} & Utente & Ulteriore account standard. Utile per testare il popolamento e l'ordinamento dinamico della Leaderboard simulando un ambiente multi-utente realistico. \\ \hline
-\textbf{\texttt{michele@gmail.com}} & \texttt{micheleuser} & Utente & Account standard aggiuntivo. Consigliato per testare le transazioni avanzate, l'upgrade alla licenza Premium e l'acquisto in blocco dei portafogli altrui dalla classifica. \\ \hline
-\textbf{\texttt{giuseppe@gmail.com}} & \texttt{giuseppeuser} & Utente & Account standard. Focalizzato sul test del sistema di linking vettoriale, la creazione di percorsi logici tra widget e l'utilizzo degli aggregatori matematici. \\ \hline
+\textbf{\texttt{carola@gmail.com}} & \texttt{carolauser} & Utente & Account standard. Per provare workspace, acquisti nel Broker e pubblicazione in classifica. \\ \hline
+\textbf{\texttt{emanuele@gmail.com}} & \texttt{emanueleuser} & Utente & Account standard. Per provare le interazioni tra utenti, come le recensioni sulle schede altrui. \\ \hline
+\textbf{\texttt{daniela@gmail.com}} & \texttt{danielauser} & Utente & Account standard. Per riempire la classifica e vederne l'ordinamento con più utenti. \\ \hline
+\textbf{\texttt{michele@gmail.com}} & \texttt{micheleuser} & Utente & Account standard. Per provare l'upgrade a Premium e l'acquisto in blocco di un portafoglio dalla classifica. \\ \hline
+\textbf{\texttt{giuseppe@gmail.com}} & \texttt{giuseppeuser} & Utente & Account standard. Per provare i collegamenti tra widget e gli aggregatori di calcolo. \\ \hline
 \end{tabularx}
 \end{table}

@@ -1,6 +1,6 @@
-PWD M:\DeQ\ionic\Divide_et_Quantifica\docs
+PWD m:\DeQ\ionic\Divide_et_Quantifica\docs
 INPUT C:\Users\giang\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT Doc.tex
+INPUT m:\DeQ\ionic\Divide_et_Quantifica\docs\Doc.tex
 OUTPUT Doc.log
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
@@ -277,7 +277,6 @@ INPUT .\Doc.toc
 INPUT Doc.toc
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx10.tfm
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmtt10.tfm
-INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmti10.tfm
 OUTPUT Doc.toc
 INPUT .\Pagine\Introduzione\introduzione.tex
 INPUT .\Pagine\Introduzione\introduzione.tex
@@ -295,6 +294,7 @@ INPUT .\Pagine\architettura\architettura.tex
 INPUT .\Pagine\architettura\architettura.tex
 INPUT Pagine\architettura\architettura.tex
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmtt12.tfm
+INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmti10.tfm
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\tctt1000.tfm
 INPUT .\Immagini\drawsql.png
 INPUT .\Immagini\drawsql.png
