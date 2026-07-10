@@ -36,6 +36,8 @@ Apri il terminale nella cartella del server e digita:
 ```Bash
 cd server
 npm install
+npm fund
+npm audit fix
 npm run dev o npm run start
 ```
 
@@ -47,6 +49,8 @@ Apri un nuovo terminale sempre nella cartella principale del progetto e digita:
 ```Bash
 cd client
 npm install
+npm fund
+npm audit fix
 ionic serve o ionic serve --external
 ```
 
