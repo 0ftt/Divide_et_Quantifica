@@ -85,7 +85,10 @@ Per motivi di sicurezza il repository \textbf{non} include il file \texttt{serve
 \end{tabularx}
 \end{table}
 
-In pratica: si copia \texttt{.env.example} in \texttt{.env}, si incollano \texttt{DATABASE\_URL} e \texttt{JWT\_SECRET} (più eventualmente le \texttt{MAIL\_*}), e il server è pronto a partire con \texttt{npm run dev}.
+In pratica: si copia \texttt{.env.example} in \texttt{.env} e si incollano \texttt{DATABASE\_URL} e \texttt{JWT\_SECRET} (più eventualmente le \texttt{MAIL\_*}).
+
+\subsection{Inizializzazione del database}
+Un database Supabase appena creato è vuoto: le tabelle \textbf{non} vengono generate all'avvio del server. La prima volta (o dopo aver cambiato database) va quindi eseguito il comando \texttt{npm run migrate} nella cartella \texttt{server/}, che applica in ordine gli script SQL in \texttt{server/src/db/migrations/} e crea l'intero schema. Le migrazioni sono \textit{idempotenti} (usano \texttt{CREATE TABLE IF NOT EXISTS}), quindi si possono rilanciare senza rischi; una di esse inserisce anche alcune azioni di default nel listino. Su un database nuovo non esistono gli account di prova: il primo utente che si registra diventa automaticamente amministratore. Fatto questo, il server parte con \texttt{npm run dev}.
 
 % ==========================================
 \section{Attori del Sistema}

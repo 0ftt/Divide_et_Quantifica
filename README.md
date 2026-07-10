@@ -50,20 +50,31 @@ Poi apri `.env` e inserisci le tue chiavi. Le tre da procurarsi sono:
 
 Le altre variabili (`PORT`, `CORS_ORIGIN`, `PREMIUM_PRICE`, `QUOTE_CACHE_MINUTES`, `JWT_EXPIRES_IN`, `FRONTEND_URL`) hanno già un valore di default.
 
-### 3. Avviare il Server (Backend)
-Apri il terminale nella cartella del server e digita:
+### 3. Creare le tabelle del database (migrazioni)
+Un database Supabase appena creato è **vuoto**: le tabelle non si creano da sole all'avvio del server. La prima volta (o dopo aver cambiato database) vanno quindi eseguite le migrazioni:
 
-```Bash
+```bash
 cd server
 npm install
-npm fund
-npm audit fix
-npm run dev o npm run start
+npm run migrate
 ```
 
-Il server si avvierà in modalità di sviluppo tramite tsx (di default sulla porta configurata nel file .env).
+Il comando applica in ordine tutti gli script SQL in `server/src/db/migrations/` (sono idempotenti: usano `CREATE TABLE IF NOT EXISTS`, quindi si possono rilanciare senza problemi) e crea l'intero schema, inserendo anche alcune azioni di default nel listino.
 
-### 4. Avviare il Client (Frontend)
+> **Nota:** su un database nuovo non esistono gli account di test elencati sotto. Il **primo utente che si registra diventa automaticamente admin**; gli altri sono utenti standard.
+
+### 4. Avviare il Server (Backend)
+Sempre nella cartella `server/`:
+
+```bash
+npm run dev      # sviluppo con tsx (ricarica automatica)
+# oppure
+npm run build && npm run start   # build + avvio della versione compilata
+```
+
+Il server si avvierà sulla porta configurata nel file `.env` (default `3000`).
+
+### 5. Avviare il Client (Frontend)
 Apri un nuovo terminale sempre nella cartella principale del progetto e digita:
 
 ```Bash
