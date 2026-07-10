@@ -11,7 +11,7 @@ Il progetto adotta una rigorosa separazione delle responsabilità tra client e s
 \renewcommand{\arraystretch}{1.3}
 \begin{tabularx}{\textwidth}{|l|c|X|}
 \hline
-\rowcolor[HTML]{17365D}
+\rowcolor[HTML]{2E2A5E}
 \textcolor{white}{\textbf{Libreria}} & \textcolor{white}{\textbf{Versione}} & \textcolor{white}{\textbf{Scopo}} \\ \hline
 \textbf{\texttt{@angular/core} (\dots)} & \textasciicircum{}21.2 & Framework SPA (architettura Standalone + Signals) \\ \hline
 \textbf{\texttt{@ionic/angular}} & \textasciicircum{}8.0 & Componenti UI ibridi e approccio mobile-first \\ \hline
@@ -40,7 +40,7 @@ Il progetto adotta una rigorosa separazione delle responsabilità tra client e s
 \renewcommand{\arraystretch}{1.3}
 \begin{tabularx}{\textwidth}{|l|c|X|}
 \hline
-\rowcolor[HTML]{17365D}
+\rowcolor[HTML]{2E2A5E}
 \textcolor{white}{\textbf{Libreria}} & \textcolor{white}{\textbf{Versione}} & \textcolor{white}{\textbf{Scopo}} \\ \hline
 \textbf{\texttt{express}} & \textasciicircum{}4.19 & Web framework e gestore dell'infrastruttura API REST \\ \hline
 \textbf{\texttt{pg}} & \textasciicircum{}8.12 & Driver nativo per il client PostgreSQL (connessione a Supabase) \\ \hline
@@ -73,7 +73,7 @@ Gli attori definiscono i profili (umani o automatizzati) che interagiscono con i
 \renewcommand{\arraystretch}{1.3}
 \begin{tabularx}{\textwidth}{|l|c|X|X|}
 \hline
-\rowcolor[HTML]{17365D}
+\rowcolor[HTML]{2E2A5E}
 \textcolor{white}{\textbf{Attore}} & \textcolor{white}{\textbf{Tipo}} & \textcolor{white}{\textbf{Descrizione}} & \textcolor{white}{\textbf{Ruolo e Permessi nel Sistema}} \\ \hline
 \textbf{Utente Standard (Trader)} & Umano & L'utente finale che utilizza la piattaforma per scopi analitici e di simulazione. & Regola l'accesso tramite credenziali single-session. Può gestire i propri workspace infiniti, manipolare e collegare widget, effettuare compravendite simulate nel Broker (con addebito di commissioni), personalizzare il profilo e interagire con la leaderboard (condivisione e recensioni). \\ \hline
 \textbf{Amministratore (Admin)} & Umano & Profilo con privilegi elevati incaricato della supervisione operativa della piattaforma. & Possiede tutti i permessi dell'utente standard, a cui si aggiunge l'accesso esclusivo al Pannello Admin. Può inserire o rimuovere asset dal listino globale, eliminare account utente, forzare il refresh dei mercati e ispezionare la tabella dei ricavi dell'app. \\ \hline
@@ -104,7 +104,7 @@ Le entità \textit{core} rappresentano il cuore del dominio applicativo e finanz
 \renewcommand{\arraystretch}{1.3}
 \begin{tabularx}{\textwidth}{|l|X|p{3.5cm}|X|}
 \hline
-\rowcolor[HTML]{17365D}
+\rowcolor[HTML]{2E2A5E}
 \textcolor{white}{\textbf{Entità}} & \textcolor{white}{\textbf{Descrizione}} & \textcolor{white}{\textbf{Attributi Critici}} & \textcolor{white}{\textbf{Implicazioni Logiche / Relazioni}} \\ \hline
 \textbf{User} & Rappresenta l'identità e lo stato economico/contrattuale di un account registrato. & \texttt{id}, \texttt{email}, \texttt{credit}, \texttt{is\_\allowbreak{}premium}, \texttt{token\_\allowbreak{}version} & Entità centrale. Il parametro \texttt{token\_\allowbreak{}version} blocca i login simultanei. Ha una relazione 1:N con workspace, transazioni e posizioni. \\ \hline
 \textbf{Asset} & Lo strumento finanziario (azione quotata o indice personalizzato unlisted) tracciabile sulla canvas. & \texttt{ticker}, \texttt{name}, \texttt{last\_\allowbreak{}price}, \texttt{currency} & Identificato univocamente dal ticker. Alimenta i widget grafici e definisce gli elementi acquistabili nel broker. \\ \hline
@@ -123,7 +123,7 @@ Queste entità gestiscono le funzioni trasversali della piattaforma, inclusi i s
 \renewcommand{\arraystretch}{1.3}
 \begin{tabularx}{\textwidth}{|l|X|X|X|}
 \hline
-\rowcolor[HTML]{17365D}
+\rowcolor[HTML]{2E2A5E}
 \textcolor{white}{\textbf{Entità}} & \textcolor{white}{\textbf{Descrizione}} & \textcolor{white}{\textbf{Funzione Architetturale}} & \textcolor{white}{\textbf{Allineamento e Vincoli}} \\ \hline
 \textbf{Leaderboard Entry} & La scheda pubblica delle performance condivisa da un utente. & Ordina la classifica globale in base al guadagno/perdita non realizzato (P\&L) delle posizioni, dato dalla differenza tra prezzo attuale e prezzo medio di carico. & Relazione N:1 con User. Il vincolo di unicità (\texttt{user\_\allowbreak{}id}, \texttt{label}) consente a un singolo utente di competere con strategie separate. \\ \hline
 \textbf{Leaderboard Review} & Il feedback testuale lasciato da un utente sotto la scheda condivisa di un altro trader. & Implementa la componente di interazione sociale e validazione delle strategie della community. & Possiede una doppia chiave esterna vincolata in \texttt{CASCADE} verso l'utente recensito (\texttt{entry\_\allowbreak{}user\_\allowbreak{}id}) e l'autore (\texttt{author\_\allowbreak{}id}). \\ \hline

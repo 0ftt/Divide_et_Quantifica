@@ -1,6 +1,6 @@
-PWD m:\DeQ\ionic\Divide_et_Quantifica\docs
+PWD M:\DeQ\ionic\Divide_et_Quantifica\docs
 INPUT C:\Users\giang\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT m:\DeQ\ionic\Divide_et_Quantifica\docs\Doc.tex
+INPUT Doc.tex
 OUTPUT Doc.log
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
