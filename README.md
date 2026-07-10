@@ -36,6 +36,8 @@ Apri il terminale nella cartella del server e digita:
 ```Bash
 cd server
 npm install
+npm fund
+npm audit fix
 npm run dev o npm run start
 ```
 
@@ -47,11 +49,13 @@ Apri un nuovo terminale sempre nella cartella principale del progetto e digita:
 ```Bash
 cd client
 npm install
+npm fund
+npm audit fix
 ionic serve o ionic serve --external
 ```
 
 Utilizzare --external permette al frontend di essere accessibile tramite la rete a cui è allacciato il pc. Utile per testare su mobile.
-L'applicazione aprirà automaticamente una scheda nel tuo browser (di default su http://localhost:8100 o anche http://localhost:4200).
+L'applicazione aprirà automaticamente una scheda nel tuo browser (di default su http://localhost:8100 o anche http://localhost:4200, per accedere da un dispositivo nella rete bisogna sostituire localhost con l'indirizzo IPv4 del dispositivo dove il frontend è localizzato, ad oggi non so se sulla rete di Unipa funziona).
 
 ## 🧪 Account di Test
 
