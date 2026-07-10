@@ -1,0 +1,81 @@
+:root {
+  --deq-bg-base: #020617;
+
+  --deq-accent-main: #1CA9C9;
+  --deq-accent-neon: #00f2fe;
+
+  --deq-text-bright: #ffffff;
+  --deq-text-main: #e2e8f0;
+  --deq-text-muted: #64748b;
+
+  --deq-border: rgba(0, 242, 254, 0.2);
+  --deq-border-solid: #1e293b;
+
+  --deq-error: #ff4a5a;
+  --deq-error-glow: rgba(255, 74, 90, 0.8);
+  --deq-success: #00c853;
+  --deq-success-muted: #84cc16;
+
+  --deq-surface-glass: rgba(15, 23, 42, 0.45);
+  --deq-surface-panel: rgba(15, 23, 42, 0.65);
+
+  --deq-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+
+  --deq-page-gradient: linear-gradient(
+    160deg,
+    #c0b3fa 0%, #c0b3fa 12.5%,
+    #a5a0de 12.5%, #a5a0de 25%,
+    #8b8ec3 25%, #8b8ec3 37.5%,
+    #707ba7 37.5%, #707ba7 50%,
+    #56688b 50%, #56688b 62.5%,
+    #3b566f 62.5%, #3b566f 75%,
+    #214354 75%, #214354 87.5%,
+    #063038 87.5%, #063038 100%
+  );
+}
+
+body.deq-light {
+  --deq-bg-base: #e7d6ba;
+
+  --deq-accent-main: #24897c;
+  --deq-accent-neon: #129186;
+
+  --deq-text-bright: #2f2519;
+  --deq-text-main: #52412f;
+  --deq-text-muted: #8a7359;
+
+  --deq-border: rgba(36, 137, 124, 0.32);
+  --deq-border-solid: #d7c19d;
+
+  --deq-surface-glass: rgba(245, 235, 218, 0.68);
+  --deq-surface-panel: rgba(245, 235, 218, 0.88);
+
+  --deq-page-gradient: linear-gradient(
+    160deg,
+    #f4e9d2 0%, #f4e9d2 12.5%,
+    #d8d5b7 12.5%, #d8d5b7 25%,
+    #bcc29d 25%, #bcc29d 37.5%,
+    #9fb090 37.5%, #9fb090 50%,
+    #7f9f88 50%, #7f9f88 62.5%,
+    #5c8d7f 62.5%, #5c8d7f 75%,
+    #3a7c74 75%, #3a7c74 87.5%,
+    #1f6b66 87.5%, #1f6b66 100%
+  );
+
+  --deq-error: #c14a41;
+  --deq-error-glow: rgba(193, 74, 65, 0.55);
+  --deq-success: #2a8f63;
+  --deq-success-muted: #71903a;
+
+  background: linear-gradient(135deg, #eee2c8 0%, #e2d2ac 30%, #c9d4b8 65%, #a9cdc0 100%);
+
+  .widget-drawer {
+    border-color: color-mix(in srgb, var(--deq-accent-main) 38%, transparent);
+    box-shadow: 0 10px 25px rgba(58, 46, 34, 0.2);
+
+    .drawer-item {
+      border-color: color-mix(in srgb, var(--deq-accent-main) 32%, transparent);
+      background: color-mix(in srgb, var(--deq-bg-base) 75%, transparent);
+    }
+  }
+}
