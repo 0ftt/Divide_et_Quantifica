@@ -16,6 +16,7 @@ import {
   IonBadge,
   IonSegment,
   IonSegmentButton,
+  IonSearchbar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -70,6 +71,7 @@ interface StackedEvent {
     IonBadge,
     IonSegment,
     IonSegmentButton,
+    IonSearchbar,
     BreadcrumbsComponent,
     TranslocoModule,
   ],

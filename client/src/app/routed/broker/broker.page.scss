@@ -94,28 +94,6 @@
   --color: var(--deq-accent-neon);
 }
 
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0.7rem 0;
-  padding: 0.45rem 0.7rem;
-  background: color-mix(in srgb, var(--deq-bg-base) 25%, transparent);
-  border: 1px solid var(--deq-border);
-  border-radius: 6px;
-
-  ion-icon { color: var(--deq-text-muted); font-size: 1rem; flex-shrink: 0; }
-  input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--deq-text-bright);
-    font-family: "SF Mono", monospace;
-    font-size: 0.9rem;
-  }
-}
-
 .row-icon { color: var(--deq-accent-neon); font-size: 1.1rem; }
 
 .asset-pager {
@@ -180,7 +158,7 @@
   &.buy { --background: color-mix(in srgb, var(--deq-success) 22%, transparent); --color: var(--deq-success); }
   &.sell { --background: color-mix(in srgb, var(--deq-error) 22%, transparent); --color: var(--deq-error); }
   &.recharge { --background: color-mix(in srgb, var(--deq-accent-neon) 20%, transparent); --color: var(--deq-accent-neon); }
-  &.premium { --background: color-mix(in srgb, #ffce31 22%, transparent); --color: #ffce31; }
+  &.premium { --background: color-mix(in srgb, var(--deq-premium) 22%, transparent); --color: var(--deq-premium); }
 }
 
 .tx-amount {

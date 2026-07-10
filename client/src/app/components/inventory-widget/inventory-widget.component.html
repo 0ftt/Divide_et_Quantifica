@@ -29,13 +29,34 @@
 
   @if (!widget.minimize) {
     <main class="widget-content inv-body" (pointerdown)="$event.stopPropagation()">
-      @for (row of rows; track row.ticker) {
+      <div class="inv-search">
+        <ion-icon name="search-outline"></ion-icon>
+        <input type="text" [(ngModel)]="search" (ngModelChange)="onSearch()"
+               [placeholder]="'stocks.searchPlaceholder' | transloco" />
+      </div>
+
+      @for (row of pagedRows; track row.ticker) {
         <div class="inv-row">
           <span class="inv-ticker">{{ row.ticker }}</span>
           <span class="inv-qty">{{ row.quantity }}&times;</span>
           <span class="inv-val">&euro;{{ value(row) | number:'1.0-0' }}</span>
         </div>
+      } @empty {
+        <div class="inv-empty">{{ 'widget.inventoryEmpty' | transloco }}</div>
       }
+
+      @if (pageCount > 1) {
+        <div class="inv-pager">
+          <ion-button fill="clear" size="small" [disabled]="page === 0" (click)="prevPage()">
+            <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+          </ion-button>
+          <span class="inv-page">{{ page + 1 }}/{{ pageCount }}</span>
+          <ion-button fill="clear" size="small" [disabled]="page >= pageCount - 1" (click)="nextPage()">
+            <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+          </ion-button>
+        </div>
+      }
+
       <div class="inv-total">
         <span class="inv-total-tag">TOTALE</span>
         <span class="inv-total-val">&euro;{{ total | number:'1.0-0' }}</span>

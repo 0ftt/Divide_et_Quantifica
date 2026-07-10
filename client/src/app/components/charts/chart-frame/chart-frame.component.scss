@@ -38,16 +38,6 @@
 }
 
 .resize-handle {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  z-index: 6;
-  width: 18px;
-  height: 18px;
-  cursor: nwse-resize;
-  border-bottom-right-radius: 10px;
-  background:
-    linear-gradient(135deg, transparent 50%, var(--deq-accent-main) 50%, var(--deq-accent-main) 62%, transparent 62%, transparent 74%, var(--deq-accent-main) 74%, var(--deq-accent-main) 86%, transparent 86%);
   opacity: 0.7;
 
   &:hover { opacity: 1; }

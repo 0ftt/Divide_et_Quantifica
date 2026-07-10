@@ -65,11 +65,8 @@
                 <ion-badge class="deq-badge count-badge">{{ filteredAssets.length }}</ion-badge>
               </div>
 
-              <div class="search-box">
-                <ion-icon name="search-outline"></ion-icon>
-                <input type="text" [(ngModel)]="search" (ngModelChange)="onSearch()"
-                       [placeholder]="'stocks.searchPlaceholder' | transloco" />
-              </div>
+              <ion-searchbar class="deq-search" [(ngModel)]="search" (ionInput)="onSearch()"
+                             [placeholder]="'stocks.searchPlaceholder' | transloco"></ion-searchbar>
 
               <ion-list class="deq-list market-list" lines="none">
                 @if (loading) {
@@ -132,8 +129,10 @@
                 <span>{{ 'broker.credit' | transloco }}</span>
                 <strong>€{{ credit.toFixed(2) }}</strong>
               </div>
+              <ion-searchbar class="deq-search" [(ngModel)]="invSearch" (ionInput)="onInvSearch()"
+                             [placeholder]="'stocks.searchPlaceholder' | transloco"></ion-searchbar>
               <ion-list class="deq-list" lines="none">
-                @for (holding of inventory; track holding.ticker) {
+                @for (holding of pagedInventory; track holding.ticker) {
                   <ion-item class="deq-item">
                     <ion-label>{{ holding.ticker }}</ion-label>
                     <ion-badge slot="end" class="deq-badge">{{ holding.quantity }}</ion-badge>
@@ -156,6 +155,17 @@
                   </ion-item>
                 }
               </ion-list>
+              @if (invTotalPages > 1) {
+                <div class="asset-pager">
+                  <ion-button fill="clear" [disabled]="invPage === 0" (click)="invPrevPage()">
+                    <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+                  </ion-button>
+                  <span class="pager-label">{{ invPage + 1 }} / {{ invTotalPages }}</span>
+                  <ion-button fill="clear" [disabled]="invPage >= invTotalPages - 1" (click)="invNextPage()">
+                    <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+                  </ion-button>
+                </div>
+              }
             </div>
           </aside>
         </section>
@@ -195,11 +205,8 @@
             <ion-badge class="deq-badge count-badge">{{ filteredTransactions.length }}</ion-badge>
           </div>
 
-          <div class="search-box">
-            <ion-icon name="search-outline"></ion-icon>
-            <input type="text" [(ngModel)]="txSearch" (ngModelChange)="onTxSearch()"
-                   [placeholder]="'history.searchPlaceholder' | transloco" />
-          </div>
+          <ion-searchbar class="deq-search" [(ngModel)]="txSearch" (ionInput)="onTxSearch()"
+                         [placeholder]="'history.searchPlaceholder' | transloco"></ion-searchbar>
 
           @if (txError) {
             <p class="asset-error">{{ txError }}</p>

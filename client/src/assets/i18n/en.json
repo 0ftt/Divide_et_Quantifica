@@ -277,6 +277,7 @@
     "alertExit": "🔔 {{ticker}} exited range {{band}} — price {{price}}",
     "inTab": " (tab «{{tab}}»)",
     "emptyChart": "Connect a data source",
+    "inventoryEmpty": "No positions.",
     "loadingChart": "Loading data…"
   },
   "dashboard": {

@@ -125,23 +125,41 @@
         <button class="floating-btn tabs-btn" [class.active]="tabsMenuOpen" (click)="toggleTabsMenu($event)" [title]="'dashboard.tManageTabs' | transloco"><ion-icon name="albums-outline"></ion-icon></button>
         <button class="floating-btn add-tab-plus" (click)="createTabSilent()" [title]="'dashboard.tNewTab' | transloco"><ion-icon name="add-outline"></ion-icon></button>
         @if (tabsMenuOpen) {
-          <div class="tabs-menu widget-box">
-            @for (tab of tabsList; track tab.id) {
-              <div class="tabs-menu-item" [class.active]="tab.active">
-                <ion-icon class="tab-type-icon" [name]="$first ? 'home-outline' : 'document-outline'"></ion-icon>
-                @if (renamingTabId === tab.id) {
-                  <input class="tabs-menu-input" [(ngModel)]="tab.name" (click)="$event.stopPropagation()"
-                         (keyup.enter)="renamingTabId = null" (blur)="renamingTabId = null" autofocus />
-                } @else {
-                  <span class="tabs-menu-name" (click)="selectTab(tab.id); tabsMenuOpen = false">{{ $first ? ('dashboard.homeTab' | transloco) : tab.name }}</span>
+          @if (isMobile) {
+            <div class="tabs-carousel widget-box">
+              <swiper-container slides-per-view="auto" space-between="8" free-mode="true">
+                @for (tab of tabsList; track tab.id) {
+                  <swiper-slide class="tab-slide">
+                    <div class="tab-card" [class.active]="tab.active" (click)="selectTab(tab.id); tabsMenuOpen = false">
+                      <ion-icon class="tab-type-icon" [name]="$first ? 'home-outline' : 'document-outline'"></ion-icon>
+                      <span class="tab-card-name">{{ $first ? ('dashboard.homeTab' | transloco) : tab.name }}</span>
+                      @if (!$first) {
+                        <ion-icon class="tabs-menu-close" name="close-outline" (click)="closeTab(tab.id, $event)"></ion-icon>
+                      }
+                    </div>
+                  </swiper-slide>
                 }
-                @if (!$first) {
-                  <ion-icon class="tabs-menu-rename" name="create-outline" [title]="'dashboard.renameTab' | transloco" (click)="startRenameTab(tab.id, $event)"></ion-icon>
-                  <ion-icon class="tabs-menu-close" name="close-outline" (click)="closeTab(tab.id, $event)"></ion-icon>
-                }
-              </div>
-            }
-          </div>
+              </swiper-container>
+            </div>
+          } @else {
+            <div class="tabs-menu widget-box">
+              @for (tab of tabsList; track tab.id) {
+                <div class="tabs-menu-item" [class.active]="tab.active">
+                  <ion-icon class="tab-type-icon" [name]="$first ? 'home-outline' : 'document-outline'"></ion-icon>
+                  @if (renamingTabId === tab.id) {
+                    <input class="tabs-menu-input" [(ngModel)]="tab.name" (click)="$event.stopPropagation()"
+                           (keyup.enter)="renamingTabId = null" (blur)="renamingTabId = null" autofocus />
+                  } @else {
+                    <span class="tabs-menu-name" (click)="selectTab(tab.id); tabsMenuOpen = false">{{ $first ? ('dashboard.homeTab' | transloco) : tab.name }}</span>
+                  }
+                  @if (!$first) {
+                    <ion-icon class="tabs-menu-rename" name="create-outline" [title]="'dashboard.renameTab' | transloco" (click)="startRenameTab(tab.id, $event)"></ion-icon>
+                    <ion-icon class="tabs-menu-close" name="close-outline" (click)="closeTab(tab.id, $event)"></ion-icon>
+                  }
+                </div>
+              }
+            </div>
+          }
         }
       </div>
       <button class="floating-btn leaderboard-btn" (click)="goToLeaderboard($event)" [title]="'nav.leaderboard' | transloco"><ion-icon name="trophy-outline"></ion-icon></button>

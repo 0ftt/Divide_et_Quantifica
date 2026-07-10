@@ -117,6 +117,22 @@ header.widget-header .ticker-name,
   color: var(--deq-error);
 }
 
+ion-searchbar.deq-search {
+  --background: color-mix(in srgb, var(--deq-bg-base) 25%, transparent);
+  --color: var(--deq-text-bright);
+  --placeholder-color: var(--deq-text-muted);
+  --icon-color: var(--deq-text-muted);
+  --clear-button-color: var(--deq-text-muted);
+  --box-shadow: none;
+  --border-radius: 6px;
+  padding: 0;
+  margin: 0.8rem 0;
+  min-height: 42px;
+  border: 1px solid var(--deq-border);
+  border-radius: 6px;
+  text-align: start;
+}
+
 .resize-handle {
   position: absolute;
   right: 0;
@@ -137,8 +153,8 @@ header.widget-header .ticker-name,
 .premium-perk {
   margin: 0.2rem 0 0.6rem;
   padding: 0.5rem 0.7rem;
-  border-left: 2px solid #ffce31;
-  background: color-mix(in srgb, #ffce31 8%, transparent);
+  border-left: 2px solid var(--deq-premium);
+  background: color-mix(in srgb, var(--deq-premium) 8%, transparent);
   border-radius: 0 6px 6px 0;
   font-size: 0.82rem;
   color: var(--deq-text-main);

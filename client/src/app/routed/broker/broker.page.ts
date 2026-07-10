@@ -16,6 +16,7 @@ import {
   IonItem,
   IonInput,
   IonBadge,
+  IonSearchbar,
   ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -78,6 +79,7 @@ interface Holding {
     IonItem,
     IonInput,
     IonBadge,
+    IonSearchbar,
     ModalComponent,
     MiniHistoryChartComponent,
     BreadcrumbsComponent,
@@ -109,6 +111,9 @@ export class BrokerPage implements OnInit {
   readonly pageSize = 8;
 
   inventory: Holding[] = [];
+  invSearch = '';
+  invPage = 0;
+  readonly invPageSize = 8;
 
   transactions: Transaction[] = [];
   txLoading = false;
@@ -187,6 +192,7 @@ export class BrokerPage implements OnInit {
       next: (p) => {
         this.inventory = p.holdings.map((h) => ({ ticker: h.ticker, quantity: h.quantity }));
         this.credit = p.credit;
+        this.invPage = Math.min(this.invPage, this.invTotalPages - 1);
       },
       error: () => {
         this.creditService.getBalance().subscribe({
@@ -233,6 +239,39 @@ export class BrokerPage implements OnInit {
   nextPage(): void {
     if (this.page < this.totalPages - 1) {
       this.page++;
+    }
+  }
+
+  get filteredInventory(): Holding[] {
+    const q = this.invSearch.trim().toLowerCase();
+    if (!q) {
+      return this.inventory;
+    }
+    return this.inventory.filter((h) => h.ticker.toLowerCase().includes(q));
+  }
+
+  get invTotalPages(): number {
+    return Math.max(1, Math.ceil(this.filteredInventory.length / this.invPageSize));
+  }
+
+  get pagedInventory(): Holding[] {
+    const start = this.invPage * this.invPageSize;
+    return this.filteredInventory.slice(start, start + this.invPageSize);
+  }
+
+  onInvSearch(): void {
+    this.invPage = 0;
+  }
+
+  invPrevPage(): void {
+    if (this.invPage > 0) {
+      this.invPage--;
+    }
+  }
+
+  invNextPage(): void {
+    if (this.invPage < this.invTotalPages - 1) {
+      this.invPage++;
     }
   }
 

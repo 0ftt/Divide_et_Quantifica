@@ -67,11 +67,8 @@
               <ion-badge class="deq-badge count-badge">{{ filteredAssets.length }}</ion-badge>
             </div>
 
-            <div class="search-box">
-              <ion-icon name="search-outline"></ion-icon>
-              <input type="text" [(ngModel)]="assetSearch" (ngModelChange)="onAssetSearch()"
-                     [placeholder]="'admin.searchAssets' | transloco" />
-            </div>
+            <ion-searchbar class="deq-search" [(ngModel)]="assetSearch" (ionInput)="onAssetSearch()"
+                           [placeholder]="'admin.searchAssets' | transloco"></ion-searchbar>
 
             @if (assetError) {
               <p class="asset-error">{{ assetError }}</p>

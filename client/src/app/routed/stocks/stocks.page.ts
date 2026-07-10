@@ -14,6 +14,7 @@ import {
   IonLabel,
   IonInput,
   IonBadge,
+  IonSearchbar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -52,6 +53,7 @@ import { Asset } from '$shared';
     IonLabel,
     IonInput,
     IonBadge,
+    IonSearchbar,
     BreadcrumbsComponent,
     TranslocoModule,
   ],

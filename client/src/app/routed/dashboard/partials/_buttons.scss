@@ -27,6 +27,48 @@
   gap: 2px;
 }
 
+.tabs-carousel {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  width: min(78vw, 460px);
+  max-width: calc(100vw - 24px);
+  padding: 8px;
+  z-index: 300;
+
+  swiper-container {
+    width: 100%;
+  }
+
+  swiper-slide {
+    width: auto;
+  }
+
+  .tab-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--deq-border);
+    background: color-mix(in srgb, var(--deq-bg-base) 35%, transparent);
+    color: var(--deq-text-main);
+    font-size: 0.85rem;
+    white-space: nowrap;
+    cursor: pointer;
+
+    .tab-type-icon { font-size: 1rem; color: var(--deq-text-muted); flex-shrink: 0; }
+    .tab-card-name { max-width: 42vw; overflow: hidden; text-overflow: ellipsis; }
+    .tabs-menu-close { color: var(--deq-error); opacity: 0.7; flex-shrink: 0; }
+
+    &.active {
+      border-color: var(--deq-accent-neon);
+      color: var(--deq-accent-neon);
+      .tab-type-icon { color: var(--deq-accent-neon); }
+    }
+  }
+}
+
 .tabs-menu-item {
   display: flex;
   align-items: center;

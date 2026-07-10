@@ -12,6 +12,7 @@ import {
   IonBadge,
   IonButton,
   IonIcon,
+  IonSearchbar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { refreshOutline, searchOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
@@ -37,6 +38,7 @@ import { TransactionService, Transaction } from '$core/services/transaction.serv
     IonBadge,
     IonButton,
     IonIcon,
+    IonSearchbar,
     BreadcrumbsComponent,
     TranslocoModule,
   ],

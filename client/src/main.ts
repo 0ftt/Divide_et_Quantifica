@@ -10,10 +10,14 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { provideTransloco } from '@jsverse/transloco';
 
+import { register } from 'swiper/element/bundle';
+
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { authInterceptor } from './app/core/auth/auth.interceptor';
 import { TranslocoHttpLoader } from './app/core/i18n/transloco-loader';
+
+register();
 
 bootstrapApplication(AppComponent, {
   providers: [

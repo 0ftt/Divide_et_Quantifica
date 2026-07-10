@@ -12,11 +12,8 @@
         <ion-badge class="deq-badge count-badge">{{ filteredTransactions.length }}</ion-badge>
       </div>
 
-      <div class="search-box">
-        <ion-icon name="search-outline"></ion-icon>
-        <input type="text" [(ngModel)]="search" (ngModelChange)="onSearch()"
-               [placeholder]="'history.searchPlaceholder' | transloco" />
-      </div>
+      <ion-searchbar class="deq-search" [(ngModel)]="search" (ionInput)="onSearch()"
+                     [placeholder]="'history.searchPlaceholder' | transloco"></ion-searchbar>
 
       @if (error) {
         <p class="asset-error">{{ error }}</p>

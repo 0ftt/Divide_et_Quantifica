@@ -7,6 +7,7 @@ import {
   ElementRef,
   ViewChild,
   HostListener,
+  CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -109,6 +110,7 @@ interface TabData {
     IonButton,
     IonIcon,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
 
@@ -118,6 +120,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   nomeUtente = 'Giovanni Luca';
   passwordErrata = false;
   isUserPremium = false;
+  isMobile = window.innerWidth <= 768;
 
   get isUserAdmin(): boolean {
     return this.auth.currentUser()?.role === 'admin';
@@ -1189,6 +1192,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:resize')
   onWindowResize(): void {
     this.resizeCanvas();
+    this.isMobile = window.innerWidth <= 768;
   }
 
   @HostListener('window:keydown', ['$event'])
