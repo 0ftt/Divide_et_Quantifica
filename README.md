@@ -31,7 +31,7 @@ cd Divide_et_Quantifica
 ```
 
 2. Avviare il Server (Backend)
-Apri il terminale nella cartella del server e digita:
+Apri il terminale nella cartella del r e digita:
 
 ```Bash
 cd server
@@ -51,7 +51,7 @@ ionic serve o ionic serve --external
 ```
 
 Utilizzare --external permette al frontend di essere accessibile tramite la rete a cui è allacciato il pc. Utile per testare su mobile.
-L'applicazione aprirà automaticamente una scheda nel tuo browser (di default su http://localhost:8100 o anche http://localhost:4200).
+L'applicazione aprirà automaticamente una scheda nel tuo browser (di default su http://localhost:8100 o anche http://localhost:4200, per accedere da un dispositivo nella rete bisogna sostituire localhost con l'indirizzo IPv4 del dispositivo dove il frontend è localizzato, ad oggi non so se sulla rete di Unipa funziona).
 
 ## 🧪 Account di Test
 
