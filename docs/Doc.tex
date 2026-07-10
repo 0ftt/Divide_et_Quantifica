@@ -1,0 +1,241 @@
+\documentclass[a4paper]{article}
+
+\usepackage{lipsum}
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{array} 
+\usepackage{titlesec} 
+\usepackage{enumitem} 
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{tikz}
+\usepackage{tocloft}
+\usepackage{longtable} 
+\usepackage{ltablex} 
+\usepackage{float}
+% \usepackage{booktabs} % Per tabelle professionali e pulite
+\usepackage[hidelinks]{hyperref}
+
+% --- Nuova Palette di Colori (Stile Moderno/Accademico) ---
+\definecolor{DeepNavy}{HTML}{1A365D}   % Blu Notte per i titoli principali
+\definecolor{SlateGray}{HTML}{4A5568}  % Grigio scuro per il testo secondario
+\definecolor{LightCyan}{HTML}{EBF8FF}  % Sfondo leggero per le tabelle
+
+\usepackage[skip=\baselineskip]{parskip}
+% \usepackage{enumitem}
+% \setlist{noitemsep, topsep=0pt, parsep=0pt}
+% \setlength\parskip{\baselineskip} % Per newline tra i paragrafi
+% \setlength\parindent{0pt} % Per no indent globale
+
+
+
+
+% --- Configurazioni Tabelle ---
+\setlength{\tabcolsep}{10pt} 
+\renewcommand{\arraystretch}{1.4} 
+\keepXColumns 
+
+\usepackage{etoolbox}
+
+% Forza il font Sans-Serif (moderno) all'inizio di ogni ambiente tabularx
+\AtBeginEnvironment{tabularx}{\sffamily}
+
+% --- Stili Titoli Personalizzati (Addio vecchio stile) ---
+\titleformat{\section}
+  {\normalfont\color{DeepNavy}\bfseries\Large\sffamily}
+  {\thesection}{1em}{}[{\color{DeepNavy}\titlerule[1pt]}] % Linea orizzontale sotto le sezioni
+
+\titleformat{\subsection}
+  {\normalfont\color{SlateGray}\bfseries\large\sffamily}
+  {\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\color{SlateGray}\bfseries\large\sffamily}
+  {\thesubsubsection}{1em}{}
+
+\titleformat{\paragraph}[block]
+  {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titleformat{\subparagraph}[block]
+  {\normalfont\normalsize\bfseries}{\thesubparagraph}{1em}{}
+
+% --- Configurazione Indice (TOC) ---
+\renewcommand{\contentsname}{Indice Generale}
+\renewcommand{\cftsecfont}{\color{DeepNavy}\bfseries\sffamily}
+\renewcommand{\cftsecpagefont}{\color{DeepNavy}\bfseries}
+
+
+% 1. Definiamo prima la profondità massima dell'ambiente (fino a 9 livelli)
+\setlistdepth{9}
+\renewlist{enumerate}{enumerate}{9}
+
+% 2. Impostiamo le opzioni globali per TUTTI i 9 livelli di enumerate
+\setlist[enumerate]{
+    leftmargin=*, 
+    align=left, 
+    nosep, 
+    before=\vspace{-0.5ex} % Mantiene l'allineamento perfetto nelle tabelle
+}
+
+% 3. Configura la formattazione dei singoli livelli
+% Il livello 1 ha il punto finale (es. 1.)
+\setlist[enumerate,1]{label=\arabic*.}
+
+% Dal livello 2 in poi usiamo label* SENZA punto finale, così eredita pulito 
+% e genera automaticamente: 1.1, 1.1.1, 1.1.1.1, ecc.
+\setlist[enumerate,2]{label*=\arabic*}
+\setlist[enumerate,3]{label*=.\arabic*}
+\setlist[enumerate,4]{label*=.\arabic*}
+\setlist[enumerate,5]{label*=.\arabic*}
+\setlist[enumerate,6]{label*=.\arabic*}
+\setlist[enumerate,7]{label*=.\arabic*}
+\setlist[enumerate,8]{label*=.\arabic*}
+\setlist[enumerate,9]{label*=.\arabic*}
+
+% 4. Opzioni per gli elenchi puntati (itemize)
+\setlist[itemize]{itemsep=2pt, topsep=2pt, leftmargin=*}
+
+% \renewcommand\labelitemi{{\color{DeepNavy}\tiny$\blacksquare$}} % Quadratini al posto dei cerchietti
+
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{4}
+
+% --- Nuova Copertina Geometrica (Evita il blocco di colore totale) ---
+\newcommand{\addmodernbackground}{
+  \AddToHookNext{shipout/background}{%
+    \begin{tikzpicture}[remember picture, overlay]
+      % Una fascia elegante in alto
+      \fill[DeepNavy] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+      % Un dettaglio geometrico in basso
+      \fill[SlateGray] (current page.south west) rectangle ([yshift=1cm]current page.south east);
+    \end{tikzpicture}
+  }
+}
+
+% --- Comandi Tabelle Ridisegnati (Senza righe verticali pesanti) ---
+% \newcommand{\testataTabella}[1]{\rowcolor{DeepNavy}\color{white}\textbf{#1}}
+\newcommand{\colonnaColorata}[1]{\cellcolor{#1}\color{white}}
+\newcolumntype{C}[1]{>{\cellcolor{DeepNavy}\color{white}\bfseries\centering\arraybackslash}m{3cm}}
+
+\newcommand{\rigaColorata}[2]{\renewcommand{\arraystretch}{1.2} \cellaColorata{#1} & \cellaColorata{#2} \\ \hline}
+
+\newcommand{\headerTabella}[2]{\rowcolor{DeepNavy} \multicolumn{1}{|c|}{\color{white}\textbf{#1}} & 
+\multicolumn{1}{c|}{\color{white}\textbf{#2}} \\ \hline}
+
+\newcommand{\rigaTabella}[2]{\textbf{#1} & #2 \\ \hline}
+
+\begin{document}
+
+\addmodernbackground
+
+\begin{titlepage}
+    
+\newgeometry{left=2.5cm, right=2.5cm, top=1.1cm, bottom=2.5cm}
+    
+    % --- INTESTAZIONE NELLA FASCIA BLU CON LOGO UNIPA ---
+    \color{white}\sffamily
+    \noindent
+
+    \begin{minipage}[c]{0.25\textwidth}
+        \flushright
+        % Logo UniPa inserito dentro la fascia blu
+        \includegraphics[height=1.8cm]{Immagini/Unipa.png} 
+    \end{minipage}%
+    \hspace{1cm}
+    \begin{minipage}[c]{0.70\textwidth}
+        \vspace{-0.1cm}
+        {\large \textbf{UNIVERSIT\`A DEGLI STUDI DI PALERMO}} \\
+        {\small DIPARTIMENTO DI INGEGNERIA} \\
+        {\small CORSO DI LAUREA IN INGEGNERIA INFORMATICA}
+    \end{minipage}
+
+    \vspace*{4.5cm} 
+    
+    % --- TITOLO PRINCIPALE ---
+    \color{black}\rmfamily
+    \begin{center}
+        {\Huge \textbf{\color{DeepNavy}Documento Progettuale}}\\[0.4cm]
+        {\large \color{SlateGray}\textsc{Specifiche del progetto}}\\[1.5cm]
+        \rule{4cm}{1.5pt}\\[1cm]
+        {\Large \textbf{Divide et Quantifica}}\\[0.6cm]
+        \includegraphics[height=2.5cm]{Immagini/DeQlogo.png} 
+    \end{center}
+            
+    \vfill 
+
+    % --- INFORMAZIONI IN BASSO ---
+    \sffamily
+    \begin{minipage}[t]{0.45\textwidth}
+        \color{DeepNavy}\textbf{Sviluppatore} \\
+        \color{black}
+        Giovanni Luca Cusano
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \raggedleft
+        \color{DeepNavy}\textbf{Supervisore} \\
+        \color{black}Prof.re Luca Cruciata \\
+        \vspace{.5cm}
+        \color{DeepNavy}\textbf{Anno Accademico} \\
+        \color{black}2025 - 2026
+    \end{minipage}
+    \vspace*{0.5cm}
+\end{titlepage}
+\newpage
+\restoregeometry
+
+% --- INDICE ---
+\tableofcontents
+\newpage
+
+\include{Pagine/Introduzione/introduzione}
+
+\include{Pagine/architettura/architettura}
+\include{Pagine/funzionalita/funzionalita}
+\include{Pagine/copyright/copyright}
+
+% ====================
+% TEST
+% ====================
+
+% \subsection{Stato dell'arte}
+% \lipsum[3]
+
+% \subsection{Modello dei Casi d'Uso}
+% \subsubsection{Descrizione Caso d'Uso: UC-1}
+
+% % Tabella completamente ridisegnata: stile moderno senza linee verticali
+% \arrayrulecolor{SlateGray} % Cambia il colore delle linee della tabella
+% \begin{tabularx}{\textwidth}{|l|X|}
+% \hline
+% \rowcolor{DeepNavy} \color{white}\textbf{Proprietà} & \color{white}\textbf{Descrizione} \\ \hline
+% \textbf{ID e Nome} & UC-1: Autenticazione Utente \\ \hline
+% \textbf{Attori} & Utente Registrato \\ \hline
+% \textbf{Pre-condizioni} & L'utente si trova nella schermata di login. \\ \hline
+% \rowcolor{LightCyan}\textbf{Flusso Principale} & 
+% 1. L'utente inserisce le credenziali.\newline
+% 2. Il sistema convalida i dati.\newline
+% 3. Accesso consentito. \\ \hline
+% \textbf{Flussi Alternativi} & 2a. Credenziali errate: il sistema mostra un errore. \\ \hline
+% \textbf{Post-condizioni} & L'utente è correttamente loggato. \\ \hline
+% \end{tabularx}
+% \arrayrulecolor{black}
+
+
+% \renewcommand{\arraystretch}{2.0}
+% \begin{tabularx}{\textwidth}{|C|X|}
+% \hline
+% % \rowcolor{DeepNavy} \color{white}\textbf{Proprietà} & \color{white}\textbf{Descrizione} \\ \hline
+% \rowcolor{DeepNavy} \multicolumn{1}{|c|}{\color{white}\textbf{Proprietà}} & 
+% \multicolumn{1}{c|}{\color{white}\textbf{Descrizione}} \\ \hline
+% % \multicolumn{1}{|c|}{\textbf{Proprietà}} & 
+% % \multicolumn{1}{c|}{\textbf{Descrizione}} \\ \hline
+% \textbf{Caso D'uso} & Autenticazione con Identità digitale \\ \hline
+% \textbf{ID} & AUT\_MEM\_ID \\ \hline
+% \textbf{Attori} & Membro AFAM, Provider Identità digitale, DBMS \\ \hline
+% \textbf{Precondizione} & Il sistema ha mostrato la schermata ``LOGIN'' oppure la schermata ``REGISTRATI'' \\ \hline
+% \textbf{Flusso degli eventi} & 
+% \begin{enumerate}[leftmargin=*, label=\arabic*., itemsep=2pt, parsep=0pt]
+%     \item Il Membro clicca sul pulsante ``ENTRA CON SPID''
+%     \item Il sistema mostra un menu con i provider di identità digitale
+%     \item Il Membro seleziona il proprio provider
+%     \item Il sistema mostra a video la schermata di autenticazione del 
+
+\end{document}

@@ -1,0 +1,152 @@
+% ==========================================
+\section{Dettaglio dello Stack Tecnologico}
+% ==========================================
+
+Il progetto adotta una rigorosa separazione delle responsabilità tra client e server, pur mantenendo una forte coerenza architetturale tramite la condivisione di tipologie e logiche di validazione.
+
+\subsection{Client (Frontend) -- \texttt{client/package.json}}
+\begin{table}[H]
+\centering
+\arrayrulecolor{SlateGray}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|l|c|X|}
+\hline
+\rowcolor[HTML]{17365D}
+\textcolor{white}{\textbf{Libreria}} & \textcolor{white}{\textbf{Versione}} & \textcolor{white}{\textbf{Scopo}} \\ \hline
+\textbf{\texttt{@angular/core} (\dots)} & \textasciicircum{}21.2 & Framework SPA (architettura Standalone + Signals) \\ \hline
+\textbf{\texttt{@ionic/angular}} & \textasciicircum{}8.0 & Componenti UI ibridi e approccio mobile-first \\ \hline
+\textbf{\texttt{ionicons}} & \textasciicircum{}7.0 & Set di icone vettoriali standardizzate \\ \hline
+\textbf{\texttt{@capacitor/core}} & 8.x & Shell nativa per la build e il deploy su dispositivi mobili \\ \hline
+\textbf{\texttt{echarts}} & \textasciicircum{}6.1 & Motore di rendering grafico (candele, linee, aree, volumi) \\ \hline
+\textbf{\texttt{@jsverse/transloco}} & \textasciicircum{}7.5 & Gestione dell'internazionalizzazione dinamica (IT/EN) \\ \hline
+\textbf{\texttt{rxjs}} & \textasciitilde{}7.8 & Gestione asincrona e programmazione reattiva \\ \hline
+\textbf{\texttt{zod}} & \textasciicircum{}3.25 & Validazione rigorosa dei form e dei payload lato client \\ \hline
+\textbf{\texttt{zone.js} / \texttt{tslib}} & \textasciitilde{}0.15 / \textasciicircum{}2.8 & Runtime Angular e helper TypeScript \\ \hline
+\end{tabularx}
+\end{table}
+
+\textbf{Tooling e Dipendenze di Sviluppo (devDependencies):}
+\begin{itemize}[itemsep=-2pt]
+    \item \textbf{Build/CLI:} \texttt{@angular/build}, \texttt{@angular/cli}, \texttt{@angular/\allowbreak{}compiler-cli}, \texttt{@angular/\allowbreak{}language-service} (\textasciicircum{}21), \texttt{@ionic/\allowbreak{}angular-toolkit}, \texttt{@capacitor/cli}.
+    \item \textbf{Linting:} \texttt{eslint} (\textasciicircum{}9), i pacchetti \texttt{@angular-eslint/*} e \texttt{@typescript-eslint/*}, oltre a plugin specifici per import, JSDoc e arrow functions.
+    \item \textbf{Testing:} \texttt{karma}, \texttt{jasmine-core}, e relativi reporter/launcher per la suite di test.
+    \item \textbf{Linguaggio:} \texttt{typescript} \textasciitilde{}5.9.
+\end{itemize}
+
+\subsection{Server (Backend) -- \texttt{server/package.json}}
+\begin{table}[H]
+\centering
+\arrayrulecolor{SlateGray}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|l|c|X|}
+\hline
+\rowcolor[HTML]{17365D}
+\textcolor{white}{\textbf{Libreria}} & \textcolor{white}{\textbf{Versione}} & \textcolor{white}{\textbf{Scopo}} \\ \hline
+\textbf{\texttt{express}} & \textasciicircum{}4.19 & Web framework e gestore dell'infrastruttura API REST \\ \hline
+\textbf{\texttt{pg}} & \textasciicircum{}8.12 & Driver nativo per il client PostgreSQL (connessione a Supabase) \\ \hline
+\textbf{\texttt{jsonwebtoken}} & \textasciicircum{}9.0 & Generazione e verifica dei token per l'autenticazione stateless \\ \hline
+\textbf{\texttt{bcryptjs}} & \textasciicircum{}2.4 & Funzioni di hashing crittografico per la protezione delle password \\ \hline
+\textbf{\texttt{zod}} & \textasciicircum{}3.23 & Validazione rigorosa degli input e dei payload in ingresso \\ \hline
+\textbf{\texttt{nodemailer}} & \textasciicircum{}9.0 & Modulo di invio email transazionali tramite protocollo SMTP \\ \hline
+\textbf{\texttt{cors}} & \textasciicircum{}2.8 & Configurazione e gestione delle policy CORS \\ \hline
+\textbf{\texttt{dotenv}} & \textasciicircum{}16.4 & Iniezione e gestione sicura delle variabili d'ambiente \\ \hline
+\end{tabularx}
+\end{table}
+
+\textbf{Tooling e Dipendenze di Sviluppo (devDependencies):}
+\begin{itemize}[itemsep=-2pt]
+    \item \textbf{Esecuzione:} \texttt{tsx} (\textasciicircum{}4.16) per l'esecuzione nativa e il \textit{watch} dei file TypeScript in ambiente di sviluppo.
+    \item \textbf{Linguaggio e Tipizzazione:} \texttt{typescript} (\textasciicircum{}5.5) e pacchetti \texttt{@types/} per Node, Express, pg, JWT, bcryptjs, cors e nodemailer.
+\end{itemize}
+
+\subsection{Note Architetturali e Modulo Condiviso}
+Il workspace implementa una directory \texttt{shared/} che funge da strato di integrazione concettuale tra frontend e backend. Tale cartella non possiede dipendenze a runtime proprie, limitandosi a esporre modelli e interfacce TypeScript condivise (importabili tramite l'alias \texttt{\$shared}). All'interno di questo ecosistema, \textbf{Zod} rappresenta l'unica libreria condivisa in modo simmetrico tra i due layer, garantendo una \textit{Single Source of Truth} per la validazione dei dati con regole rigorosamente allineate. L'ambiente server utilizza stabilmente la versione 4 di Express (\textasciicircum{}4.19) garantendo la massima compatibilità con l'ecosistema di middleware e plugin attuali.
+
+% ==========================================
+\section{Attori del Sistema}
+% ==========================================
+Gli attori definiscono i profili (umani o automatizzati) che interagiscono con il sistema, determinando i confini dei permessi e i flussi d'uso della piattaforma DeQ.
+
+\begin{table}[H]
+\centering
+\arrayrulecolor{SlateGray}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|l|c|X|X|}
+\hline
+\rowcolor[HTML]{17365D}
+\textcolor{white}{\textbf{Attore}} & \textcolor{white}{\textbf{Tipo}} & \textcolor{white}{\textbf{Descrizione}} & \textcolor{white}{\textbf{Ruolo e Permessi nel Sistema}} \\ \hline
+\textbf{Utente Standard (Trader)} & Umano & L'utente finale che utilizza la piattaforma per scopi analitici e di simulazione. & Regola l'accesso tramite credenziali single-session. Può gestire i propri workspace infiniti, manipolare e collegare widget, effettuare compravendite simulate nel Broker (con addebito di commissioni), personalizzare il profilo e interagire con la leaderboard (condivisione e recensioni). \\ \hline
+\textbf{Amministratore (Admin)} & Umano & Profilo con privilegi elevati incaricato della supervisione operativa della piattaforma. & Possiede tutti i permessi dell'utente standard, a cui si aggiunge l'accesso esclusivo al Pannello Admin. Può inserire o rimuovere asset dal listino globale, eliminare account utente, forzare il refresh dei mercati e ispezionare la tabella dei ricavi dell'app. \\ \hline
+\textbf{Scheduler (Sistema)} & Automatizzato & Processo asincrono operante in background sul server Node.js. & Esegue compiti di manutenzione temporizzati senza intervento umano: interroga ciclicamente i provider esterni, aggiorna la cache di mercato e la cronologia dei prezzi, gestisce la scadenza dei token di reset e invalida le sessioni. \\ \hline
+\textbf{Provider Dati} & Servizio Esterno & API di terze parti integrata a livello di backend. & Fornisce i flussi di dati reali (quotazioni live e serie storiche OHLC) necessari ad alimentare i widget azionari e i grafici sulla dashboard. \\ \hline
+\end{tabularx}
+\end{table}
+
+% ==========================================
+\section{Modello Dati e Struttura del Database}
+% ==========================================
+
+L'infrastruttura di persistenza di DeQ poggia su un robusto database relazionale PostgreSQL, ospitato sull'ecosistema Supabase. La topologia del database è stata ingegnerizzata per separare in modo rigoroso la gestione dello stato finanziario dell'utente, la configurazione vettoriale degli spazi di lavoro e lo storico immutabile delle transazioni di mercato.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Immagini/drawsql.png}
+    \caption{Diagramma Entità-Relazione (ER) del database di sistema generato tramite DrawSQL.}
+    \label{fig:er-diagram}
+\end{figure}
+
+\subsection{Entità Core (Core Entities)}
+Le entità \textit{core} rappresentano il cuore del dominio applicativo e finanziario della piattaforma, mappate direttamente sulle tabelle relazionali principali.
+
+\begin{table}[H]
+\centering
+\arrayrulecolor{SlateGray}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|l|X|p{3.5cm}|X|}
+\hline
+\rowcolor[HTML]{17365D}
+\textcolor{white}{\textbf{Entità}} & \textcolor{white}{\textbf{Descrizione}} & \textcolor{white}{\textbf{Attributi Critici}} & \textcolor{white}{\textbf{Implicazioni Logiche / Relazioni}} \\ \hline
+\textbf{User} & Rappresenta l'identità e lo stato economico/contrattuale di un account registrato. & \texttt{id}, \texttt{email}, \texttt{credit}, \texttt{is\_\allowbreak{}premium}, \texttt{token\_\allowbreak{}version} & Entità centrale. Il parametro \texttt{token\_\allowbreak{}version} blocca i login simultanei. Ha una relazione 1:N con workspace, transazioni e posizioni. \\ \hline
+\textbf{Asset} & Lo strumento finanziario (azione quotata o indice personalizzato unlisted) tracciabile sulla canvas. & \texttt{ticker}, \texttt{name}, \texttt{last\_\allowbreak{}price}, \texttt{currency} & Identificato univocamente dal ticker. Alimenta i widget grafici e definisce gli elementi acquistabili nel broker. \\ \hline
+\textbf{Holding} & La posizione finanziaria specifica; rappresenta la quantità di un determinato asset nel portafoglio di un utente. & \texttt{id}, \texttt{user\_\allowbreak{}id}, \texttt{ticker}, \texttt{quantity}, \texttt{avg\_\allowbreak{}price} & Risolve fisicamente la relazione molti-a-molti (M:N) tra User e Asset. Memorizza il prezzo medio di carico per il calcolo delle plusvalenze. \\ \hline
+\textbf{Transaction} & Il registro immutabile e append-only di qualsiasi evento che modifichi il saldo o lo stato dell'utente. & \texttt{id}, \texttt{user\_\allowbreak{}id}, \texttt{type}, \texttt{amount}, \texttt{created\_\allowbreak{}at} & Traccia la causale (acquisto, vendita, ricarica mock, attivazione Premium) a scopi di auditing e per la diagnostica finanziaria lato admin. \\ \hline
+\textbf{Workspace} & La singola scheda logica del canvas. Contiene la disposizione spaziale e la topologia dei nodi. & \texttt{id}, \texttt{user\_\allowbreak{}id}, \texttt{name}, \texttt{camera\_\allowbreak{}zoom}, \texttt{widget} (\texttt{JSONB}) & Memorizza lo stato geometrico della telecamera e serializza l'intera rete di nodi e collegamenti in un payload JSON dinamico per l'autosave. \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsection{Entità di Sistema e Supporto (System \& Support Entities)}
+Queste entità gestiscono le funzioni trasversali della piattaforma, inclusi i servizi di ottimizzazione delle prestazioni (caching), la sicurezza e i moduli di gamification.
+
+\begin{table}[H]
+\centering
+\arrayrulecolor{SlateGray}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|l|X|X|X|}
+\hline
+\rowcolor[HTML]{17365D}
+\textcolor{white}{\textbf{Entità}} & \textcolor{white}{\textbf{Descrizione}} & \textcolor{white}{\textbf{Funzione Architetturale}} & \textcolor{white}{\textbf{Allineamento e Vincoli}} \\ \hline
+\textbf{Leaderboard Entry} & La scheda pubblica delle performance condivisa da un utente. & Ordina la classifica globale in base al guadagno/perdita non realizzato (P\&L) delle posizioni, dato dalla differenza tra prezzo attuale e prezzo medio di carico. & Relazione N:1 con User. Il vincolo di unicità (\texttt{user\_\allowbreak{}id}, \texttt{label}) consente a un singolo utente di competere con strategie separate. \\ \hline
+\textbf{Leaderboard Review} & Il feedback testuale lasciato da un utente sotto la scheda condivisa di un altro trader. & Implementa la componente di interazione sociale e validazione delle strategie della community. & Possiede una doppia chiave esterna vincolata in \texttt{CASCADE} verso l'utente recensito (\texttt{entry\_\allowbreak{}user\_\allowbreak{}id}) e l'autore (\texttt{author\_\allowbreak{}id}). \\ \hline
+\textbf{Market Cache} & Tabella di memorizzazione temporanea delle risposte strutturate di Yahoo Finance. & Abbassa il carico di rete e previene il superamento dei limiti di frequenza (rate-limiting) delle API esterne. & Mantiene la validità del dato per un timeout standard (\textasciitilde{}20 min) basato sul timestamp \texttt{last\_\allowbreak{}fetched}. Indicizzata per \texttt{ticker} e \texttt{timeframe}. \\ \hline
+\textbf{Price History} & Serie storica dei prezzi registrati internamente nel tempo dal sistema. & Consente al nastro scorrevole (marquee) e alle modali del broker di calcolare le variazioni percentuali locali. & Struttura standalone/append-only. Non ha vincoli di foreign key stringenti per preservare i record anche in caso di delisting dell'asset. \\ \hline
+\textbf{Password Reset} & Il record temporaneo di verifica per le procedure di recupero credenziali. & Memorizza l'hash del token e la data di scadenza (1 ora) per convalidare i flussi generati via email. & Relazione N:1 con User, dotata di flag booleano di utilizzo (\texttt{used}) per impedire attacchi di tipo replay. \\ \hline
+\textbf{App Revenue} & Tabella finanziaria centralizzata che quantifica i ricavi fittizi generati dall'applicazione. & Aggrega gli introiti derivanti dalle licenze Premium (€10) e dalle commissioni di trading (1\%) per i grafici del pannello admin. & Entità completamente isolata e disaccoppiata (nessuna chiave esterna) per garantire che i dati contabili storici persistano anche se un utente viene rimosso dal database. \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsection{Dettaglio delle Relazioni e Vincoli di Schema}
+La consistenza dei dati finanziari e la prevenzione di anomalie logiche sono demandate nativamente al motore SQL tramite l'applicazione di stringenti vincoli relazionali:
+
+\begin{itemize}
+    \item \textbf{Propagazione delle Eliminazioni (\texttt{ON DELETE CASCADE}):} L'eliminazione di un profilo utente innesca la cancellazione a cascata di tutte le entità strettamente dipendenti, inclusi i portafogli (\texttt{holdings}), lo storico transazionale, i workspace salvati e le chiavi di recupero password.
+    \item \textbf{Mantenimento dello Storico (\texttt{ON DELETE SET NULL}):} Al fine di garantire la rintracciabilità delle operazioni amministrative, le chiavi esterne relative all'inserimento di nuovi titoli a listino (\texttt{added\_by} in \texttt{assets}) e al tracciamento degli eventi di sistema (\texttt{actor\_id} in \texttt{asset\_events}) prevedono l'annullamento del riferimento in caso di eliminazione dell'amministratore, preservando inalterato il record storico.
+    \item \textbf{Vincoli di Unicità (\texttt{UNIQUE}):} Sono stati implementati vincoli compositi strategici a livello di schema per garantire l'integrità dei dati. Esempi chiave includono la coppia \texttt{(user\_id, ticker)} in \texttt{holdings} per prevenire frammentazioni di una stessa azione nel portafoglio, e la coppia \texttt{(user\_id, label)} in \texttt{leaderboard\_\allowbreak{}entries}, la quale garantisce che un utente possa competere simultaneamente in classifica con strategie differenti e non sovrapponibili.
+\end{itemize}
+
+\subsection{Disaccoppiamento e Tabelle \textit{Standalone}}
+Per garantire un'elevata resilienza dei dati a fronte di mutazioni strutturali del listino azionario, specifiche partizioni del database sono state deliberatamente isolate dalla rigida struttura delle chiavi esterne:
+
+\begin{itemize}
+    \item \textbf{Storicizzazione Indipendente dal Listino:} Entità quali \texttt{market\_\allowbreak{}cache} e \texttt{price\_\allowbreak{}history} agganciano gli asset unicamente tramite il riferimento testuale del \texttt{ticker}. Qualora si verificasse un \textit{delisting} (rimozione di un'azione dal listino negoziabile), lo storico dei prezzi passati e la cache delle API rimarrebbero perfettamente intatti e interrogabili.
+    \item \textbf{Contabilità Globale:} La tabella \texttt{app\_\allowbreak{}revenue}, preposta alla quantificazione degli introiti generati tramite le commissioni di rete (\textit{fee}) e le licenze Premium, è un'entità \textit{standalone}. Tale disaccoppiamento garantisce che il bilancio economico globale dell'applicazione non subisca alcuna flessione a seguito della fisiologica cancellazione degli account utente che hanno originato tali ricavi.
+\end{itemize}
