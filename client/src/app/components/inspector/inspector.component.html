@@ -1,5 +1,6 @@
 @if (selectedWidget) {
-  <div class="widget-box inspector-panel" (mousedown)="$event.stopPropagation()">
+  <div class="widget-box inspector-panel" (mousedown)="$event.stopPropagation()"
+       (wheel)="$event.stopPropagation()">
     <header class="widget-header inspector-header">
       <div class="header-info">
         <span class="ticker-name">INSPECTOR</span>

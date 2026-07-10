@@ -49,7 +49,7 @@
                 </ion-item>
                 <ion-item lines="full" class="custom-input">
                   <ion-input [label]="'auth.username' | transloco" labelPlacement="floating"
-                             [placeholder]="'auth.usernamePlaceholder' | transloco"
+                             [placeholder]="'auth.usernamePlaceholder' | transloco" autocomplete="username"
                              [(ngModel)]="username" name="username" required></ion-input>
                 </ion-item>
                 @if (fieldError('username'); as err) { <p class="field-error">{{ err | transloco }}</p> }
@@ -57,7 +57,7 @@
 
               <ion-item lines="full" class="custom-input">
                 <ion-input type="email" [label]="'login.email' | transloco" labelPlacement="floating"
-                           [placeholder]="'login.emailPlaceholder' | transloco"
+                           [placeholder]="'login.emailPlaceholder' | transloco" autocomplete="email"
                            [(ngModel)]="email" name="email" required></ion-input>
               </ion-item>
               @if (fieldError('email'); as err) { <p class="field-error">{{ err | transloco }}</p> }
@@ -66,6 +66,7 @@
                 <ion-item lines="full" class="custom-input">
                   <ion-input type="password" [label]="'login.password' | transloco" labelPlacement="floating"
                              [placeholder]="'login.passwordPlaceholder' | transloco"
+                             [autocomplete]="authMode === 'register' ? 'new-password' : 'current-password'"
                              [(ngModel)]="password" name="password" required></ion-input>
                 </ion-item>
                 @if (fieldError('password'); as err) { <p class="field-error">{{ err | transloco }}</p> }
@@ -74,7 +75,7 @@
               @if (authMode === 'register') {
                 <ion-item lines="full" class="custom-input">
                   <ion-input type="password" [label]="'auth.confirmPassword' | transloco" labelPlacement="floating"
-                             [placeholder]="'auth.confirmPasswordPlaceholder' | transloco"
+                             [placeholder]="'auth.confirmPasswordPlaceholder' | transloco" autocomplete="new-password"
                              [(ngModel)]="confirmPassword" name="confirmPassword" required></ion-input>
                 </ion-item>
                 @if (confirmPassword && confirmPassword !== password) {
@@ -121,7 +122,7 @@
     <canvas #bgCanvas class="trama-bg"></canvas>
 
     <div class="btn-container">
-      <div class="tabs-control" (pointerdown)="$event.stopPropagation()">
+      <div class="tabs-control" (pointerdown)="$event.stopPropagation()" (wheel)="$event.stopPropagation()">
         <button class="floating-btn tabs-btn" [class.active]="tabsMenuOpen" (click)="toggleTabsMenu($event)" [title]="'dashboard.tManageTabs' | transloco"><ion-icon name="albums-outline"></ion-icon></button>
         <button class="floating-btn add-tab-plus" (click)="createTabSilent()" [title]="'dashboard.tNewTab' | transloco"><ion-icon name="add-outline"></ion-icon></button>
         @if (tabsMenuOpen) {
@@ -340,7 +341,7 @@
       </div>
     </div>
 
-    <div class="drawer-dock" (pointerdown)="$event.stopPropagation()">
+    <div class="drawer-dock" (pointerdown)="$event.stopPropagation()" (wheel)="$event.stopPropagation()">
       <div class="search-wrap" (pointerdown)="$event.stopPropagation()">
         <button class="floating-btn search-btn" [class.active]="searchOpen" (click)="toggleSearch($event)" [title]="'dashboard.searchWidget' | transloco"><ion-icon name="search-outline"></ion-icon></button>
         @if (searchOpen) {
