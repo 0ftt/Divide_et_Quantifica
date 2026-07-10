@@ -17,6 +17,7 @@
 
 % --- Nuova Palette di Colori (Stile Moderno/Accademico) ---
 \definecolor{DeepNavy}{HTML}{2E2A5E}   % Violetto scuro (welcome page)
+\definecolor{SoftViolet}{HTML}{3B3766}  % Violetto con tocco di grigio schiarito (banner e header)
 \definecolor{SlateGray}{HTML}{969699}  % Grigio spento quasi neutro
 \definecolor{LightCyan}{HTML}{EDEBFA}  % Lavanda chiaro (welcome page)
 
@@ -45,10 +46,10 @@
   {\thesection}{1em}{}[{\color{DeepNavy}\titlerule[1pt]}] % Linea orizzontale sotto le sezioni
 
 \titleformat{\subsection}
-  {\normalfont\color{SlateGray}\bfseries\large\sffamily}
+  {\normalfont\color{DeepNavy}\bfseries\large\sffamily}
   {\thesubsection}{1em}{}
 \titleformat{\subsubsection}
-  {\normalfont\color{SlateGray}\bfseries\large\sffamily}
+  {\normalfont\color{DeepNavy}\bfseries\large\sffamily}
   {\thesubsubsection}{1em}{}
 
 \titleformat{\paragraph}[block]
@@ -102,7 +103,7 @@
   \AddToHookNext{shipout/background}{%
     \begin{tikzpicture}[remember picture, overlay]
       % Una fascia elegante in alto
-      \fill[DeepNavy] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+      \fill[SoftViolet] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
       % Un dettaglio geometrico in basso
       \fill[SlateGray] (current page.south west) rectangle ([yshift=1cm]current page.south east);
     \end{tikzpicture}
@@ -112,11 +113,11 @@
 % --- Comandi Tabelle Ridisegnati (Senza righe verticali pesanti) ---
 % \newcommand{\testataTabella}[1]{\rowcolor{DeepNavy}\color{white}\textbf{#1}}
 \newcommand{\colonnaColorata}[1]{\cellcolor{#1}\color{white}}
-\newcolumntype{C}[1]{>{\cellcolor{DeepNavy}\color{white}\bfseries\centering\arraybackslash}m{3cm}}
+\newcolumntype{C}[1]{>{\cellcolor{SoftViolet}\color{white}\bfseries\centering\arraybackslash}m{3cm}}
 
 \newcommand{\rigaColorata}[2]{\renewcommand{\arraystretch}{1.2} \cellaColorata{#1} & \cellaColorata{#2} \\ \hline}
 
-\newcommand{\headerTabella}[2]{\rowcolor{DeepNavy} \multicolumn{1}{|c|}{\color{white}\textbf{#1}} & 
+\newcommand{\headerTabella}[2]{\rowcolor{SoftViolet} \multicolumn{1}{|c|}{\color{white}\textbf{#1}} &
 \multicolumn{1}{c|}{\color{white}\textbf{#2}} \\ \hline}
 
 \newcommand{\rigaTabella}[2]{\textbf{#1} & #2 \\ \hline}

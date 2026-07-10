@@ -4,14 +4,14 @@
 \subsection{Obiettivi del sistema}
 Il progetto ``DeQ: Divide et Quantifica'' nasce con lo scopo di ingegnerizzare e rilasciare un ecosistema software ibrido espressamente dedicato all'analisi quantitativa visiva e alla simulazione di trading. L'applicativo si propone come l'ambiente digitale di riferimento per analisti, trader e studenti che necessitano di flessibilità, prestazioni e controllo totale sui flussi di dati di mercato.
 
-L'obiettivo cardine del sistema consiste nel superare la rigidità delle tradizionali dashboard a griglia fissa, trasformando l'ambiente analitico in uno spazio di lavoro vettoriale infinito (\textit{Infinite Workspace}). Lo strumento aggrega in un unico ecosistema protetto l'esplorazione dei dati di mercato in tempo reale, la costruzione di architetture logiche personalizzate tramite nodi visivi e un terminale di compravendita simulato.
+L'obiettivo cardine del sistema consiste nel superare la rigidità delle tradizionali dashboard a griglia fissa, trasformando l'ambiente analitico in uno spazio di lavoro vettoriale infinito. Lo strumento aggrega in un unico ecosistema protetto l'esplorazione dei dati di mercato in tempo reale, la costruzione di architetture logiche personalizzate tramite nodi visivi e un terminale di compravendita simulato.
 
 Nello specifico, il sistema persegue i seguenti traguardi strategici e operativi:
 
 \begin{itemize}[itemsep=-8pt]
     \item \textbf{Analisi Visiva Modulare:} Superare la frammentazione degli strumenti analitici offrendo un catalogo di widget drag-and-drop (azioni, grafici avanzati, aggregatori) collegabili tra loro per far fluire e calcolare i dati in tempo reale.
     \item \textbf{Simulazione Finanziaria Realistica:} Fornire un Terminale Broker integrato e connesso a provider esterni, permettendo all'utente di testare l'acquisto e la vendita di asset (calcolando le spese di commissione) senza alcun rischio di capitale reale.
-    \item \textbf{Gamification e Condivisione:} Abilitare canali di condivisione pubblica tramite una Classifica Globale (Leaderboard), dove gli utenti possono esporre le proprie strategie, competere sul guadagno/perdita non realizzato (P\&L) delle posizioni e scambiarsi recensioni.
+    \item \textbf{Gamification e Condivisione:} Abilitare canali di condivisione pubblica tramite una Classifica Globale (Leaderboard), dove gli utenti possono esporre le proprie strategie, competere sul guadagno/perdita non realizzato delle posizioni e scambiarsi recensioni.
     \item \textbf{Persistenza e Scalabilità Architetturale:} Configurare un'infrastruttura tecnologica asincrona capace di salvare in background la complessa topologia della canvas su un database relazionale, limitando al contempo il carico di rete tramite sistemi di Smart API Caching.
 \end{itemize}
 
@@ -26,7 +26,7 @@ Nello specifico, il sistema persegue i seguenti traguardi strategici e operativi
 \rigaTabella{Workspace (Canvas)}{L'ambiente vettoriale infinito, navigabile tramite inerzia (pan e zoom), in cui l'utente posiziona e collega i nodi per formare la propria dashboard analitica.}
 \rigaTabella{Widget (Nodo)}{Modulo logico e visivo autonomo (es. Azione, Grafico, Orologio, Media) inseribile sulla canvas. Può scambiare informazioni agendo da sorgente dati o da consumatore tramite il sistema di linking.}
 \rigaTabella{Terminale Broker}{L'ambiente transazionale dell'applicativo, suddiviso in listino asset, carrello, inventario e storico transazioni, dove l'utente spende il proprio credito virtuale.}
-\rigaTabella{Leaderboard Entry}{La scheda pubblica condivisa da un utente per competere nella classifica globale. La metrica di valutazione si basa sul guadagno/perdita non realizzato (P\&L) delle posizioni, calcolato in valore assoluto come differenza tra il prezzo di mercato attuale e il prezzo medio di carico.}
+\rigaTabella{Leaderboard Entry}{La scheda pubblica condivisa da un utente per competere nella classifica globale. La metrica di valutazione si basa sul guadagno/perdita non realizzato delle posizioni, calcolato in valore assoluto come differenza tra il prezzo di mercato attuale e il prezzo medio di carico.}
 \rigaTabella{Provider Dati}{Servizio esterno (es. Yahoo Finance) interrogato automaticamente dal backend per ottenere quotazioni e serie storiche necessarie ad alimentare i grafici e il listino.}
 \rigaTabella{Token JWT}{Strumento crittografico utilizzato per il sistema di autenticazione stateless. Include un meccanismo di versioning per garantire un accesso single-session, invalidando in automatico l'accesso su dispositivi secondari.}
 \rigaTabella{Modale}{Elemento dell'interfaccia grafica che compare in sovrimpressione rispetto alla schermata corrente, disabilitando temporaneamente l'interazione con l'applicazione sottostante. L'utente è obbligato a interagirvi (ad esempio per confermare un ordine di acquisto) prima di poter tornare alla dashboard.}
@@ -43,7 +43,7 @@ Al fine di consentire una corretta valutazione del sistema e delle logiche di au
 \renewcommand{\arraystretch}{1.3}
 \begin{tabularx}{\textwidth}{|l|c|c|X|}
 \hline
-\rowcolor[HTML]{2E2A5E}
+\rowcolor[HTML]{3B3766}
 \textcolor{white}{\textbf{Email}} & \textcolor{white}{\textbf{Password}} & \textcolor{white}{\textbf{Ruolo}} & \textcolor{white}{\textbf{Scopo del Test}} \\ \hline
 \textbf{\texttt{admin@gmail.com}} & \texttt{adminadmin} & Admin & Account principale. Accesso completo al Pannello Admin per la gestione degli utenti e del listino asset. \\ \hline
 \textbf{\texttt{adminriserva@gmail.com}} & \texttt{adminriserva} & Utente & Account standard di riserva, utile come profilo secondario di collaudo. \\ \hline
