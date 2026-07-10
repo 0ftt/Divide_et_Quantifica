@@ -22,7 +22,9 @@ Assicurati di avere installato sul tuo computer:
 * Angular CLI e Ionic CLI installati globalmente:
   ```bash
   npm install -g @angular/cli @ionic/cli
-1. Clonare il progetto
+  ```
+
+### 1. Clonare il progetto
 Apri il terminale e clona la repository sul tuo computer:
 
 ```Bash
@@ -30,7 +32,24 @@ git clone [https://github.com/0ftt/Divide_et_Quantifica.git](https://github.com/
 cd Divide_et_Quantifica
 ```
 
-2. Avviare il Server (Backend)
+### 2. Configurare le chiavi (file `.env`)
+Per motivi di sicurezza il file `server/.env` **non è incluso** nel repository: contiene password e chiavi private che non vanno condivise. Prima di avviare il backend devi quindi crearne uno tuo nella cartella `server/`, partendo dal modello `.env.example`:
+
+```bash
+cd server
+cp .env.example .env      # su Windows PowerShell: Copy-Item .env.example .env
+```
+
+Poi apri `.env` e inserisci le tue chiavi. Le uniche **obbligatorie** sono:
+
+| Variabile | Come procurarsela |
+| :--- | :--- |
+| `DATABASE_URL` | Stringa di connessione a un database PostgreSQL. Crea un progetto gratuito su [Supabase](https://supabase.com) e copia la connection string da *Project Settings → Database*. |
+| `JWT_SECRET` | Stringa casuale lunga per firmare i token di accesso. Generala tu, ad es. con `openssl rand -hex 32` oppure `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`. |
+
+Le variabili `MAIL_USER` / `MAIL_PASS` / `MAIL_FROM` sono **opzionali**: servono solo all'invio delle email di recupero password (un account **Gmail** con una *App Password* generata da *Account Google → Sicurezza → Password per le app*). Senza, l'app funziona lo stesso, solo quella funzione resta disattivata. Le altre variabili (`PORT`, `CORS_ORIGIN`, `PREMIUM_PRICE`, `QUOTE_CACHE_MINUTES`, `JWT_EXPIRES_IN`, `FRONTEND_URL`) hanno già un valore di default.
+
+### 3. Avviare il Server (Backend)
 Apri il terminale nella cartella del server e digita:
 
 ```Bash
@@ -43,7 +62,7 @@ npm run dev o npm run start
 
 Il server si avvierà in modalità di sviluppo tramite tsx (di default sulla porta configurata nel file .env).
 
-3. Avviare il Client (Frontend)
+### 4. Avviare il Client (Frontend)
 Apri un nuovo terminale sempre nella cartella principale del progetto e digita:
 
 ```Bash

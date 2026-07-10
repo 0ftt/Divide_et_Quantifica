@@ -1,6 +1,6 @@
-PWD m:\DeQ\ionic\Divide_et_Quantifica\docs
+PWD M:\DeQ\ionic\Divide_et_Quantifica\docs
 INPUT C:\Users\giang\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT m:\DeQ\ionic\Divide_et_Quantifica\docs\Doc.tex
+INPUT Doc.tex
 OUTPUT Doc.log
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
@@ -287,6 +287,7 @@ INPUT Pagine\Introduzione\introduzione.tex
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmssbx10.tfm
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\tcrm1000.tfm
+INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmti10.tfm
 INPUT .\Pagine\architettura\architettura.tex
 INPUT .\Pagine\architettura\architettura.tex
 OUTPUT Pagine\architettura\architettura.aux
@@ -294,8 +295,8 @@ INPUT .\Pagine\architettura\architettura.tex
 INPUT .\Pagine\architettura\architettura.tex
 INPUT Pagine\architettura\architettura.tex
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmtt12.tfm
-INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmti10.tfm
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\tctt1000.tfm
+INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmssi10.tfm
 INPUT .\Immagini\drawsql.png
 INPUT .\Immagini\drawsql.png
 INPUT .\Immagini\drawsql.png
@@ -351,6 +352,8 @@ INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\c
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmss9.pfb
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmssbx10.pfb
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmssbx10.pfb
+INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmssi10.pfb
+INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmssi10.pfb
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmti10.pfb
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmti10.pfb
 INPUT C:\Users\giang\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt10.pfb
