@@ -14,7 +14,7 @@
 
 ---
 
-## 🚀 Come Avviare il Progetto Localmente
+## Come Avviare il Progetto Localmente
 
 ### Prerequisiti
 Assicurati di avere installato sul tuo computer:
@@ -52,6 +52,20 @@ ionic serve o ionic serve --external
 
 Utilizzare --external permette al frontend di essere accessibile tramite la rete a cui è allacciato il pc. Utile per testare su mobile.
 L'applicazione aprirà automaticamente una scheda nel tuo browser (di default su http://localhost:8100 o anche http://localhost:4200).
+
+## 🧪 Account di Test
+
+Al fine di consentire una rapida valutazione del sistema e delle logiche di autorizzazione, il database include i seguenti account pre-configurati:
+
+| Email | Password | Ruolo | Scopo del Test |
+| :--- | :--- | :---: | :--- |
+| **`admin@gmail.com`** | `admin` | Admin | Account principale. Accesso completo al Pannello Admin per la gestione degli utenti e del listino asset. |
+| **`adminriserva@gmail.com`** | `adminriserva` | Admin | Account di backup con privilegi amministrativi elevati. |
+| **`carola@gmail.com`** | `carolauser` | Utente | Account standard. Ideale per testare la creazione di workspace sulla canvas, l'acquisto simulato nel Terminale Broker e la pubblicazione nella Leaderboard. |
+| **`emanuele@gmail.com`** | `emanueleuser` | Utente | Account standard secondario. Essenziale per testare le interazioni tra utenti (es. scrivere recensioni sulle schede condivise) e la concorrenza. |
+| **`daniela@gmail.com`** | `danielauser` | Utente | Ulteriore account standard. Utile per testare il popolamento e l'ordinamento dinamico della Leaderboard simulando un ambiente multi-utente realistico. |
+| **`michele@gmail.com`** | `micheleuser` | Utente | Account standard aggiuntivo. Consigliato per testare le transazioni avanzate, l'upgrade alla licenza Premium e l'acquisto in blocco dei portafogli altrui dalla classifica. |
+| **`giuseppe@gmail.com`** | `giuseppeuser` | Utente | Account standard. Focalizzato sul test del sistema di linking vettoriale, la creazione di percorsi logici tra widget e l'utilizzo degli aggregatori matematici. |
 
 📊 Schema dei Dati
 L'infrastruttura di persistenza è modellata su PostgreSQL. Oltre al link esterno alla board visuale su DrawSQL, di seguito è riportato lo schema logico e relazionale del database.
@@ -195,6 +209,10 @@ erDiagram
 ```
 
 In alternativa è visualizzabile da https://drawsql.app/teams/0ftt/diagrams/deq
+
+Account da testing
+
+
 
 🔑 Legenda Relazioni e Vincoli
 Propagazione Eliminazioni (ON DELETE CASCADE): Eliminando un utente dalla tabella users, vengono eliminati a cascata i record associati in holdings, transactions, workspaces, leaderboard_entries, leaderboard_history, password_resets e leaderboard_reviews (sia come autore che come utente recensito). L'eliminazione di un asset distrugge le relative holdings.
