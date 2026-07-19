@@ -37,9 +37,7 @@ body.deq-light {
 .broker-dark-bg,
 .admin-dark-bg,
 .account-bg,
-.leaderboard-dark-bg,
-.stocks-dark-bg,
-.history-dark-bg {
+.leaderboard-dark-bg {
   --background: var(--deq-bg-base);
 
   &::part(background) {
