@@ -437,48 +437,21 @@ export class BrokerPage implements OnInit {
     this.historyCandles = [];
     this.marketService.history(ticker).subscribe({
       next: (h) => {
-
-        this.historyCandles = h.candles?.length ? h.candles : this.demoCandles(ticker);
+        this.historyCandles = h.candles ?? [];
+        this.historyError = this.historyCandles.length
+          ? null
+          : this.transloco.translate('broker.historyEmpty');
         this.historyLoading = false;
       },
       error: () => {
-
-        this.historyCandles = this.demoCandles(ticker);
+        this.historyCandles = [];
+        this.historyError = this.transloco.translate('broker.historyFailed');
         this.historyLoading = false;
       },
     });
   }
 
-    private demoCandles(ticker: string): Candle[] {
-    const asset = this.assets.find((a) => a.ticker === ticker);
-    const endPrice = asset ? asset.price : 100;
-    const points = 30;
-    const startPrice = endPrice * 0.92;
-    const candles: Candle[] = [];
-    let prev = startPrice;
-    for (let i = 0; i < points; i++) {
-      const t = i / (points - 1);
-
-      const trend = startPrice + (endPrice - startPrice) * t;
-      const wave = Math.sin(i * 1.7) * endPrice * 0.015;
-      const close = Math.max(0.01, trend + wave);
-      const open = prev;
-      const day = new Date();
-      day.setDate(day.getDate() - (points - 1 - i));
-      candles.push({
-        date: day.toISOString().slice(0, 10),
-        open,
-        high: Math.max(open, close) * 1.01,
-        low: Math.min(open, close) * 0.99,
-        close,
-        volume: 0,
-      });
-      prev = close;
-    }
-    return candles;
-  }
-
-  closeHistory(): void {
+    closeHistory(): void {
     this.historyTicker = null;
   }
 

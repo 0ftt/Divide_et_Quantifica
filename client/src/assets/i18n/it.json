@@ -173,6 +173,8 @@
     "addToCart": "Aggiungi al carrello",
     "priceHistory": "Storico prezzi",
     "loadingHistory": "Caricamento storico…",
+    "historyFailed": "Storico non disponibile: il server non ha risposto.",
+    "historyEmpty": "Nessuno storico disponibile per questo titolo.",
     "confirmPurchases": "Conferma acquisti",
     "confirmPurchasesQ": "Confermi l'acquisto simulato di queste posizioni?",
     "qtyInvalid": "Inserisci una quantità positiva.",

@@ -173,6 +173,8 @@
     "addToCart": "Add to cart",
     "priceHistory": "Price history",
     "loadingHistory": "Loading history…",
+    "historyFailed": "History unavailable: the server did not respond.",
+    "historyEmpty": "No history available for this asset.",
     "confirmPurchases": "Confirm purchases",
     "confirmPurchasesQ": "Confirm the simulated purchase of these positions?",
     "qtyInvalid": "Enter a positive quantity.",
