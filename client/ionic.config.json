@@ -1,7 +1,4 @@
 {
   "name": "Divide_et_Quantifica",
-  "integrations": {
-    "capacitor": {}
-  },
   "type": "angular-standalone"
 }
