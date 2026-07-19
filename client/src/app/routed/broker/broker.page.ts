@@ -44,7 +44,6 @@ import { AssetService } from '$core/services/asset.service';
 import { PortfolioService } from '$core/services/portfolio.service';
 import { BrokerCartService } from '$core/services/broker-cart.service';
 import { CreditService } from '$core/services/credit.service';
-import { AuthService } from '$core/auth/auth.service';
 import { WidgetService } from '$core/services/widget.service';
 import { TransactionService, Transaction } from '$core/services/transaction.service';
 import { ModalComponent } from '$components/modal/modal.component';
@@ -137,7 +136,6 @@ export class BrokerPage implements OnInit {
   private creditService = inject(CreditService);
   private assetService = inject(AssetService);
   private portfolioService = inject(PortfolioService);
-  private auth = inject(AuthService);
   private widgetService = inject(WidgetService);
   private txService = inject(TransactionService);
   private transloco = inject(TranslocoService);
@@ -165,10 +163,6 @@ export class BrokerPage implements OnInit {
     this.loadAssets();
     this.loadPortfolio();
     this.loadTransactions();
-  }
-
-  get isAdmin(): boolean {
-    return this.auth.currentUser()?.role === 'admin';
   }
 
   loadAssets(): void {
