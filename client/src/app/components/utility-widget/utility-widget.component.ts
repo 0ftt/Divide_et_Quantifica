@@ -6,7 +6,9 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  inject,
 } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonButton, IonIcon } from '@ionic/angular/standalone';
@@ -27,6 +29,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { WidgetData, widgetBackground, widgetIcon, widgetNameKey } from '$core/models/widget.model';
 import { ResizeHandleDirective } from '$core/directives/resize-handle.directive';
 import { generateCandles } from '$core/charts/chart-data';
+import { AssetService } from '$core/services/asset.service';
 
 export interface UtilityDuplicatePayload {
   id: string;
@@ -41,6 +44,7 @@ interface NetRow {
 }
 
 const NET_REFRESH_SECS = 5;
+const PRICE_FETCH_SECS = 60;
 
 @Component({
   selector: 'app-utility-widget',
@@ -253,7 +257,12 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
   private isDragging = false;
   private lastX = 0;
   private lastY = 0;
-  private tracked = new Map<string, number>();
+  private assets = inject(AssetService);
+  // Prezzo e variazione % reali per ticker, dall'endpoint /assets.
+  private prices = new Map<string, number>();
+  private changes = new Map<string, number>();
+  private pricesSub?: Subscription;
+  private priceTimer?: ReturnType<typeof setInterval>;
   private closeCache = new Map<string, number>();
 
   constructor() {
@@ -272,6 +281,11 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this.widget.type === 'net' || this.widget.type === 'average') {
+      // Prezzi reali dal listino, ricaricati periodicamente.
+      this.loadPrices();
+      this.priceTimer = setInterval(() => this.loadPrices(), PRICE_FETCH_SECS * 1000);
+    }
     if (this.widget.type === 'net') {
       this.refreshNet();
       this.timer = setInterval(() => this.refreshNet(), NET_REFRESH_SECS * 1000);
@@ -281,6 +295,36 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
     }
   }
 
+  // loadPrices — GET /assets: memorizza prezzo e variazione % di ogni titolo del
+  // listino. In caso di errore (es. offline) tiene i valori precedenti.
+  private loadPrices(): void {
+    this.pricesSub?.unsubscribe();
+    this.pricesSub = this.assets.list().subscribe({
+      next: (list) => {
+        this.prices.clear();
+        this.changes.clear();
+        for (const a of list) {
+          const key = a.ticker.toUpperCase();
+          this.prices.set(key, a.price);
+          if (a.change !== null && a.change !== undefined) {
+            this.changes.set(key, a.change);
+          }
+        }
+        if (this.widget.type === 'net') {
+          this.refreshNet();
+        }
+      },
+      error: () => undefined,
+    });
+  }
+
+  // priceOf — prezzo reale del ticker; per i titoli non quotati (che nel listino
+  // non esistono) resta la serie simulata come ripiego.
+  private priceOf(ticker: string): number {
+    const real = this.prices.get(ticker);
+    return real !== undefined ? real : this.lastClose(ticker);
+  }
+
   private refreshClock(): void {
     const now = new Date();
     this.clockTime = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -288,6 +332,10 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.pricesSub?.unsubscribe();
+    if (this.priceTimer) {
+      clearInterval(this.priceTimer);
+    }
     if (this.timer) {
       clearInterval(this.timer);
     }
@@ -318,7 +366,7 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
     if (!tks.length) {
       return null;
     }
-    const sum = tks.reduce((s, t) => s + this.lastClose(t), 0);
+    const sum = tks.reduce((s, t) => s + this.priceOf(t), 0);
     return sum / tks.length;
   }
 
@@ -358,17 +406,12 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
     const tickers = this.linkedTickers();
     const rows: NetRow[] = [];
     for (const t of tickers) {
-      const prev = this.tracked.get(t) ?? this.lastClose(t);
-      const delta = +(prev * (Math.random() * 0.04 - 0.02)).toFixed(2);
-      const next = +(prev + delta).toFixed(2);
-      this.tracked.set(t, next);
-      rows.push({ ticker: t, price: next, delta });
-    }
-
-    for (const key of [...this.tracked.keys()]) {
-      if (!tickers.includes(key)) {
-        this.tracked.delete(key);
-      }
+      const price = this.priceOf(t);
+      // Il listino da' la variazione in percentuale: la si riporta a valore
+      // assoluto ricavando il prezzo di riferimento, cosi' il totale e' sommabile.
+      const pct = this.changes.get(t) ?? 0;
+      const delta = pct ? +(price - price / (1 + pct / 100)).toFixed(2) : 0;
+      rows.push({ ticker: t, price, delta });
     }
     this.netRows = rows;
   }
