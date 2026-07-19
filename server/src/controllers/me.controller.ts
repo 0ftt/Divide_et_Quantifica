@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
+import type { User } from '$shared';
 import { query, queryOne } from '../db/pool';
 import { AppError } from '../middleware/error';
 
@@ -18,7 +19,7 @@ interface UserRow {
   avatar_data_url: string | null;
 }
 
-function toPublicMe(user: UserRow) {
+function toPublicMe(user: UserRow): User {
   return {
     id: user.id,
     email: user.email,

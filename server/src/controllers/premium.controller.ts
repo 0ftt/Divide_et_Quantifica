@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import type { PremiumResult } from '$shared';
 import { query, queryOne } from '../db/pool';
 import { env } from '../config/env';
 import { AppError } from '../middleware/error';
@@ -35,9 +36,10 @@ export async function purchasePremium(req: Request, res: Response): Promise<void
 
   await recordRevenue('premium', price);
 
-  res.json({
+  const payload: PremiumResult = {
     message: 'Licenza Premium attivata.',
     credit: Number(rows[0].credit),
     isPremium: true,
-  });
+  };
+  res.json(payload);
 }

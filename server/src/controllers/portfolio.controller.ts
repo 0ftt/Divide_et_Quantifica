@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
+import type { Holding, PortfolioResponse, OrderResult } from '$shared';
 import { query, queryOne } from '../db/pool';
 import { AppError } from '../middleware/error';
 
@@ -28,7 +29,7 @@ export async function getPortfolio(req: Request, res: Response): Promise<void> {
     [userId],
   );
 
-  const holdings = rows.map((r) => {
+  const holdings: Holding[] = rows.map((r) => {
     const quantity = Number(r.quantity);
     const lastPrice = Number(r.last_price);
     return {
@@ -46,11 +47,12 @@ export async function getPortfolio(req: Request, res: Response): Promise<void> {
   ]);
   const invested = holdings.reduce((sum, h) => sum + h.value, 0);
 
-  res.json({
+  const payload: PortfolioResponse = {
     credit: Number(creditRow?.credit ?? 0),
     investedValue: +invested.toFixed(2),
     holdings,
-  });
+  };
+  res.json(payload);
 }
 
 export async function buy(req: Request, res: Response): Promise<void> {
@@ -105,7 +107,8 @@ export async function buy(req: Request, res: Response): Promise<void> {
     [userId, symbol, quantity, cost, `Acquisto ${quantity} ${symbol}`],
   );
 
-  res.json({ message: `Acquistate ${quantity} unita di ${symbol}.`, cost });
+  const payload: OrderResult = { message: `Acquistate ${quantity} unita di ${symbol}.`, cost };
+  res.json(payload);
 }
 
 export async function sell(req: Request, res: Response): Promise<void> {
@@ -147,5 +150,6 @@ export async function sell(req: Request, res: Response): Promise<void> {
     [userId, symbol, quantity, proceeds, `Vendita ${quantity} ${symbol}`],
   );
 
-  res.json({ message: `Vendute ${quantity} unita di ${symbol}.`, proceeds });
+  const payload: OrderResult = { message: `Vendute ${quantity} unita di ${symbol}.`, proceeds };
+  res.json(payload);
 }

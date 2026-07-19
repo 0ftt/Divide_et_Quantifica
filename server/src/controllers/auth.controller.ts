@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { randomBytes, createHash } from 'node:crypto';
+import type { AuthResponse, User } from '$shared';
 import { query, queryOne } from '../db/pool';
 import { hashPassword, verifyPassword } from '../auth/password';
 import { signToken } from '../auth/jwt';
@@ -25,7 +26,7 @@ interface UserRow {
   token_version: number;
 }
 
-function toPublicUser(u: UserRow) {
+function toPublicUser(u: UserRow): User {
   return {
     id: u.id,
     email: u.email,
@@ -106,7 +107,8 @@ export async function register(req: Request, res: Response): Promise<void> {
     ),
   );
 
-  res.status(201).json({ token, user: toPublicUser(user) });
+  const payload: AuthResponse = { token, user: toPublicUser(user) };
+  res.status(201).json(payload);
 }
 
 export async function login(req: Request, res: Response): Promise<void> {
@@ -127,7 +129,8 @@ export async function login(req: Request, res: Response): Promise<void> {
     email: user.email,
     tv: bumped[0].token_version,
   });
-  res.json({ token, user: toPublicUser(user) });
+  const payload: AuthResponse = { token, user: toPublicUser(user) };
+  res.json(payload);
 }
 
 const recoverSchema = z.object({ email: z.string().trim().toLowerCase().email() });

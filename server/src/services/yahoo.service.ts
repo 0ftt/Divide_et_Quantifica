@@ -1,28 +1,8 @@
+import type { Quote, Candle, SymbolHit } from '$shared';
 import { AppError } from '../middleware/error';
 import { readCache, writeCache } from './market-cache.service';
 
-export interface Quote {
-  ticker: string;
-  name: string;
-  currency: string;
-  price: number;
-}
-
-export interface Candle {
-  date: string;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
-}
-
-export interface SymbolHit {
-  ticker: string;
-  name: string;
-  exchange: string;
-  type: string;
-}
+export type { Quote, Candle, SymbolHit };
 
 const YAHOO_HEADERS = { 'User-Agent': 'Mozilla/5.0 (DivideEtQuantifica)' };
 

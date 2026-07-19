@@ -1,5 +1,13 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
+import type {
+  LeaderboardEntry,
+  LeaderboardHistoryPoint,
+  LeaderboardHolding,
+  LeaderboardResponse,
+  LeaderboardReview,
+  ShareScoreResult,
+} from '$shared';
 import { query, queryOne } from '../db/pool';
 import { AppError } from '../middleware/error';
 
@@ -37,7 +45,7 @@ export async function listLeaderboard(req: Request, res: Response): Promise<void
        join users u on u.id = le.user_id`,
   );
 
-  const entries = rows
+  const entries: LeaderboardEntry[] = rows
     .map((r) => {
       const gain = +(Number(r.invested ?? 0) - Number(r.cost_basis ?? 0)).toFixed(2);
       return {
@@ -56,7 +64,8 @@ export async function listLeaderboard(req: Request, res: Response): Promise<void
     .slice(0, LEADERBOARD_LIMIT)
     .map((e, index) => ({ ...e, rank: index + 1 }));
 
-  res.json({ entries });
+  const payload: LeaderboardResponse = { entries };
+  res.json(payload);
 }
 
 export async function shareScore(req: Request, res: Response): Promise<void> {
@@ -108,7 +117,7 @@ export async function shareScore(req: Request, res: Response): Promise<void> {
     [saved.score],
   );
 
-  res.json({
+  const payload: ShareScoreResult = {
     message: 'Scheda condivisa in classifica.',
     entry: {
       rank: Number(rankRow?.rank ?? 1),
@@ -121,7 +130,8 @@ export async function shareScore(req: Request, res: Response): Promise<void> {
       sharedAt: saved.shared_at,
       isMe: true,
     },
-  });
+  };
+  res.json(payload);
 }
 
 const unshareSchema = z.object({ label: z.string().max(40) });
@@ -139,7 +149,11 @@ export async function getHistory(req: Request, res: Response): Promise<void> {
     `select score, shared_at from leaderboard_history where user_id = $1 order by shared_at asc`,
     [userId],
   );
-  res.json({ points: rows.map((r) => ({ score: Number(r.score), sharedAt: r.shared_at })) });
+  const points: LeaderboardHistoryPoint[] = rows.map((r) => ({
+    score: Number(r.score),
+    sharedAt: r.shared_at,
+  }));
+  res.json({ points });
 }
 
 interface ReviewRow {
@@ -160,15 +174,14 @@ export async function listReviews(req: Request, res: Response): Promise<void> {
       order by r.created_at desc`,
     [entryUserId],
   );
-  res.json(
-    rows.map((r) => ({
-      id: r.id,
-      authorId: r.author_id,
-      authorName: r.author_name,
-      body: r.body,
-      createdAt: r.created_at,
-    })),
-  );
+  const payload: LeaderboardReview[] = rows.map((r) => ({
+    id: r.id,
+    authorId: r.author_id,
+    authorName: r.author_name,
+    body: r.body,
+    createdAt: r.created_at,
+  }));
+  res.json(payload);
 }
 
 const reviewSchema = z.object({ body: z.string().trim().min(1).max(500) });
@@ -194,13 +207,14 @@ export async function addReview(req: Request, res: Response): Promise<void> {
   );
   const saved = rows[0];
 
-  res.status(201).json({
+  const payload: LeaderboardReview = {
     id: saved.id,
     authorId: saved.author_id,
     authorName: saved.author_name,
     body: saved.body,
     createdAt: saved.created_at,
-  });
+  };
+  res.status(201).json(payload);
 }
 
 interface HoldingRow {
@@ -214,5 +228,9 @@ export async function getHoldings(req: Request, res: Response): Promise<void> {
     'select ticker, quantity from holdings where user_id = $1 and quantity > 0',
     [entryUserId],
   );
-  res.json(rows.map((r) => ({ ticker: r.ticker, quantity: Number(r.quantity) })));
+  const payload: LeaderboardHolding[] = rows.map((r) => ({
+    ticker: r.ticker,
+    quantity: Number(r.quantity),
+  }));
+  res.json(payload);
 }

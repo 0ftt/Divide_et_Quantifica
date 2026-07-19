@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
+import type { Asset, AssetHistory } from '$shared';
 import { query, queryOne } from '../db/pool';
 import { getQuote, getHistory, searchSymbols, TIMEFRAMES } from '../services/yahoo.service';
 import { AppError } from '../middleware/error';
@@ -17,7 +18,7 @@ interface AssetRowWithRef extends AssetRow {
   ref_oldest: string | null;
 }
 
-function toPublicAsset(a: AssetRow) {
+function toPublicAsset(a: AssetRow): Asset {
   return {
     ticker: a.ticker,
     name: a.name,
@@ -71,7 +72,8 @@ export async function listAssets(_req: Request, res: Response): Promise<void> {
      from assets a
      order by a.ticker asc`,
   );
-  res.json(rows.map((r) => ({ ...toPublicAsset(r), change: changePct(r) })));
+  const payload: Asset[] = rows.map((r) => ({ ...toPublicAsset(r), change: changePct(r) }));
+  res.json(payload);
 }
 
 export async function searchAssets(req: Request, res: Response): Promise<void> {
@@ -227,5 +229,6 @@ export async function assetHistory(req: Request, res: Response): Promise<void> {
   const ticker = tickerSchema.parse(req.params.ticker).toUpperCase();
   const { timeframe, force } = historyQuerySchema.parse(req.query);
   const candles = await getHistory(ticker, timeframe, force);
-  res.json({ ticker, timeframe, candles });
+  const payload: AssetHistory = { ticker, timeframe, candles };
+  res.json(payload);
 }

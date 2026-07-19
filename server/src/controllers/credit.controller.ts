@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
+import type { BalanceResponse, RechargeResult } from '$shared';
 import { query, queryOne } from '../db/pool';
 import { processMockCharge } from '../services/stripe-mock.service';
 
@@ -24,12 +25,14 @@ export async function rechargeCredit(req: Request, res: Response): Promise<void>
     [userId, amount, 'Ricarica simulata (Stripe mock)'],
   );
 
-  res.json({ message: charge.message, credit: Number(rows[0].credit) });
+  const payload: RechargeResult = { message: charge.message, credit: Number(rows[0].credit) };
+  res.json(payload);
 }
 
 export async function getBalance(req: Request, res: Response): Promise<void> {
   const row = await queryOne<{ credit: string }>('select credit from users where id = $1', [
     req.user!.sub,
   ]);
-  res.json({ credit: Number(row?.credit ?? 0) });
+  const payload: BalanceResponse = { credit: Number(row?.credit ?? 0) };
+  res.json(payload);
 }
