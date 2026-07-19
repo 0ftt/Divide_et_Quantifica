@@ -35,6 +35,6 @@ export interface Candle {
 
 export interface AssetHistory {
   ticker: string;
-  timeframe: ChartTimeframe | string;
+  timeframe: ChartTimeframe;
   candles: Candle[];
 }
