@@ -124,11 +124,6 @@ export class AccountSettingsPage {
     }
     const amount = parsed.data;
 
-    if (this.auth.currentUser()?.id === 'offline-admin') {
-      this.credit += amount;
-      this.showRechargeDone(amount);
-      return;
-    }
     this.creditService.recharge(amount).subscribe({
       next: (res) => {
         this.credit = res.credit;
@@ -290,12 +285,6 @@ export class AccountSettingsPage {
   }
 
   private saveAvatar(dataUrl: string): void {
-    if (this.auth.currentUser()?.id === 'offline-admin') {
-      this.avatarDataUrl = dataUrl;
-      this.auth.patchCurrentUser({ avatarDataUrl: dataUrl });
-      this.feedback = this.t('account.avatarUpdated');
-      return;
-    }
     this.auth.updateMe({ avatarDataUrl: dataUrl }).subscribe({
       next: (user) => {
         this.avatarDataUrl = user.avatarDataUrl ?? null;

@@ -14,7 +14,7 @@ export class AppComponent {
     inject(ThemeService).init();
 
     window.addEventListener('storage', (e) => {
-      if (e.key === 'deq_token' || e.key === 'deq_offline_session') {
+      if (e.key === 'deq_token') {
         window.location.reload();
       }
     });

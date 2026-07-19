@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
-import { getToken, clearToken, setOfflineSession } from './token.store';
+import { getToken, clearToken } from './token.store';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = getToken();
@@ -13,7 +13,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
       if (err.status === 401 && token) {
         clearToken();
-        setOfflineSession(false);
         window.location.reload();
       }
       return throwError(() => err);

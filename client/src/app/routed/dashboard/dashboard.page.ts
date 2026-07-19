@@ -426,10 +426,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     this.syncReviewNotifications();
   }
 
-  private isOfflineSession(): boolean {
-    return this.auth.currentUser()?.id === 'offline-admin';
-  }
-
   private serializeWorkspace(): unknown {
     this.saveCameraToTab(this.activeTab);
     return {
@@ -534,10 +530,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     this.lastSavedJson = json;
-    if (this.isOfflineSession()) {
-      localStorage.setItem('deq-workspace', json);
-      return;
-    }
     this.workspaceService.save(state).subscribe({ error: () => undefined });
   }
 
@@ -924,12 +916,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    if (this.auth.currentUser()?.id === 'offline-admin') {
-      this.isUserPremium = true;
-      this.auth.patchCurrentUser({ isPremium: true });
-      this.premiumModalOpen = false;
-      return;
-    }
     this.premiumBusy = true;
     this.premiumError = null;
     this.credit.purchasePremium().subscribe({
