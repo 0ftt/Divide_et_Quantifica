@@ -117,7 +117,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   email = '';
   password = '';
   confirmPassword = '';
-  nomeUtente = 'Giovanni Luca';
+  nomeUtente = '';
   passwordErrata = false;
   isUserPremium = false;
   isMobile = window.innerWidth <= 768;
@@ -129,7 +129,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   authMode: 'login' | 'register' | 'recover' = 'login';
   displayName = '';
   username = '';
-  phone = '';
 
   address = '';
   city = '';
@@ -838,15 +837,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     this.tabsMenuOpen = false;
   }
 
-  triggerTabCreation(): void {
-    if (!this.isUserPremium && this.tabsList.length >= 2) {
-      this.showLinkFeedback(this.transloco.translate('dashboard.premiumTabGate'));
-      return;
-    }
-    this.newTabName = '';
-    this.tabModalOpen = true;
-  }
-
   closeTabModal(): void {
     this.tabModalOpen = false;
   }
@@ -1046,14 +1036,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     if (widget) {
       this.activeTab.maxZIndex++;
       widget.zIndex = this.activeTab.maxZIndex;
-    }
-  }
-
-  updateWidgetPosition(eventData: { id: string; x: number; y: number }): void {
-    const widget = this.widgetList.find((w) => w.id === eventData.id);
-    if (widget) {
-      widget.posX = eventData.x;
-      widget.posY = eventData.y;
     }
   }
 
