@@ -144,8 +144,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
 
   tabsMenuOpen = false;
   renamingTabId: string | null = null;
-  tabModalOpen = false;
-  newTabName = '';
 
   marqueeAddModalOpen = false;
   marqueeAddTicker: string | null = null;
@@ -835,33 +833,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     this.tabsList.push(nuovaTab);
     this.loadCameraFromTab(nuovaTab);
     this.tabsMenuOpen = false;
-  }
-
-  closeTabModal(): void {
-    this.tabModalOpen = false;
-  }
-
-  confirmCreateTab(): void {
-    const nome = this.newTabName.trim();
-    if (!nome) {
-      return;
-    }
-    this.saveCameraToTab(this.activeTab);
-    this.tabsList.forEach((t) => (t.active = false));
-    const nuovaTab: TabData = {
-      id: `tab-${Date.now()}`,
-      name: nome,
-      active: true,
-      widgets: [],
-      deletedWidgets: [],
-      maxZIndex: 10,
-      cameraX: 0,
-      cameraY: 0,
-      cameraZoom: 1,
-    };
-    this.tabsList.push(nuovaTab);
-    this.loadCameraFromTab(nuovaTab);
-    this.tabModalOpen = false;
   }
 
   closeTab(tabId: string, event: MouseEvent): void {

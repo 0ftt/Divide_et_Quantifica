@@ -459,20 +459,6 @@
     </div>
   </footer>
 
-  <app-modal [open]="tabModalOpen" [title]="'dashboard.newTab' | transloco" (closed)="closeTabModal()">
-    <div class="modal-form">
-      <ion-item lines="full" class="custom-input">
-        <ion-input [label]="'dashboard.tabNameLabel' | transloco" labelPlacement="stacked"
-                   [placeholder]="'dashboard.tabNamePlaceholder' | transloco"
-                   [(ngModel)]="newTabName" (keyup.enter)="confirmCreateTab()"></ion-input>
-      </ion-item>
-      <div class="modal-actions">
-        <ion-button fill="clear" (click)="closeTabModal()">{{ 'common.cancel' | transloco }}</ion-button>
-        <ion-button [disabled]="!newTabName.trim()" (click)="confirmCreateTab()">{{ 'dashboard.createTab' | transloco }}</ion-button>
-      </div>
-    </div>
-  </app-modal>
-
   <app-modal [open]="premiumModalOpen" [title]="'dashboard.shopTitle' | transloco" [dismissible]="!premiumBusy"
              (closed)="closePremiumModal()">
     <div class="modal-form">
