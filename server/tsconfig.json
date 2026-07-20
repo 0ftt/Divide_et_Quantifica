@@ -4,7 +4,7 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "outDir": "./dist",
-    "rootDir": "..",
+    "rootDir": "./src",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -13,8 +13,8 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "$shared": ["../shared/src/index.ts"],
-      "$shared/*": ["../shared/src/*"]
+      "$shared": ["../shared/dist/index.d.ts"],
+      "$shared/*": ["../shared/dist/*"]
     }
   },
   "include": ["src/**/*.ts"]

@@ -3,6 +3,5 @@
   "version": "1.0.0",
   "description": "Tipi TypeScript condivisi tra frontend e backend di Divide et Quantifica.",
   "private": true,
-  "main": "src/index.ts",
-  "types": "src/index.ts"
+  "types": "dist/index.d.ts"
 }
