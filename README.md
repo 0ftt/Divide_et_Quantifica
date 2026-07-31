@@ -105,7 +105,8 @@ Al fine di consentire una rapida valutazione del sistema e delle logiche di auto
 | **`michele@gmail.com`** | `micheleuser` | Utente | Account standard aggiuntivo. Consigliato per testare le transazioni avanzate, l'upgrade alla licenza Premium e l'acquisto in blocco dei portafogli altrui dalla classifica. |
 | **`giuseppe@gmail.com`** | `giuseppeuser` | Utente | Account standard. Focalizzato sul test del sistema di linking vettoriale, la creazione di percorsi logici tra widget e l'utilizzo degli aggregatori matematici. |
 
-📊 Schema dei Dati
+## 📊 Schema dei Dati
+
 L'infrastruttura di persistenza è modellata su PostgreSQL. Oltre al link esterno alla board visuale su DrawSQL, di seguito è riportato lo schema logico e relazionale del database.
 
 ```mermaid
@@ -248,11 +249,7 @@ erDiagram
 
 In alternativa è visualizzabile da https://drawsql.app/teams/0ftt/diagrams/deq
 
-Account da testing
-
-
-
-🔑 Legenda Relazioni e Vincoli
+### 🔑 Legenda Relazioni e Vincoli
 Propagazione Eliminazioni (ON DELETE CASCADE): Eliminando un utente dalla tabella users, vengono eliminati a cascata i record associati in holdings, transactions, workspaces, leaderboard_entries, leaderboard_history, password_resets e leaderboard_reviews (sia come autore che come utente recensito). L'eliminazione di un asset distrugge le relative holdings.
 
 Mantenimento Storico (ON DELETE SET NULL): Le relazioni verso assets (added_by) e asset_events (actor_id) preservano lo storico di auditing anche qualora l'account amministratore venga rimosso.
@@ -261,25 +258,14 @@ Vincoli di Unicità: Sono applicati vincoli univoci su users.email, users.userna
 
 Disaccoppiamento Logico (Senza FK): Tabelle come market_cache, price_history e asset_events referenziano logicamente il ticker tramite stringa di testo senza costrizioni di chiave esterna, garantendo l'integrità dei dati pregressi anche in caso di delisting dell'asset dal database. app_revenue è un'entità del tutto autonoma e append-only per preservare il tracciamento degli incassi storici.
 
-## Changelog
+## 📝 Changelog
 
-### Pulizia e refactoring
+**Pulizia e refactoring**
 
-- **Drag & resize unificati**: il trascinamento e il ridimensionamento dei
-  widget sono ora direttive di attributo riusabili (`appDrag`, `appResize`),
-  applicate a chart-frame, connection-hub, inventory e utility widget al posto
-  del codice pointer-event duplicato in ogni componente.
-- **Ticker collegati centralizzati**: la risalita dei collegamenti tra widget
-  (`collectLinkedTickers` in `widget.model.ts`) sostituisce le tre copie della
-  stessa logica in chart-widget-base e utility widget.
-- **Mapper utente condiviso**: `toPublicUser` (`server/src/controllers/user-mapper.ts`)
-  unifica i due mapper duplicati di auth e me controller; lo schema Zod
-  dell'username è estratto in `server/src/validation/schemas.ts`.
-- **Ridimensionamento funzionante** per inventory e connection-hub: il corpo dei
-  widget scala i contenuti con container query quando il box ha un'altezza fissa;
-  corretto anche il ritorno a capo dell'orologio.
-- **Codice morto rimosso**: campi `WidgetData` inutilizzati, metodi `goBack` non
-  raggiungibili, tipo `Timeframe`, chiavi i18n orfane e gli spec boilerplate.
-- **Identificatori più chiari** (in inglese): rinominati campi, metodi e variabili
-  a lettera singola dove il significato non era evidente.
-- **Sicurezza**: ruotato il `JWT_SECRET` (le sessioni esistenti vanno rifatte).
+- Trascinamento e ridimensionamento dei widget unificati in due direttive riusabili (`appDrag`, `appResize`), al posto del codice duplicato in ogni componente.
+- Logica dei ticker collegati centralizzata in `collectLinkedTickers` (`widget.model.ts`), condivisa da grafici e widget di utilità.
+- Mapper utente e schema di validazione dell'username condivisi tra i controller (`user-mapper.ts`, `validation/schemas.ts`).
+- Ridimensionamento di inventario e connection-hub ora effettivo: i contenuti scalano con le container query e il ritorno a capo dell'orologio è corretto.
+- Rimosso codice morto: campi e metodi inutilizzati, tipo `Timeframe`, chiavi i18n orfane e gli spec boilerplate.
+- Identificatori resi più chiari e coerenti (in inglese).
+- `JWT_SECRET` ruotato per sicurezza: richiede un nuovo accesso.
