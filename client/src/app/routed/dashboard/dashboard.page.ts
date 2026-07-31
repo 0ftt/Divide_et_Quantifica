@@ -117,8 +117,8 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   email = '';
   password = '';
   confirmPassword = '';
-  nomeUtente = '';
-  passwordErrata = false;
+  currentUserName = '';
+  wrongPassword = false;
   isUserPremium = false;
   isMobile = window.innerWidth <= 768;
 
@@ -411,11 +411,11 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
 
   private onAuthSuccess(): void {
     this.authLoading = false;
-    this.passwordErrata = false;
+    this.wrongPassword = false;
 
     const user = this.auth.currentUser();
     if (user) {
-      this.nomeUtente = user.username || user.displayName || 'Utente';
+      this.currentUserName = user.username || user.displayName || 'Utente';
       this.isUserPremium = user.isPremium;
     }
     this.loadAssetPool();
@@ -440,18 +440,18 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private restoreWorkspace(state: unknown): void {
-    const s = state as {
+    const saved = state as {
       activeTabId?: string;
       tabs?: Array<Partial<TabData> & { widgets?: WidgetData[] }>;
     };
-    if (!s || !Array.isArray(s.tabs) || !s.tabs.length) {
+    if (!saved || !Array.isArray(saved.tabs) || !saved.tabs.length) {
       this.resetWorkspaceToDefault();
       return;
     }
-    this.tabsList = s.tabs.map((t) => ({
+    this.tabsList = saved.tabs.map((t) => ({
       id: t.id ?? `tab-${Date.now()}`,
       name: t.name ?? 'Board',
-      active: t.id === s.activeTabId,
+      active: t.id === saved.activeTabId,
       widgets: Array.isArray(t.widgets) ? t.widgets : [],
       deletedWidgets: [],
       maxZIndex: t.maxZIndex ?? 10,
@@ -576,8 +576,8 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
 
   private onAuthError(err: { error?: { error?: string } }): void {
     this.authLoading = false;
-    this.passwordErrata = true;
-    setTimeout(() => (this.passwordErrata = false), 800);
+    this.wrongPassword = true;
+    setTimeout(() => (this.wrongPassword = false), 800);
     this.authError = err?.error?.error || this.transloco.translate('auth.failed');
   }
 
@@ -819,7 +819,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     }
     this.saveCameraToTab(this.activeTab);
     this.tabsList.forEach((t) => (t.active = false));
-    const nuovaTab: TabData = {
+    const newTab: TabData = {
       id: `tab-${Date.now()}`,
       name: `Scheda ${this.tabsList.length + 1}`,
       active: true,
@@ -830,8 +830,8 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
       cameraY: 0,
       cameraZoom: 1,
     };
-    this.tabsList.push(nuovaTab);
-    this.loadCameraFromTab(nuovaTab);
+    this.tabsList.push(newTab);
+    this.loadCameraFromTab(newTab);
     this.tabsMenuOpen = false;
   }
 
@@ -985,7 +985,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
 
     this.widgetList.push({
       id: `w-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      connectionID: '',
       title: '',
       type: tipo,
       company: tipo === 'unlistedStock' ? '' : stockName,
@@ -998,7 +997,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
       height: tipo.startsWith('chart') ? size.height : 0,
       zIndex: this.activeTab.maxZIndex,
       minimize: false,
-      visible: true,
     });
   }
 

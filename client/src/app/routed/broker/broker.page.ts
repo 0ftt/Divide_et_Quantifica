@@ -425,9 +425,6 @@ export class BrokerPage implements OnInit {
     }
   }
 
-  goBack(): void {
-    this.router.navigate(['/dashboard']);
-  }
 
   openHistory(ticker: string, event: MouseEvent): void {
     event.stopPropagation();

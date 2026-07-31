@@ -7,7 +7,7 @@
       </div>
       <div class="widget-controls">
         <ion-button fill="clear" size="small" class="control-btn close" title="Chiudi"
-                    (click)="chiudiPannello()">
+                    (click)="closePanel()">
           <ion-icon slot="icon-only" name="close-outline"></ion-icon>
         </ion-button>
       </div>
@@ -102,13 +102,13 @@
               @for (cid of selectedWidget.connectedIDs; track cid) {
                 <div class="id-tag">
                   <span class="tag-text">{{ cid }}</span>
-                  <button class="remove-tag-btn" (click)="rimuoviID(cid)">×</button>
+                  <button class="remove-tag-btn" (click)="removeLinkId(cid)">×</button>
                 </div>
               }
 
               <div class="add-id-row">
                 <input type="text" placeholder="Es. w-123" [(ngModel)]="nuovoID" />
-                <button class="add-id-btn" (click)="aggiungiID()">+</button>
+                <button class="add-id-btn" (click)="addLinkId()">+</button>
               </div>
             </div>
           </div>
@@ -151,13 +151,13 @@
               @for (cid of selectedWidget.connectedIDs; track cid) {
                 <div class="id-tag">
                   <span class="tag-text">{{ cid }}</span>
-                  <button class="remove-tag-btn" (click)="rimuoviID(cid)">×</button>
+                  <button class="remove-tag-btn" (click)="removeLinkId(cid)">×</button>
                 </div>
               }
 
               <div class="add-id-row">
                 <input type="text" placeholder="Es. w-123" [(ngModel)]="nuovoID" />
-                <button class="add-id-btn" (click)="aggiungiID()">+</button>
+                <button class="add-id-btn" (click)="addLinkId()">+</button>
               </div>
             </div>
           </div>

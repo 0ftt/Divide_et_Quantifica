@@ -101,7 +101,7 @@
         <p class="field-error">{{ rechargeError }}</p>
       }
 
-      <ion-button expand="block" color="success" (click)="ricaricaCredito()">
+      <ion-button expand="block" color="success" (click)="rechargeCredit()">
         <ion-icon slot="start" name="wallet-outline"></ion-icon>
         {{ 'account.rechargeBtn' | transloco }}
       </ion-button>
@@ -118,7 +118,7 @@
       </ion-item>
 
       <ion-button expand="block" color="warning" class="premium-btn glow-btn" [disabled]="isPremium"
-                  (click)="apriModalePremium()">
+                  (click)="openPremiumModal()">
         {{ 'account.buyPremium' | transloco }}
       </ion-button>
     </section>

@@ -18,6 +18,8 @@
   min-width: 240px;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   font-family: 'Courier New', Courier, monospace;
 }
 
@@ -27,6 +29,16 @@ header.widget-header { cursor: move; }
   display: flex;
   flex-direction: column;
   padding: 0.4rem 0.2rem;
+
+  &.scaled {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    container-type: size;
+
+    .inv-row { font-size: clamp(0.78rem, 5cqmin, 1.5rem); }
+    .inv-total-val { font-size: clamp(0.95rem, 6cqmin, 1.8rem); }
+  }
 }
 
 .inv-search {

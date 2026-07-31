@@ -1,6 +1,5 @@
 {
   "login": {
-    "tagline": "Your command deck for market analysis.",
     "lead": "Divide et Quantifica is your simulated trading deck: build market widgets, wire them together and read the markets on an infinite canvas. No real orders — just strategy.",
     "card1": "Linkable widgets",
     "card2": "ECharts graphs",
@@ -8,7 +7,6 @@
     "point1": "Market widgets you can link together",
     "point2": "ECharts graphs: candlestick, line, area, volume, pie",
     "point3": "Infinite canvas with pan & zoom",
-    "subtitle": "Begin trading",
     "email": "email",
     "password": "password",
     "emailPlaceholder": "Type your email here",
@@ -45,13 +43,7 @@
     "passwordMismatch": "Passwords do not match."
   },
   "nav": {
-    "dashboard": "Dashboard",
-    "broker": "Broker",
-    "admin": "Administration",
-    "account": "Account",
-    "leaderboard": "Leaderboard",
-    "stocks": "All stocks",
-    "history": "History"
+    "leaderboard": "Leaderboard"
   },
   "reset": {
     "title": "Reset your password",
@@ -69,7 +61,6 @@
     "loading": "Loading...",
     "empty": "No operations recorded.",
     "loadError": "Could not load the history.",
-    "refresh": "Reload",
     "types": {
       "buy": "Buy",
       "sell": "Sell",
@@ -78,22 +69,11 @@
     }
   },
   "stocks": {
-    "title": "All stocks",
     "poolTitle": "Site listing",
     "searchPlaceholder": "Search ticker or name…",
     "loading": "Loading...",
     "empty": "No stocks in the listing.",
-    "loadError": "Could not load the listing.",
-    "refresh": "Reload",
-    "createWidget": "Create stock widget",
-    "remove": "Remove from listing",
-    "adminAdd": "Add stock to listing",
-    "ticker": "Ticker",
-    "tickerPlaceholder": "E.g. AAPL",
-    "tickerInvalid": "Invalid ticker.",
-    "searchAdd": "Search and add",
-    "adding": "Searching...",
-    "addError": "Ticker \"{{ ticker }}\" not found on Yahoo Finance."
+    "createWidget": "Create stock widget"
   },
   "account": {
     "title": "Account Settings",
@@ -146,11 +126,8 @@
   },
   "common": {
     "loading": "Loading...",
-    "save": "Save",
     "cancel": "Cancel",
-    "confirm": "Confirm",
-    "buy": "Buy",
-    "sell": "Sell"
+    "confirm": "Confirm"
   },
   "broker": {
     "title": "Trading Terminal",
@@ -187,7 +164,6 @@
     "tabUsers": "Users",
     "tabAssets": "Listing",
     "tabFinance": "Finance",
-    "tabSystem": "System",
     "searchAssets": "Search ticker or name…",
     "autoUpdate": "AUTOMATIC UPDATE",
     "nextUpdate": "next",
@@ -216,10 +192,6 @@
     "seeding": "POPULATING…",
     "seedDone": "Listing populated: {{ count }} stocks.",
     "seedError": "Population failed.",
-    "systemStatus": "SYSTEM STATUS",
-    "uptime": "Uptime",
-    "activeUsers": "Active users",
-    "marketAssets": "Market assets",
     "appCredit": "EARNINGS",
     "revenueTotal": "Total",
     "revenuePremium": "From Premium",
@@ -242,10 +214,6 @@
     "unshareError": "Could not withdraw the share. Please try again.",
     "empty": "No trader has shared their score yet.",
     "you": "You",
-    "rank": "Rank",
-    "trader": "Trader",
-    "score": "Net worth",
-    "sharedAt": "Shared on",
     "trend": "Trend",
     "loadingHistory": "Loading history…",
     "tooFewShares": "Too few shares yet for a chart (needs more than one share).",
@@ -275,9 +243,6 @@
     "duplicate": "Connection already exists."
   },
   "widget": {
-    "alertEnter": "🔔 {{ticker}} entered range {{band}} — price {{price}}",
-    "alertExit": "🔔 {{ticker}} exited range {{band}} — price {{price}}",
-    "inTab": " (tab «{{tab}}»)",
     "emptyChart": "Connect a data source",
     "inventoryEmpty": "No positions.",
     "loadingChart": "Loading data…"
@@ -302,7 +267,6 @@
     "tAdmin": "Admin Panel",
     "tSettings": "Account Settings",
     "tShop": "Shop",
-    "tShopPremium": "Shop — Premium active",
     "tTheme": "Light/Dark theme",
     "tNotifications": "Notifications",
     "tCenterView": "Center view",

@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -109,7 +108,6 @@ export class AdminPanelPage implements OnInit, OnDestroy {
   private clockTimer?: ReturnType<typeof setInterval>;
 
   constructor(
-    private router: Router,
     private assetService: AssetService,
     private creditService: CreditService,
     private txService: TransactionService,
@@ -341,10 +339,10 @@ export class AdminPanelPage implements OnInit, OnDestroy {
   }
 
   get countdownLabel(): string {
-    const s = this.secondsLeft;
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${m}:${sec.toString().padStart(2, '0')}`;
+    const totalSeconds = this.secondsLeft;
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   }
 
   get progressFraction(): number {
@@ -372,7 +370,4 @@ export class AdminPanelPage implements OnInit, OnDestroy {
     });
   }
 
-  goBack(): void {
-    this.router.navigate(['/dashboard']);
-  }
 }

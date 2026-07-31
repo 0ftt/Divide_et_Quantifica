@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import * as echarts from 'echarts';
 import { TranslocoService } from '@jsverse/transloco';
-import { WidgetData } from '$core/models/widget.model';
+import { WidgetData, collectLinkedTickers } from '$core/models/widget.model';
 import { MarketService } from '$core/services/market.service';
 import { Candle, generateCandles } from '$core/charts/chart-data';
 
@@ -70,39 +70,11 @@ export abstract class ChartWidgetBase implements AfterViewInit, OnDestroy, DoChe
     this.chart?.dispose();
   }
 
-    protected sourceTickers(): string[] {
+  protected sourceTickers(): string[] {
     if (this.demoTicker) {
       return [this.demoTicker.toUpperCase()];
     }
-    const out = new Set<string>();
-
-    const visited = new Set<string>([this.widget.id]);
-    const collect = (w?: WidgetData) => {
-      if (!w || visited.has(w.id)) {
-        return;
-      }
-      visited.add(w.id);
-      if (w.type === 'stockInfo' || w.type === 'unlistedStock') {
-        const t = (w.ticker || w.title || '').toUpperCase();
-        if (t) {
-          out.add(t);
-        }
-      } else if (w.type === 'inventory') {
-        for (const t of w.tickers ?? []) {
-          if (t) {
-            out.add(t.toUpperCase());
-          }
-        }
-      } else if (w.type === 'connectionHub') {
-        for (const sid of w.connectedIDs ?? []) {
-          collect(this.allWidgets.find((x) => x.id === sid));
-        }
-      }
-    };
-    for (const id of this.widget.connectedIDs ?? []) {
-      collect(this.allWidgets.find((x) => x.id === id));
-    }
-    return [...out];
+    return collectLinkedTickers(this.widget, this.allWidgets);
   }
 
   private timeframe(): string {
@@ -117,7 +89,7 @@ export abstract class ChartWidgetBase implements AfterViewInit, OnDestroy, DoChe
     return `${this.sourceTickers().join(',')}@${this.timeframe()}`;
   }
 
-    protected candlesFor(ticker: string): Candle[] {
+  protected candlesFor(ticker: string): Candle[] {
     if (this.demoTicker) {
       return generateCandles(ticker);
     }

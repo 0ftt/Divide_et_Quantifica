@@ -7,7 +7,6 @@ export type { Quote, Candle, SymbolHit };
 const YAHOO_HEADERS = { 'User-Agent': 'Mozilla/5.0 (DivideEtQuantifica)' };
 
 export const TIMEFRAMES = ['1d', '5d', '1mo', '3mo', '6mo', '1y', '5y'] as const;
-export type Timeframe = (typeof TIMEFRAMES)[number];
 
 function rangeParams(timeframe: string): { range: string; interval: string } {
   switch (timeframe) {

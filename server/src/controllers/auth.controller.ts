@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { randomBytes, createHash } from 'node:crypto';
-import type { AuthResponse, User } from '$shared';
+import type { AuthResponse } from '$shared';
 import { query, queryOne } from '../db/pool';
 import { hashPassword, verifyPassword } from '../auth/password';
 import { signToken } from '../auth/jwt';
 import { AppError } from '../middleware/error';
 import { sendMail, emailLayout } from '../services/mail.service';
+import { usernameSchema } from '../validation/schemas';
+import { toPublicUser } from './user-mapper';
 import { env } from '../config/env';
 
 interface UserRow {
@@ -25,31 +27,6 @@ interface UserRow {
   avatar_data_url: string | null;
   token_version: number;
 }
-
-function toPublicUser(u: UserRow): User {
-  return {
-    id: u.id,
-    email: u.email,
-    displayName: u.display_name,
-    username: u.username,
-    phone: u.phone,
-    address: u.address,
-    city: u.city,
-    postalCode: u.postal_code,
-    role: u.role,
-    credit: Number(u.credit),
-
-    isPremium: u.is_premium || u.role === 'admin',
-    avatarDataUrl: u.avatar_data_url,
-  };
-}
-
-const usernameSchema = z
-  .string()
-  .trim()
-  .min(3)
-  .max(20)
-  .regex(/^[a-zA-Z0-9_]+$/, 'Username: solo lettere, numeri e underscore (3-20).');
 
 const registerSchema = z.object({
   email: z.string().trim().toLowerCase().email(),

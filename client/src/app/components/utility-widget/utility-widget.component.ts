@@ -1,7 +1,6 @@
 import {
   Component,
   EventEmitter,
-  HostListener,
   Input,
   OnDestroy,
   OnInit,
@@ -26,8 +25,9 @@ import {
   timeOutline,
 } from 'ionicons/icons';
 import { TranslocoModule } from '@jsverse/transloco';
-import { WidgetData, widgetBackground, widgetIcon, widgetNameKey } from '$core/models/widget.model';
+import { WidgetData, widgetBackground, widgetIcon, widgetNameKey, collectLinkedTickers } from '$core/models/widget.model';
 import { ResizeHandleDirective } from '$core/directives/resize-handle.directive';
+import { DragHandleDirective } from '$core/directives/drag-handle.directive';
 import { generateCandles } from '$core/charts/chart-data';
 import { AssetService } from '$core/services/asset.service';
 
@@ -49,10 +49,11 @@ const PRICE_FETCH_SECS = 60;
 @Component({
   selector: 'app-utility-widget',
   standalone: true,
-  imports: [CommonModule, FormsModule, IonButton, IonIcon, TranslocoModule, ResizeHandleDirective],
+  imports: [CommonModule, FormsModule, IonButton, IonIcon, TranslocoModule, ResizeHandleDirective, DragHandleDirective],
   template: `
     <section class="widget-box util-box" [style.background]="bg()"
-             [style.width.px]="widget.width" [style.height.px]="widget.height || null" (pointerdown)="startDrag($event)">
+             [style.width.px]="widget.width" [style.height.px]="widget.height || null"
+             appDrag [appDragTarget]="widget" [appDragZoom]="zoomLevel">
       <header class="widget-header">
         <div class="header-info">
           <ion-icon class="widget-type-icon" [name]="typeIcon"></ion-icon>
@@ -134,7 +135,7 @@ const PRICE_FETCH_SECS = 60;
         flex-direction: column;
         justify-content: center;
       }
-      .util-body.scaled .clock-time { font-size: clamp(2.4rem, 26cqmin, 10rem); }
+      .util-body.scaled .clock-time { font-size: clamp(1.6rem, min(13cqi, 30cqh), 8rem); }
       .util-body.scaled .clock-date { font-size: clamp(0.8rem, 6cqmin, 2rem); }
       .util-body.scaled .net-total { font-size: clamp(1.4rem, 20cqmin, 7rem); }
       .util-body.scaled .net-total-tag { font-size: clamp(0.7rem, 5cqmin, 1.5rem); }
@@ -218,6 +219,7 @@ const PRICE_FETCH_SECS = 60;
         font-size: 2.4rem;
         font-weight: 800;
         text-align: center;
+        white-space: nowrap;
         letter-spacing: 2px;
         font-variant-numeric: tabular-nums;
         color: var(--deq-text-bright);
@@ -254,9 +256,6 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
   clockDate = '';
 
   private timer?: ReturnType<typeof setInterval>;
-  private isDragging = false;
-  private lastX = 0;
-  private lastY = 0;
   private assets = inject(AssetService);
   // Prezzo e variazione % reali per ticker, dall'endpoint /assets.
   private prices = new Map<string, number>();
@@ -371,35 +370,7 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
   }
 
   private linkedTickers(): string[] {
-    const out = new Set<string>();
-
-    const visited = new Set<string>([this.widget.id]);
-    const collect = (w?: WidgetData) => {
-      if (!w || visited.has(w.id)) {
-        return;
-      }
-      visited.add(w.id);
-      if (w.type === 'stockInfo' || w.type === 'unlistedStock') {
-        const t = (w.ticker || w.title || '').toUpperCase();
-        if (t) {
-          out.add(t);
-        }
-      } else if (w.type === 'inventory') {
-        for (const t of w.tickers ?? []) {
-          if (t) {
-            out.add(t.toUpperCase());
-          }
-        }
-      } else if (w.type === 'connectionHub') {
-        for (const sid of w.connectedIDs ?? []) {
-          collect(this.allWidgets.find((x) => x.id === sid));
-        }
-      }
-    };
-    for (const id of this.widget.connectedIDs ?? []) {
-      collect(this.allWidgets.find((x) => x.id === id));
-    }
-    return [...out];
+    return collectLinkedTickers(this.widget, this.allWidgets);
   }
 
   private refreshNet(): void {
@@ -425,33 +396,6 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
     const close = candles[candles.length - 1]?.close ?? 0;
     this.closeCache.set(ticker, close);
     return close;
-  }
-
-  startDrag(event: PointerEvent): void {
-    if (event.button !== 0) {
-      return;
-    }
-    this.isDragging = true;
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
-    event.preventDefault();
-  }
-
-  @HostListener('window:pointermove', ['$event'])
-  onMouseMove(event: PointerEvent): void {
-    if (!this.isDragging) {
-      return;
-    }
-    this.widget.posX += (event.clientX - this.lastX) / this.zoomLevel;
-    this.widget.posY += (event.clientY - this.lastY) / this.zoomLevel;
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
-  }
-
-  @HostListener('window:pointerup')
-  @HostListener('window:pointercancel')
-  onMouseUp(): void {
-    this.isDragging = false;
   }
 
   requestLink(event: MouseEvent): void {

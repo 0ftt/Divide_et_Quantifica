@@ -1,5 +1,6 @@
 <section class="widget-box inv-box" [style.background]="bg()" [style.width.px]="widget.width"
-         [style.height.px]="widget.height || null" (pointerdown)="startDrag($event)">
+         [style.height.px]="widget.height || null"
+         appDrag [appDragTarget]="widget" [appDragZoom]="zoomLevel">
 
   <header class="widget-header">
     <div class="header-info">
@@ -28,7 +29,8 @@
   </header>
 
   @if (!widget.minimize) {
-    <main class="widget-content inv-body" (pointerdown)="$event.stopPropagation()">
+    <main class="widget-content inv-body" [class.scaled]="!!widget.height"
+          (pointerdown)="$event.stopPropagation()">
       <div class="inv-search">
         <ion-icon name="search-outline"></ion-icon>
         <input type="text" [(ngModel)]="search" (ngModelChange)="onSearch()"

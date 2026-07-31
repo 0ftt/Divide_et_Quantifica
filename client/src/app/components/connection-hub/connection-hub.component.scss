@@ -18,6 +18,8 @@
   min-width: 240px;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   font-family: 'Courier New', Courier, monospace;
 }
 
@@ -29,6 +31,16 @@ header.widget-header { cursor: move; }
   padding: 0;
   max-height: 180px;
   overflow-y: auto;
+
+  &.scaled {
+    max-height: none;
+    flex: 1 1 auto;
+    min-height: 0;
+    container-type: size;
+
+    .terminal-id-row { font-size: clamp(0.75rem, 6cqmin, 1.5rem); }
+    .terminal-empty { font-size: clamp(0.75rem, 6cqmin, 1.5rem); }
+  }
 
   &::-webkit-scrollbar { width: 3px; }
   &::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--deq-accent-neon) 20%, transparent); border-radius: 2px; }

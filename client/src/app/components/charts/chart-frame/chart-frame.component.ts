@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   HostBinding,
-  HostListener,
   Input,
   Output,
 } from '@angular/core';
@@ -23,14 +22,13 @@ import {
 import { TranslocoModule } from '@jsverse/transloco';
 import { WidgetData, widgetBackground, widgetIcon, widgetNameKey } from '$core/models/widget.model';
 import { DuplicatePayload } from '../chart-widget-base';
-
-const MIN_W = 260;
-const MIN_H = 200;
+import { ResizeHandleDirective } from '$core/directives/resize-handle.directive';
+import { DragHandleDirective } from '$core/directives/drag-handle.directive';
 
 @Component({
   selector: 'app-chart-frame',
   standalone: true,
-  imports: [IonButton, IonIcon, TranslocoModule],
+  imports: [IonButton, IonIcon, TranslocoModule, ResizeHandleDirective, DragHandleDirective],
   templateUrl: './chart-frame.component.html',
   styleUrls: ['./chart-frame.component.scss'],
 })
@@ -58,11 +56,6 @@ export class ChartFrameComponent {
 
   @Output() link = new EventEmitter<string>();
 
-  private dragging = false;
-  private resizing = false;
-  private lastX = 0;
-  private lastY = 0;
-
   constructor() {
     addIcons({
       copyOutline,
@@ -85,51 +78,6 @@ export class ChartFrameComponent {
 
   get bodyHeight(): number {
     return this.widget?.height || 300;
-  }
-
-  startDrag(event: PointerEvent): void {
-    if (event.button !== 0) {
-      return;
-    }
-    this.dragging = true;
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
-    event.preventDefault();
-  }
-
-  startResize(event: PointerEvent): void {
-    if (event.button !== 0) {
-      return;
-    }
-    this.resizing = true;
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
-    event.preventDefault();
-  }
-
-  @HostListener('window:pointermove', ['$event'])
-  onMouseMove(event: PointerEvent): void {
-    if (!this.dragging && !this.resizing) {
-      return;
-    }
-    const dx = (event.clientX - this.lastX) / this.zoomLevel;
-    const dy = (event.clientY - this.lastY) / this.zoomLevel;
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
-    if (this.dragging) {
-      this.widget.posX += dx;
-      this.widget.posY += dy;
-    } else if (this.resizing) {
-      this.widget.width = Math.max(MIN_W, (this.widget.width || 380) + dx);
-      this.widget.height = Math.max(MIN_H, (this.widget.height || 300) + dy);
-    }
-  }
-
-  @HostListener('window:pointerup')
-  @HostListener('window:pointercancel')
-  onMouseUp(): void {
-    this.dragging = false;
-    this.resizing = false;
   }
 
   onLink(event: MouseEvent): void {

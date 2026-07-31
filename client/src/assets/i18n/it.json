@@ -1,6 +1,5 @@
 {
   "login": {
-    "tagline": "La tua plancia di comando per l'analisi dei mercati.",
     "lead": "Divide et Quantifica è la tua plancia di trading simulato: componi widget di mercato, collegali tra loro e leggi i mercati su un canvas infinito. Nessun ordine reale, solo strategia.",
     "card1": "Widget collegabili",
     "card2": "Grafici ECharts",
@@ -8,7 +7,6 @@
     "point1": "Widget di mercato collegabili tra loro",
     "point2": "Grafici ECharts: candele, linea, area, volumi, torta",
     "point3": "Canvas infinito con pan & zoom",
-    "subtitle": "Begin trading",
     "email": "email",
     "password": "password",
     "emailPlaceholder": "Scrivi qui la tua email",
@@ -45,13 +43,7 @@
     "passwordMismatch": "Le password non coincidono."
   },
   "nav": {
-    "dashboard": "Dashboard",
-    "broker": "Broker",
-    "admin": "Amministrazione",
-    "account": "Account",
-    "leaderboard": "Classifica",
-    "stocks": "Tutte le azioni",
-    "history": "Storico"
+    "leaderboard": "Classifica"
   },
   "reset": {
     "title": "Reimposta la password",
@@ -69,7 +61,6 @@
     "loading": "Caricamento...",
     "empty": "Nessuna operazione registrata.",
     "loadError": "Impossibile caricare lo storico.",
-    "refresh": "Ricarica",
     "types": {
       "buy": "Acquisto",
       "sell": "Vendita",
@@ -78,22 +69,11 @@
     }
   },
   "stocks": {
-    "title": "Tutte le azioni",
     "poolTitle": "Listino del sito",
     "searchPlaceholder": "Cerca ticker o nome…",
     "loading": "Caricamento...",
     "empty": "Nessuna azione nel listino.",
-    "loadError": "Impossibile caricare il listino.",
-    "refresh": "Ricarica",
-    "createWidget": "Crea widget azione",
-    "remove": "Rimuovi dal listino",
-    "adminAdd": "Aggiungi azione al listino",
-    "ticker": "Ticker",
-    "tickerPlaceholder": "Es. AAPL",
-    "tickerInvalid": "Ticker non valido.",
-    "searchAdd": "Cerca e aggiungi",
-    "adding": "Ricerca in corso...",
-    "addError": "Ticker \"{{ ticker }}\" non trovato su Yahoo Finance."
+    "createWidget": "Crea widget azione"
   },
   "account": {
     "title": "Impostazioni Account",
@@ -146,11 +126,8 @@
   },
   "common": {
     "loading": "Caricamento...",
-    "save": "Salva",
     "cancel": "Annulla",
-    "confirm": "Conferma",
-    "buy": "Compra",
-    "sell": "Vendi"
+    "confirm": "Conferma"
   },
   "broker": {
     "title": "Terminale di Trading",
@@ -187,7 +164,6 @@
     "tabUsers": "Utenti",
     "tabAssets": "Listino",
     "tabFinance": "Finanze",
-    "tabSystem": "Sistema",
     "searchAssets": "Cerca ticker o nome…",
     "autoUpdate": "AGGIORNAMENTO AUTOMATICO",
     "nextUpdate": "prossimo",
@@ -216,10 +192,6 @@
     "seeding": "POPOLAMENTO IN CORSO…",
     "seedDone": "Listino popolato: {{ count }} azioni.",
     "seedError": "Popolamento non riuscito.",
-    "systemStatus": "STATO SISTEMA",
-    "uptime": "Uptime",
-    "activeUsers": "Utenti attivi",
-    "marketAssets": "Asset di mercato",
     "appCredit": "GUADAGNI",
     "revenueTotal": "Totale",
     "revenuePremium": "Da Premium",
@@ -242,10 +214,6 @@
     "unshareError": "Impossibile rescindere la condivisione. Riprova.",
     "empty": "Nessun trader ha ancora condiviso il proprio punteggio.",
     "you": "Tu",
-    "rank": "Pos.",
-    "trader": "Trader",
-    "score": "Patrimonio",
-    "sharedAt": "Condiviso il",
     "trend": "Andamento",
     "loadingHistory": "Caricamento storico…",
     "tooFewShares": "Ancora troppo poche condivisioni per un grafico (serve più di una condivisione).",
@@ -275,9 +243,6 @@
     "duplicate": "Collegamento già esistente."
   },
   "widget": {
-    "alertEnter": "🔔 {{ticker}} è entrata nel campo {{band}} — prezzo {{price}}",
-    "alertExit": "🔔 {{ticker}} è uscita dal campo {{band}} — prezzo {{price}}",
-    "inTab": " (scheda «{{tab}}»)",
     "emptyChart": "Collega una sorgente dati",
     "inventoryEmpty": "Nessuna posizione.",
     "loadingChart": "Caricamento dati…"
@@ -302,7 +267,6 @@
     "tAdmin": "Pannello Admin",
     "tSettings": "Impostazioni Account",
     "tShop": "Shop",
-    "tShopPremium": "Shop — Premium attivo",
     "tTheme": "Tema chiaro/scuro",
     "tNotifications": "Notifiche",
     "tCenterView": "Centra vista",

@@ -1,5 +1,6 @@
 <section class="widget-box hub-box" [style.background]="bg()" [style.width.px]="widget.width"
-         [style.height.px]="widget.height || null" (pointerdown)="startDrag($event)">
+         [style.height.px]="widget.height || null"
+         appDrag [appDragTarget]="widget" [appDragZoom]="zoomLevel">
 
   <header class="widget-header">
     <div class="header-info">
@@ -28,7 +29,8 @@
   </header>
 
   @if (!widget.minimize) {
-    <main class="widget-content terminal-body" (pointerdown)="$event.stopPropagation()">
+    <main class="widget-content terminal-body" [class.scaled]="!!widget.height"
+          (pointerdown)="$event.stopPropagation()">
       @if (connectedWidgets.length > 0) {
         @for (cw of connectedWidgets; track cw.id) {
           <div class="terminal-id-row">LINK: {{ cw.id }} &middot; {{ cw.title }}</div>

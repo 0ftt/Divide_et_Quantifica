@@ -1,6 +1,6 @@
 <section class="chart-frame" [style.background]="bg()">
 
-  <header class="frame-header" (pointerdown)="startDrag($event)">
+  <header class="frame-header" appDrag [appDragTarget]="widget" [appDragZoom]="zoomLevel">
     <div class="frame-title">
       <ion-icon class="frame-icon" [name]="icon"></ion-icon>
       <span class="frame-name">{{ widget.title || (nameKey | transloco) }}</span>
@@ -34,6 +34,8 @@
   </main>
 
   @if (!widget.minimize) {
-    <div class="resize-handle" title="Ridimensiona" (pointerdown)="startResize($event)"></div>
+    <div class="resize-handle" title="Ridimensiona"
+         appResize [appResizeTarget]="widget" [appResizeZoom]="zoomLevel"
+         [appResizeMinW]="260" [appResizeMinH]="200"></div>
   }
 </section>

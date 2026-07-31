@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, HostListener } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -11,6 +11,7 @@ import {
 import { TranslocoModule } from '@jsverse/transloco';
 import { WidgetData, widgetBackground, widgetNameKey } from '$core/models/widget.model';
 import { ResizeHandleDirective } from '$core/directives/resize-handle.directive';
+import { DragHandleDirective } from '$core/directives/drag-handle.directive';
 
 export interface HubDuplicatePayload {
   id: string;
@@ -21,7 +22,7 @@ export interface HubDuplicatePayload {
 @Component({
   selector: 'app-connection-hub',
   standalone: true,
-  imports: [IonButton, IonIcon, TranslocoModule, ResizeHandleDirective],
+  imports: [IonButton, IonIcon, TranslocoModule, ResizeHandleDirective, DragHandleDirective],
   templateUrl: './connection-hub.component.html',
   styleUrls: ['./connection-hub.component.scss'],
 })
@@ -47,10 +48,6 @@ export class ConnectionHubComponent {
 
   @Output() remove = new EventEmitter<string>();
 
-  private isDragging = false;
-  private lastX = 0;
-  private lastY = 0;
-
   constructor() {
     addIcons({ gitNetworkOutline, copyOutline, removeOutline, addOutline, closeOutline });
   }
@@ -60,33 +57,6 @@ export class ConnectionHubComponent {
       return [];
     }
     return this.allWidgets.filter((w) => this.widget.connectedIDs?.includes(w.id));
-  }
-
-  startDrag(event: PointerEvent): void {
-    if (event.button !== 0) {
-      return;
-    }
-    this.isDragging = true;
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
-    event.preventDefault();
-  }
-
-  @HostListener('window:pointermove', ['$event'])
-  onMouseMove(event: PointerEvent): void {
-    if (!this.isDragging) {
-      return;
-    }
-    this.widget.posX += (event.clientX - this.lastX) / this.zoomLevel;
-    this.widget.posY += (event.clientY - this.lastY) / this.zoomLevel;
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
-  }
-
-  @HostListener('window:pointerup')
-  @HostListener('window:pointercancel')
-  onMouseUp(): void {
-    this.isDragging = false;
   }
 
   requestLink(event: MouseEvent): void {

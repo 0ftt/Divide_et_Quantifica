@@ -102,12 +102,12 @@ export class InspectorComponent {
     }
   }
 
-  chiudiPannello(): void {
+  closePanel(): void {
     this.widgetService.deselectWidget();
     this.closed.emit();
   }
 
-  aggiungiID(): void {
+  addLinkId(): void {
     if (!this.selectedWidget) {
       return;
     }
@@ -129,10 +129,10 @@ export class InspectorComponent {
     }
   }
 
-  rimuoviID(idDaRimuovere: string): void {
+  removeLinkId(idToRemove: string): void {
     if (this.selectedWidget?.connectedIDs) {
       this.selectedWidget.connectedIDs = this.selectedWidget.connectedIDs.filter(
-        (id: string) => id !== idDaRimuovere,
+        (id: string) => id !== idToRemove,
       );
     }
   }

@@ -260,3 +260,26 @@ Mantenimento Storico (ON DELETE SET NULL): Le relazioni verso assets (added_by) 
 Vincoli di Unicità: Sono applicati vincoli univoci su users.email, users.username, sulle posizioni in portafoglio holdings (user_id, ticker), sulla cache market_cache (ticker, timeframe) e sulle strategie condivise leaderboard_entries (user_id, label) per consentire configurazioni di rete multiple per lo stesso utente.
 
 Disaccoppiamento Logico (Senza FK): Tabelle come market_cache, price_history e asset_events referenziano logicamente il ticker tramite stringa di testo senza costrizioni di chiave esterna, garantendo l'integrità dei dati pregressi anche in caso di delisting dell'asset dal database. app_revenue è un'entità del tutto autonoma e append-only per preservare il tracciamento degli incassi storici.
+
+## Changelog
+
+### Pulizia e refactoring
+
+- **Drag & resize unificati**: il trascinamento e il ridimensionamento dei
+  widget sono ora direttive di attributo riusabili (`appDrag`, `appResize`),
+  applicate a chart-frame, connection-hub, inventory e utility widget al posto
+  del codice pointer-event duplicato in ogni componente.
+- **Ticker collegati centralizzati**: la risalita dei collegamenti tra widget
+  (`collectLinkedTickers` in `widget.model.ts`) sostituisce le tre copie della
+  stessa logica in chart-widget-base e utility widget.
+- **Mapper utente condiviso**: `toPublicUser` (`server/src/controllers/user-mapper.ts`)
+  unifica i due mapper duplicati di auth e me controller; lo schema Zod
+  dell'username è estratto in `server/src/validation/schemas.ts`.
+- **Ridimensionamento funzionante** per inventory e connection-hub: il corpo dei
+  widget scala i contenuti con container query quando il box ha un'altezza fissa;
+  corretto anche il ritorno a capo dell'orologio.
+- **Codice morto rimosso**: campi `WidgetData` inutilizzati, metodi `goBack` non
+  raggiungibili, tipo `Timeframe`, chiavi i18n orfane e gli spec boilerplate.
+- **Identificatori più chiari** (in inglese): rinominati campi, metodi e variabili
+  a lettera singola dove il significato non era evidente.
+- **Sicurezza**: ruotato il `JWT_SECRET` (le sessioni esistenti vanno rifatte).

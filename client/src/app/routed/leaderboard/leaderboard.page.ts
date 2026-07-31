@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -91,7 +90,7 @@ export class LeaderboardPage implements OnInit {
   cartLoading = false;
   cartError: string | null = null;
 
-  constructor(private router: Router) {
+  constructor() {
     addIcons({
       trophyOutline,
       shareSocialOutline,
@@ -156,9 +155,6 @@ export class LeaderboardPage implements OnInit {
     });
   }
 
-  goBack(): void {
-    this.router.navigate(['/dashboard']);
-  }
 
   openHistory(entry: LeaderboardEntry, event: MouseEvent): void {
     event.stopPropagation();

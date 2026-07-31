@@ -47,16 +47,13 @@ export interface WidgetData {
   zIndex: number;
 
   minimize: boolean;
-  visible: boolean;
 
   company?: string;
-  connectionID?: string;
   connectedIDs?: string[];
 
   ticker?: string;
   theme?: string;
   timeframe?: string;
-  chartType?: string;
   color?: string;
   opacity?: number;
   source?: string;
@@ -155,4 +152,36 @@ export function widgetBackground(w: { color?: string; opacity?: number }): strin
     return null;
   }
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+// Raccoglie i ticker delle sorgenti collegate a un widget, seguendo gli hub in ricorsione.
+export function collectLinkedTickers(widget: WidgetData, allWidgets: WidgetData[]): string[] {
+  const out = new Set<string>();
+  const visited = new Set<string>([widget.id]);
+  const collect = (w?: WidgetData): void => {
+    if (!w || visited.has(w.id)) {
+      return;
+    }
+    visited.add(w.id);
+    if (w.type === 'stockInfo' || w.type === 'unlistedStock') {
+      const t = (w.ticker || w.title || '').toUpperCase();
+      if (t) {
+        out.add(t);
+      }
+    } else if (w.type === 'inventory') {
+      for (const t of w.tickers ?? []) {
+        if (t) {
+          out.add(t.toUpperCase());
+        }
+      }
+    } else if (w.type === 'connectionHub') {
+      for (const sid of w.connectedIDs ?? []) {
+        collect(allWidgets.find((x) => x.id === sid));
+      }
+    }
+  };
+  for (const id of widget.connectedIDs ?? []) {
+    collect(allWidgets.find((x) => x.id === id));
+  }
+  return [...out];
 }

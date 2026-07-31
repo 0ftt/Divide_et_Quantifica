@@ -27,7 +27,7 @@
     <div class="login-form-container">
       <div class="login-container">
         <img class="welcome-logo" src="assets/DeQlogo.png" alt="Divide et Quantifica" />
-        <ion-card class="login-card" [class.spin-error]="passwordErrata">
+        <ion-card class="login-card" [class.spin-error]="wrongPassword">
           <ion-card-content>
             <div class="card-top">
               <app-lang-switcher></app-lang-switcher>
@@ -184,7 +184,7 @@
         <span class="tier-badge" [class.is-premium]="isUserPremium">
           {{ (isUserPremium ? 'dashboard.premiumBadge' : 'dashboard.standardBadge') | transloco }}
         </span>
-        {{ nomeUtente }} | Zoom: {{ (canvasZoom * 100).toFixed(0) }}%
+        {{ currentUserName }} | Zoom: {{ (canvasZoom * 100).toFixed(0) }}%
       </p>
     </div>
 

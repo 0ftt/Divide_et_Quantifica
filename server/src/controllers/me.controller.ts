@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import type { User } from '$shared';
 import { query, queryOne } from '../db/pool';
 import { AppError } from '../middleware/error';
+import { usernameSchema } from '../validation/schemas';
+import { toPublicUser } from './user-mapper';
 
 interface UserRow {
   id: string;
@@ -19,24 +20,6 @@ interface UserRow {
   avatar_data_url: string | null;
 }
 
-function toPublicMe(user: UserRow): User {
-  return {
-    id: user.id,
-    email: user.email,
-    displayName: user.display_name,
-    username: user.username,
-    phone: user.phone,
-    address: user.address,
-    city: user.city,
-    postalCode: user.postal_code,
-    role: user.role,
-    credit: Number(user.credit),
-
-    isPremium: user.is_premium || user.role === 'admin',
-    avatarDataUrl: user.avatar_data_url,
-  };
-}
-
 export async function getMe(req: Request, res: Response): Promise<void> {
   const user = await queryOne<UserRow>(
     'select id, email, display_name, username, phone, address, city, postal_code, role, credit, is_premium, avatar_data_url from users where id = $1',
@@ -46,15 +29,8 @@ export async function getMe(req: Request, res: Response): Promise<void> {
     throw new AppError(404, 'Utente non trovato.');
   }
 
-  res.json(toPublicMe(user));
+  res.json(toPublicUser(user));
 }
-
-const usernameSchema = z
-  .string()
-  .trim()
-  .min(3)
-  .max(20)
-  .regex(/^[a-zA-Z0-9_]+$/, 'Username: solo lettere, numeri e underscore (3-20).');
 
 const updateMeSchema = z.object({
   displayName: z.string().trim().min(1).optional(),
@@ -118,7 +94,7 @@ export async function updateMe(req: Request, res: Response): Promise<void> {
     throw new AppError(404, 'Utente non trovato.');
   }
 
-  res.json(toPublicMe(rows[0]));
+  res.json(toPublicUser(rows[0]));
 }
 
 export async function deleteMe(req: Request, res: Response): Promise<void> {

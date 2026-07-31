@@ -70,25 +70,25 @@ export class WidgetComponent {
   }
 
   priceLabel(): string {
-    const p = this.widget().price;
-    if (p != null) {
-      return p.toFixed(2);
+    const price = this.widget().price;
+    if (price != null) {
+      return price.toFixed(2);
     }
     return this.isUnlisted() ? '0.00' : '400.32';
   }
 
   private currentPrice(): number {
-    const p = this.widget().price;
-    return p != null ? p : 400.32;
+    const price = this.widget().price;
+    return price != null ? price : 400.32;
   }
 
   private changePct(): number {
     const key = (this.widget().ticker || this.widget().title || '').toUpperCase();
-    let h = 0;
+    let hash = 0;
     for (let i = 0; i < key.length; i++) {
-      h = (h * 31 + key.charCodeAt(i)) % 2000;
+      hash = (hash * 31 + key.charCodeAt(i)) % 2000;
     }
-    return +(h / 1000 - 1).toFixed(2);
+    return +(hash / 1000 - 1).toFixed(2);
   }
 
   changeDown(): boolean {

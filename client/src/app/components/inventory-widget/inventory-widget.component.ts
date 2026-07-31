@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonButton, IonIcon } from '@ionic/angular/standalone';
@@ -10,6 +10,7 @@ import {
 import { TranslocoModule } from '@jsverse/transloco';
 import { WidgetData, widgetBackground, widgetNameKey } from '$core/models/widget.model';
 import { ResizeHandleDirective } from '$core/directives/resize-handle.directive';
+import { DragHandleDirective } from '$core/directives/drag-handle.directive';
 import { PortfolioService } from '$core/services/portfolio.service';
 
 export interface InventoryDuplicatePayload {
@@ -27,7 +28,7 @@ interface InventoryRow {
 @Component({
   selector: 'app-inventory-widget',
   standalone: true,
-  imports: [CommonModule, FormsModule, IonButton, IonIcon, TranslocoModule, ResizeHandleDirective],
+  imports: [CommonModule, FormsModule, IonButton, IonIcon, TranslocoModule, ResizeHandleDirective, DragHandleDirective],
   templateUrl: './inventory-widget.component.html',
   styleUrls: ['./inventory-widget.component.scss'],
 })
@@ -51,10 +52,6 @@ export class InventoryWidgetComponent implements OnInit {
   search = '';
   page = 0;
   readonly pageSize = 6;
-
-  private isDragging = false;
-  private lastX = 0;
-  private lastY = 0;
 
   constructor() {
     addIcons({
@@ -133,33 +130,6 @@ export class InventoryWidgetComponent implements OnInit {
 
   get total(): number {
     return this.rows.reduce((sum, row) => sum + this.value(row), 0);
-  }
-
-  startDrag(event: PointerEvent): void {
-    if (event.button !== 0) {
-      return;
-    }
-    this.isDragging = true;
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
-    event.preventDefault();
-  }
-
-  @HostListener('window:pointermove', ['$event'])
-  onMouseMove(event: PointerEvent): void {
-    if (!this.isDragging) {
-      return;
-    }
-    this.widget.posX += (event.clientX - this.lastX) / this.zoomLevel;
-    this.widget.posY += (event.clientY - this.lastY) / this.zoomLevel;
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
-  }
-
-  @HostListener('window:pointerup')
-  @HostListener('window:pointercancel')
-  onMouseUp(): void {
-    this.isDragging = false;
   }
 
   requestLink(event: MouseEvent): void {

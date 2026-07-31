@@ -115,7 +115,7 @@ export class AccountSettingsPage {
     });
   }
 
-  ricaricaCredito(): void {
+  rechargeCredit(): void {
     this.rechargeError = null;
     const parsed = rechargeAmountSchema.safeParse(this.rechargeAmount);
     if (!parsed.success) {
@@ -145,7 +145,7 @@ export class AccountSettingsPage {
     this.rechargeModalOpen = false;
   }
 
-  apriModalePremium(): void {
+  openPremiumModal(): void {
     if (this.isPremium) {
       return;
     }
@@ -238,9 +238,6 @@ export class AccountSettingsPage {
     this.theme.set(this.darkTheme ? 'dark' : 'light');
   }
 
-  goBack(): void {
-    this.router.navigate(['/dashboard']);
-  }
 
   logout(): void {
     this.auth.logout();

@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { WidgetData, isChartWidget } from '$core/models/widget.model';
 
 function hashSeed(text: string): number {
-  let h = 0;
+  let hash = 0;
   for (let i = 0; i < text.length; i++) {
-    h = (h * 31 + text.charCodeAt(i)) | 0;
+    hash = (hash * 31 + text.charCodeAt(i)) | 0;
   }
-  return Math.abs(h);
+  return Math.abs(hash);
 }
 
 export interface ConnectionLine {
