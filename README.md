@@ -260,10 +260,7 @@ Disaccoppiamento Logico (Senza FK): Tabelle come market_cache, price_history e a
 
 ## Changelog
 
-Ultimi aggiornamenti, un po' di pulizia e qualche aggiunta:
-
 - Drag e resize dei widget ora sono direttive riusabili invece di codice ripetuto in ogni componente.
-- Inventario e connection hub si ridimensionano davvero (i contenuti scalano), e l'orologio non va più a capo.
 - Tolto un po' di codice inutilizzato e uniformati alcuni nomi.
 - I messaggi di errore del server ora sono codici tradotti dal client, così seguono la lingua scelta.
 - Aggiunto il braccialetto DeQ nel profilo, che si sblocca con il Premium e il profilo completo.
