@@ -3,21 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import {
-  addOutline, closeOutline, copyOutline, gitNetworkOutline, removeOutline, walletOutline,
-  searchOutline, chevronBackOutline, chevronForwardOutline,
-} from 'ionicons/icons';
+import { searchOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 import { TranslocoModule } from '@jsverse/transloco';
-import { WidgetData, widgetBackground, widgetNameKey } from '$core/models/widget.model';
+import { WidgetData, widgetBackground, DuplicatePayload } from '$core/models/widget.model';
 import { ResizeHandleDirective } from '$core/directives/resize-handle.directive';
 import { DragHandleDirective } from '$core/directives/drag-handle.directive';
+import { WidgetHeaderComponent } from '$components/widget-header/widget-header.component';
 import { PortfolioService } from '$core/services/portfolio.service';
-
-export interface InventoryDuplicatePayload {
-  id: string;
-  currentX: number;
-  currentY: number;
-}
 
 interface InventoryRow {
   ticker: string;
@@ -28,7 +20,7 @@ interface InventoryRow {
 @Component({
   selector: 'app-inventory-widget',
   standalone: true,
-  imports: [CommonModule, FormsModule, IonButton, IonIcon, TranslocoModule, ResizeHandleDirective, DragHandleDirective],
+  imports: [CommonModule, FormsModule, IonButton, IonIcon, TranslocoModule, ResizeHandleDirective, DragHandleDirective, WidgetHeaderComponent],
   templateUrl: './inventory-widget.component.html',
   styleUrls: ['./inventory-widget.component.scss'],
 })
@@ -40,7 +32,7 @@ export class InventoryWidgetComponent implements OnInit {
 
   @Output() link = new EventEmitter<string>();
 
-  @Output() duplicate = new EventEmitter<InventoryDuplicatePayload>();
+  @Output() duplicate = new EventEmitter<DuplicatePayload>();
 
   @Output() remove = new EventEmitter<string>();
 
@@ -54,10 +46,7 @@ export class InventoryWidgetComponent implements OnInit {
   readonly pageSize = 6;
 
   constructor() {
-    addIcons({
-      copyOutline, removeOutline, addOutline, closeOutline, gitNetworkOutline, walletOutline,
-      searchOutline, chevronBackOutline, chevronForwardOutline,
-    });
+    addIcons({ searchOutline, chevronBackOutline, chevronForwardOutline });
   }
 
   ngOnInit(): void {
@@ -120,40 +109,11 @@ export class InventoryWidgetComponent implements OnInit {
     return widgetBackground(this.widget);
   }
 
-  get nameKey(): string {
-    return widgetNameKey(this.widget.type);
-  }
-
   value(row: InventoryRow): number {
     return row.quantity * row.price;
   }
 
   get total(): number {
     return this.rows.reduce((sum, row) => sum + this.value(row), 0);
-  }
-
-  requestLink(event: MouseEvent): void {
-    event.stopPropagation();
-    this.link.emit(this.widget.id);
-  }
-
-  requestDuplicate(event: MouseEvent): void {
-    event.stopPropagation();
-    this.duplicate.emit({
-      id: this.widget.id,
-      currentX: this.widget.posX,
-      currentY: this.widget.posY,
-    });
-  }
-
-  requestRemove(event: MouseEvent): void {
-    event.stopPropagation();
-    this.remove.emit(this.widget.id);
-  }
-
-  toggleMinimize(event: MouseEvent): void {
-    event.stopPropagation();
-    event.preventDefault();
-    this.widget.minimize = !this.widget.minimize;
   }
 }

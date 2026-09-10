@@ -66,6 +66,12 @@ export interface WidgetData {
   price?: number;
 }
 
+export interface DuplicatePayload {
+  id: string;
+  currentX: number;
+  currentY: number;
+}
+
 export function isChartWidget(widget: WidgetData): boolean {
   return (CHART_WIDGET_TYPES as readonly string[]).includes(widget.type);
 }

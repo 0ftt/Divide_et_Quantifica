@@ -1,17 +1,7 @@
 import { Component, input, output, HostListener } from '@angular/core';
-import { IonButton, IonIcon } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import {
-  closeOutline,
-  copyOutline,
-  gitNetworkOutline,
-  pricetagOutline,
-  pulseOutline,
-  removeOutline,
-} from 'ionicons/icons';
-import { TranslocoModule } from '@jsverse/transloco';
-import { WidgetData, widgetBackground, widgetIcon, widgetNameKey } from '$core/models/widget.model';
+import { WidgetData, widgetBackground, DuplicatePayload } from '$core/models/widget.model';
 import { ResizeHandleDirective } from '$core/directives/resize-handle.directive';
+import { WidgetHeaderComponent } from '$components/widget-header/widget-header.component';
 
 export interface MovePayload {
   id: string;
@@ -19,18 +9,12 @@ export interface MovePayload {
   y: number;
 }
 
-export interface DuplicatePayload {
-  id: string;
-  currentX: number;
-  currentY: number;
-}
-
 @Component({
   selector: 'app-widget',
   templateUrl: './widget.component.html',
   styleUrls: ['./widget.component.scss'],
   standalone: true,
-  imports: [IonButton, IonIcon, TranslocoModule, ResizeHandleDirective],
+  imports: [ResizeHandleDirective, WidgetHeaderComponent],
   host: {
     '[style.left.px]': 'widget().posX',
     '[style.top.px]': 'widget().posY',
@@ -59,14 +43,6 @@ export class WidgetComponent {
 
   isUnlisted(): boolean {
     return this.widget().type === 'unlistedStock';
-  }
-
-  typeIcon(): string {
-    return widgetIcon(this.widget().type);
-  }
-
-  get nameKey(): string {
-    return widgetNameKey(this.widget().type);
   }
 
   priceLabel(): string {
@@ -104,10 +80,6 @@ export class WidgetComponent {
   private isDragging = false;
   private lastMouseX = 0;
   private lastMouseY = 0;
-
-  constructor() {
-    addIcons({ gitNetworkOutline, copyOutline, removeOutline, closeOutline, pulseOutline, pricetagOutline });
-  }
 
   beginDrag(event: MouseEvent): void {
     if (event.button !== 0) {
@@ -151,32 +123,8 @@ export class WidgetComponent {
     }
   }
 
-  requestLink(event: MouseEvent): void {
-    event.stopPropagation();
-    this.onLink.emit(this.widget().id);
-  }
-
-  toggleMinimize(event: MouseEvent): void {
-    event.stopPropagation();
-    this.widget().minimize = !this.widget().minimize;
-  }
-
-  duplicateWidgetClick(event: MouseEvent): void {
-    event.stopPropagation();
-    this.onDuplicate.emit({
-      id: this.widget().id,
-      currentX: this.widget().posX,
-      currentY: this.widget().posY,
-    });
-  }
-
-  private startCloseAnimation(): void {
+  requestClose(): void {
     this.isClosing = true;
     setTimeout(() => this.onRemove.emit(this.widget().id), 150);
-  }
-
-  deleteWidget(event: MouseEvent): void {
-    event.stopPropagation();
-    this.startCloseAnimation();
   }
 }

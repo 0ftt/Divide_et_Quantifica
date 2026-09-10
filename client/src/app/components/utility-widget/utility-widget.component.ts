@@ -10,32 +10,13 @@ import {
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonButton, IonIcon } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import {
-  addOutline,
-  calculatorOutline,
-  closeOutline,
-  copyOutline,
-  documentTextOutline,
-  gitNetworkOutline,
-  notificationsOutline,
-  removeOutline,
-  swapVerticalOutline,
-  timeOutline,
-} from 'ionicons/icons';
 import { TranslocoModule } from '@jsverse/transloco';
-import { WidgetData, widgetBackground, widgetIcon, widgetNameKey, collectLinkedTickers } from '$core/models/widget.model';
+import { WidgetData, widgetBackground, collectLinkedTickers, DuplicatePayload } from '$core/models/widget.model';
 import { ResizeHandleDirective } from '$core/directives/resize-handle.directive';
 import { DragHandleDirective } from '$core/directives/drag-handle.directive';
+import { WidgetHeaderComponent } from '$components/widget-header/widget-header.component';
 import { generateCandles } from '$core/charts/chart-data';
 import { AssetService } from '$core/services/asset.service';
-
-export interface UtilityDuplicatePayload {
-  id: string;
-  currentX: number;
-  currentY: number;
-}
 
 interface NetRow {
   ticker: string;
@@ -49,7 +30,7 @@ const PRICE_FETCH_SECS = 60;
 @Component({
   selector: 'app-utility-widget',
   standalone: true,
-  imports: [CommonModule, FormsModule, IonButton, IonIcon, TranslocoModule, ResizeHandleDirective, DragHandleDirective],
+  imports: [CommonModule, FormsModule, TranslocoModule, ResizeHandleDirective, DragHandleDirective, WidgetHeaderComponent],
   templateUrl: './utility-widget.component.html',
   styleUrls: ['./utility-widget.component.scss'],
 })
@@ -65,7 +46,7 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
 
   @Output() link = new EventEmitter<string>();
 
-  @Output() duplicate = new EventEmitter<UtilityDuplicatePayload>();
+  @Output() duplicate = new EventEmitter<DuplicatePayload>();
 
   @Output() remove = new EventEmitter<string>();
 
@@ -82,21 +63,6 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
   private pricesSub?: Subscription;
   private priceTimer?: ReturnType<typeof setInterval>;
   private closeCache = new Map<string, number>();
-
-  constructor() {
-    addIcons({
-      gitNetworkOutline,
-      copyOutline,
-      removeOutline,
-      addOutline,
-      closeOutline,
-      documentTextOutline,
-      swapVerticalOutline,
-      notificationsOutline,
-      calculatorOutline,
-      timeOutline,
-    });
-  }
 
   ngOnInit(): void {
     if (this.widget.type === 'net' || this.widget.type === 'average') {
@@ -163,14 +129,6 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
     return widgetBackground(this.widget);
   }
 
-  get typeIcon(): string {
-    return widgetIcon(this.widget.type);
-  }
-
-  get nameKey(): string {
-    return widgetNameKey(this.widget.type);
-  }
-
   get netTotal(): number {
     return this.netRows.reduce((sum, r) => sum + r.delta, 0);
   }
@@ -217,24 +175,4 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
     return close;
   }
 
-  requestLink(event: MouseEvent): void {
-    event.stopPropagation();
-    this.link.emit(this.widget.id);
-  }
-
-  requestDuplicate(event: MouseEvent): void {
-    event.stopPropagation();
-    this.duplicate.emit({ id: this.widget.id, currentX: this.widget.posX, currentY: this.widget.posY });
-  }
-
-  requestRemove(event: MouseEvent): void {
-    event.stopPropagation();
-    this.remove.emit(this.widget.id);
-  }
-
-  toggleMinimize(event: MouseEvent): void {
-    event.stopPropagation();
-    event.preventDefault();
-    this.widget.minimize = !this.widget.minimize;
-  }
 }

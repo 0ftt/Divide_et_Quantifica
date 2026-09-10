@@ -12,15 +12,11 @@ import {
 } from '@angular/core';
 import * as echarts from 'echarts';
 import { TranslocoService } from '@jsverse/transloco';
-import { WidgetData, collectLinkedTickers } from '$core/models/widget.model';
+import { WidgetData, collectLinkedTickers, DuplicatePayload } from '$core/models/widget.model';
 import { MarketService } from '$core/services/market.service';
 import { Candle, generateCandles } from '$core/charts/chart-data';
 
-export interface DuplicatePayload {
-  id: string;
-  currentX: number;
-  currentY: number;
-}
+export type { DuplicatePayload };
 
 @Directive()
 export abstract class ChartWidgetBase implements AfterViewInit, OnDestroy, DoCheck {
