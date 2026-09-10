@@ -26,7 +26,7 @@ export async function getMe(req: Request, res: Response): Promise<void> {
     [req.user!.sub],
   );
   if (!user) {
-    throw new AppError(404, 'Utente non trovato.');
+    throw new AppError(404, 'user_not_found');
   }
 
   res.json(toPublicUser(user));
@@ -39,7 +39,7 @@ const updateMeSchema = z.object({
   avatarDataUrl: z.string().max(2_000_000).nullable().optional(),
   address: z.string().trim().max(120).optional(),
   city: z.string().trim().max(80).optional(),
-  postalCode: z.string().trim().regex(/^\d{5}$/, 'CAP: 5 cifre.').optional(),
+  postalCode: z.string().trim().regex(/^\d{5}$/, 'cap_format').optional(),
 });
 
 export async function updateMe(req: Request, res: Response): Promise<void> {
@@ -53,7 +53,7 @@ export async function updateMe(req: Request, res: Response): Promise<void> {
     patch.city === undefined &&
     patch.postalCode === undefined
   ) {
-    throw new AppError(400, 'Nessun campo da aggiornare.');
+    throw new AppError(400, 'no_fields_to_update');
   }
 
   if (patch.username !== undefined) {
@@ -62,7 +62,7 @@ export async function updateMe(req: Request, res: Response): Promise<void> {
       [patch.username, req.user!.sub],
     );
     if (taken) {
-      throw new AppError(409, 'Username gia in uso.');
+      throw new AppError(409, 'username_taken');
     }
   }
 
@@ -91,7 +91,7 @@ export async function updateMe(req: Request, res: Response): Promise<void> {
     ],
   );
   if (!rows[0]) {
-    throw new AppError(404, 'Utente non trovato.');
+    throw new AppError(404, 'user_not_found');
   }
 
   res.json(toPublicUser(rows[0]));
@@ -130,11 +130,11 @@ export async function listUsers(_req: Request, res: Response): Promise<void> {
 export async function adminDeleteUser(req: Request, res: Response): Promise<void> {
   const id = req.params.id;
   if (id === req.user!.sub) {
-    throw new AppError(400, 'Non puoi eliminare il tuo account da qui.');
+    throw new AppError(400, 'cannot_delete_self');
   }
   const existing = await queryOne<{ id: string }>('select id from users where id = $1', [id]);
   if (!existing) {
-    throw new AppError(404, 'Utente non trovato.');
+    throw new AppError(404, 'user_not_found');
   }
   await query('delete from users where id = $1', [id]);
   res.json({ message: 'Utente eliminato.' });

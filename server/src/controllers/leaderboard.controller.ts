@@ -77,7 +77,7 @@ export async function shareScore(req: Request, res: Response): Promise<void> {
     [userId],
   );
   if (!user) {
-    throw new AppError(404, 'Utente non trovato.');
+    throw new AppError(404, 'user_not_found');
   }
 
   const investedRow = await queryOne<{ invested: string | null; cost_basis: string | null }>(
@@ -103,7 +103,7 @@ export async function shareScore(req: Request, res: Response): Promise<void> {
     [userId, displayName, entryLabel, score],
   );
   if (!rows.length) {
-    throw new AppError(409, `Hai già condiviso una scheda chiamata "${entryLabel}". Rescindila prima di ricondividerla.`);
+    throw new AppError(409, 'leaderboard_label_taken', { label: entryLabel });
   }
   const saved = rows[0];
 
@@ -196,7 +196,7 @@ export async function addReview(req: Request, res: Response): Promise<void> {
     [entryUserId],
   );
   if (!entry) {
-    throw new AppError(404, 'Entry di classifica non trovata.');
+    throw new AppError(404, 'leaderboard_entry_not_found');
   }
 
   const rows = await query<ReviewRow>(

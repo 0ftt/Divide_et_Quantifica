@@ -1,0 +1,72 @@
+<section class="widget-box util-box" [style.background]="bg()"
+         [style.width.px]="widget.width" [style.height.px]="widget.height || null"
+         appDrag [appDragTarget]="widget" [appDragZoom]="zoomLevel">
+  <header class="widget-header">
+    <div class="header-info">
+      <ion-icon class="widget-type-icon" [name]="typeIcon"></ion-icon>
+      <span class="ticker-name">{{ widget.title || (nameKey | transloco) }}</span>
+    </div>
+    <div class="widget-controls">
+      @if (widget.type === 'net' || widget.type === 'average') {
+        <ion-button fill="clear" size="small" class="control-btn" title="Collega" (click)="requestLink($event)">
+          <ion-icon slot="icon-only" name="git-network-outline"></ion-icon>
+        </ion-button>
+      }
+      <ion-button fill="clear" size="small" class="control-btn" title="Duplica" (click)="requestDuplicate($event)">
+        <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" class="control-btn" title="Minimizza" (click)="toggleMinimize($event)">
+        <ion-icon slot="icon-only" [name]="widget.minimize ? 'add-outline' : 'remove-outline'"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" class="control-btn close" title="Chiudi" (click)="requestRemove($event)">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </header>
+
+  @if (!widget.minimize) {
+    <main class="widget-content util-body" [class.scaled]="!!widget.height" (pointerdown)="$event.stopPropagation()">
+      @switch (widget.type) {
+        @case ('text') {
+          <textarea class="util-text" [(ngModel)]="widget.text" placeholder="Scrivi una nota..."></textarea>
+        }
+        @case ('net') {
+          @if (netRows.length) {
+            <div class="net-total" [class.up]="netTotal >= 0" [class.down]="netTotal < 0">
+              {{ netTotal >= 0 ? '+' : '' }}{{ netTotal | number: '1.2-2' }}
+              <span class="net-total-tag">netto</span>
+            </div>
+            @for (r of netRows; track r.ticker) {
+              <div class="net-row">
+                <span class="net-ticker">{{ r.ticker }}</span>
+                <span class="net-price">${{ r.price | number: '1.2-2' }}</span>
+                <span class="net-delta" [class.up]="r.delta >= 0" [class.down]="r.delta < 0">
+                  {{ r.delta >= 0 ? '▲' : '▼' }} {{ r.delta >= 0 ? '+' : '' }}{{ r.delta | number: '1.2-2' }}
+                </span>
+              </div>
+            }
+          } @else {
+            <p class="util-hint">Collega una o piu' azioni in entrata per vedere il netto.</p>
+          }
+        }
+        @case ('average') {
+          @if (averageValue !== null) {
+            <div class="net-total">{{ averageValue | number: '1.2-2' }}<span class="net-total-tag">media</span></div>
+            <div class="avg-sources">
+              @for (t of averageSources; track t) {
+                <span class="avg-chip">{{ t }}</span>
+              }
+            </div>
+          } @else {
+            <p class="util-hint">Collega una o piu' azioni per calcolarne la media.</p>
+          }
+        }
+        @case ('clock') {
+          <div class="clock-time">{{ clockTime }}</div>
+          <div class="clock-date">{{ clockDate }}</div>
+        }
+      }
+    </main>
+  }
+  <div class="resize-handle" appResize [appResizeTarget]="widget" [appResizeZoom]="zoomLevel"></div>
+</section>

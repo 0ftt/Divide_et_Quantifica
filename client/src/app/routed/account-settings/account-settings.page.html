@@ -124,6 +124,27 @@
     </section>
 
     <section class="panel widget-box">
+      <h3>{{ 'account.accessoryTitle' | transloco }}</h3>
+
+      <div class="accessory-box" [class.locked]="!accessoryUnlocked">
+        <img class="accessory-img" src="assets/accessorioDeQ.jpg" [alt]="'account.accessoryName' | transloco" />
+        @if (!accessoryUnlocked) {
+          <div class="accessory-lock"><ion-icon name="lock-closed-outline"></ion-icon></div>
+        }
+      </div>
+
+      @if (accessoryUnlocked) {
+        <p class="accessory-note ok">{{ 'account.accessoryUnlocked' | transloco }}</p>
+      } @else {
+        <p class="accessory-note">{{ 'account.accessoryLocked' | transloco }}</p>
+        <ul class="accessory-reqs">
+          <li [class.done]="isPremium">{{ 'account.accessoryReqPremium' | transloco }}</li>
+          <li [class.done]="profileComplete">{{ 'account.accessoryReqProfile' | transloco }}</li>
+        </ul>
+      }
+    </section>
+
+    <section class="panel widget-box">
       <h3>{{ 'account.session' | transloco }}</h3>
       <ion-button expand="block" fill="outline" (click)="logout()">
         <ion-icon slot="start" name="log-out-outline"></ion-icon>

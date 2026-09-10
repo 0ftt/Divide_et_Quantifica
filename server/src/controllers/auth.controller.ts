@@ -37,7 +37,7 @@ const registerSchema = z.object({
 
   address: z.string().trim().min(3).max(120).optional(),
   city: z.string().trim().min(2).max(80).optional(),
-  postalCode: z.string().trim().regex(/^\d{5}$/, 'CAP: 5 cifre.').optional(),
+  postalCode: z.string().trim().regex(/^\d{5}$/, 'cap_format').optional(),
 });
 
 const loginSchema = z.object({
@@ -51,7 +51,7 @@ export async function register(req: Request, res: Response): Promise<void> {
 
   const existing = await queryOne<UserRow>('select * from users where lower(email) = $1', [email]);
   if (existing) {
-    throw new AppError(409, 'Email gia registrata.');
+    throw new AppError(409, 'email_taken');
   }
 
   const takenUsername = await queryOne<{ id: string }>(
@@ -59,7 +59,7 @@ export async function register(req: Request, res: Response): Promise<void> {
     [username],
   );
   if (takenUsername) {
-    throw new AppError(409, 'Username gia in uso.');
+    throw new AppError(409, 'username_taken');
   }
 
   const count = await queryOne<{ n: string }>('select count(*)::int as n from users');
@@ -93,7 +93,7 @@ export async function login(req: Request, res: Response): Promise<void> {
 
   const user = await queryOne<UserRow>('select * from users where lower(email) = $1', [email]);
   if (!user || !(await verifyPassword(password, user.password_hash))) {
-    throw new AppError(401, 'Credenziali non valide.');
+    throw new AppError(401, 'invalid_credentials');
   }
 
   const bumped = await query<{ token_version: number }>(
@@ -148,7 +148,7 @@ export async function reset(req: Request, res: Response): Promise<void> {
     [tokenHash],
   );
   if (!row || row.used || new Date(row.expires_at) < new Date()) {
-    throw new AppError(400, 'Link di reset non valido o scaduto.');
+    throw new AppError(400, 'invalid_reset_token');
   }
   const passwordHash = await hashPassword(password);
   await query(

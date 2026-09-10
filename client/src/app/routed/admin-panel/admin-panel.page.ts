@@ -39,6 +39,7 @@ import { TransactionService, AssetEvent } from '$core/services/transaction.servi
 import { MarketService, MarketStatus } from '$core/services/market.service';
 import { AdminUserService, AdminUser } from '$core/services/admin-user.service';
 import { tickerSchema } from '$core/validation/forms.schema';
+import { serverError } from '$core/errors/server-error';
 
 interface StackedEvent {
   ticker: string;
@@ -365,7 +366,7 @@ export class AdminPanelPage implements OnInit, OnDestroy {
         this.users = this.users.filter((u) => u.id !== userId);
       },
       error: (err) => {
-        this.userError = err?.error?.error || this.transloco.translate('admin.userDeleteError');
+        this.userError = serverError(this.transloco, err, 'admin.userDeleteError');
       },
     });
   }

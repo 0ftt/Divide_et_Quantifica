@@ -46,7 +46,7 @@ const tickerSchema = z
   .trim()
   .min(1)
   .max(15)
-  .regex(/^[A-Za-z0-9.\-]+$/, 'Ticker non valido.');
+  .regex(/^[A-Za-z0-9.\-]+$/, 'ticker_format');
 
 const addSchema = z.object({ ticker: tickerSchema });
 
@@ -111,7 +111,7 @@ export async function removeAsset(req: Request, res: Response): Promise<void> {
   const ticker = tickerSchema.parse(req.params.ticker).toUpperCase();
   const existing = await queryOne<AssetRow>('select * from assets where ticker = $1', [ticker]);
   if (!existing) {
-    throw new AppError(404, 'Asset non trovato.');
+    throw new AppError(404, 'asset_not_found');
   }
   await query('delete from assets where ticker = $1', [ticker]);
 

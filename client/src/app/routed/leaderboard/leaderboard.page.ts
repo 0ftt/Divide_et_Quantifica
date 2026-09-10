@@ -27,6 +27,7 @@ import {
 import { BreadcrumbsComponent } from '$components/breadcrumbs/breadcrumbs.component';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { LeaderboardService } from '$core/services/leaderboard.service';
+import { serverError } from '$core/errors/server-error';
 import { BrokerCartService } from '$core/services/broker-cart.service';
 import { LeaderboardEntry, LeaderboardReview, LeaderboardHolding } from '$shared';
 import { ModalComponent } from '$components/modal/modal.component';
@@ -136,7 +137,7 @@ export class LeaderboardPage implements OnInit {
       },
       error: (err) => {
         this.sharing = false;
-        this.feedback = err?.error?.error || this.transloco.translate('leaderboard.shareError');
+        this.feedback = serverError(this.transloco, err, 'leaderboard.shareError');
       },
     });
   }

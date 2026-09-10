@@ -1,0 +1,23 @@
+<ion-content [fullscreen]="true" class="account-bg">
+  <div class="reset-wrap">
+    <div class="reset-card widget-box">
+      <h2>{{ 'reset.title' | transloco }}</h2>
+
+      @if (!token) {
+        <p class="reset-error">{{ 'reset.noToken' | transloco }}</p>
+      } @else if (done) {
+        <p class="reset-ok">{{ 'reset.done' | transloco }}</p>
+        <ion-button expand="block" (click)="goLogin()">{{ 'reset.toLogin' | transloco }}</ion-button>
+      } @else {
+        <ion-item lines="full" class="custom-input">
+          <ion-input type="password" [label]="'reset.newPassword' | transloco" labelPlacement="floating"
+                     [(ngModel)]="password"></ion-input>
+        </ion-item>
+        @if (error) { <p class="reset-error">{{ error }}</p> }
+        <ion-button expand="block" [disabled]="busy" (click)="submit()">
+          {{ (busy ? 'reset.saving' : 'reset.confirm') | transloco }}
+        </ion-button>
+      }
+    </div>
+  </div>
+</ion-content>

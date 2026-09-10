@@ -7,6 +7,7 @@ import { AuthService } from '$core/auth/auth.service';
 import { CreditService } from '$core/services/credit.service';
 import { rechargeAmountSchema } from '$core/validation/forms.schema';
 import { usernameSchema, capSchema } from '$core/validation/auth.schema';
+import { serverError } from '$core/errors/server-error';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ModalComponent } from '$components/modal/modal.component';
 import { LangSwitcherComponent } from '$components/lang-switcher/lang-switcher.component';
@@ -26,7 +27,7 @@ import {
   IonBadge,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { walletOutline, starOutline, cameraOutline, trashOutline, logOutOutline, saveOutline } from 'ionicons/icons';
+import { walletOutline, starOutline, cameraOutline, trashOutline, logOutOutline, saveOutline, lockClosedOutline } from 'ionicons/icons';
 
 const PREMIUM_COST = 10;
 
@@ -108,11 +109,25 @@ export class AccountSettingsPage {
   readonly premiumPrice = PREMIUM_COST;
 
   constructor(private router: Router, private theme: ThemeService) {
-    addIcons({ walletOutline, starOutline, cameraOutline, trashOutline, logOutOutline, saveOutline });
+    addIcons({ walletOutline, starOutline, cameraOutline, trashOutline, logOutOutline, saveOutline, lockClosedOutline });
     this.creditService.getBalance().subscribe({
       next: (b) => (this.credit = b.credit),
       error: () => undefined,
     });
+  }
+
+  get profileComplete(): boolean {
+    const u = this.auth.currentUser();
+    if (!u) {
+      return false;
+    }
+    return [u.displayName, u.username, u.phone, u.address, u.city, u.postalCode].every(
+      (v) => !!v && String(v).trim().length > 0,
+    );
+  }
+
+  get accessoryUnlocked(): boolean {
+    return this.isPremium && this.profileComplete;
   }
 
   rechargeCredit(): void {
@@ -179,7 +194,7 @@ export class AccountSettingsPage {
       },
       error: (err) => {
         this.premiumBusy = false;
-        this.premiumError = err?.error?.error || this.t('account.premiumFailed');
+        this.premiumError = serverError(this.transloco, err, 'account.premiumFailed');
       },
     });
   }
@@ -229,7 +244,7 @@ export class AccountSettingsPage {
       },
       error: (err) => {
         this.profileSaving = false;
-        this.profileError = err?.error?.error || this.t('account.profileSaveFailed');
+        this.profileError = serverError(this.transloco, err, 'account.profileSaveFailed');
       },
     });
   }

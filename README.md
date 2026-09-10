@@ -258,14 +258,12 @@ Vincoli di Unicità: Sono applicati vincoli univoci su users.email, users.userna
 
 Disaccoppiamento Logico (Senza FK): Tabelle come market_cache, price_history e asset_events referenziano logicamente il ticker tramite stringa di testo senza costrizioni di chiave esterna, garantendo l'integrità dei dati pregressi anche in caso di delisting dell'asset dal database. app_revenue è un'entità del tutto autonoma e append-only per preservare il tracciamento degli incassi storici.
 
-## 📝 Changelog
+## Changelog
 
-**Pulizia e refactoring**
+Ultimi aggiornamenti, un po' di pulizia e qualche aggiunta:
 
-- Trascinamento e ridimensionamento dei widget unificati in due direttive riusabili (`appDrag`, `appResize`), al posto del codice duplicato in ogni componente.
-- Logica dei ticker collegati centralizzata in `collectLinkedTickers` (`widget.model.ts`), condivisa da grafici e widget di utilità.
-- Mapper utente e schema di validazione dell'username condivisi tra i controller (`user-mapper.ts`, `validation/schemas.ts`).
-- Ridimensionamento di inventario e connection-hub ora effettivo: i contenuti scalano con le container query e il ritorno a capo dell'orologio è corretto.
-- Rimosso codice morto: campi e metodi inutilizzati, tipo `Timeframe`, chiavi i18n orfane e gli spec boilerplate.
-- Identificatori resi più chiari e coerenti (in inglese).
-- `JWT_SECRET` ruotato per sicurezza: richiede un nuovo accesso.
+- Drag e resize dei widget ora sono direttive riusabili invece di codice ripetuto in ogni componente.
+- Inventario e connection hub si ridimensionano davvero (i contenuti scalano), e l'orologio non va più a capo.
+- Tolto un po' di codice inutilizzato e uniformati alcuni nomi.
+- I messaggi di errore del server ora sono codici tradotti dal client, così seguono la lingua scelta.
+- Aggiunto il braccialetto DeQ nel profilo, che si sblocca con il Premium e il profilo completo.

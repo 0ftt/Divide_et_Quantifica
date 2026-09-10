@@ -39,6 +39,7 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { forkJoin } from 'rxjs';
 import { Asset, Candle, OrderRequest } from '$shared';
 import { quantitySchema } from '$core/validation/forms.schema';
+import { serverError } from '$core/errors/server-error';
 import { MarketService } from '$core/services/market.service';
 import { AssetService } from '$core/services/asset.service';
 import { PortfolioService } from '$core/services/portfolio.service';
@@ -276,9 +277,7 @@ export class BrokerPage implements OnInit {
   }
 
   private async showOrderError(err: unknown): Promise<void> {
-    const message =
-      (err as { error?: { error?: string } })?.error?.error ||
-      this.transloco.translate('broker.orderFailed');
+    const message = serverError(this.transloco, err, 'broker.orderFailed');
     const toast = await this.toastCtrl.create({
       message,
       duration: 3000,
@@ -413,7 +412,7 @@ export class BrokerPage implements OnInit {
         this.orderQuantity = null;
       },
       error: (err) => {
-        this.orderError = err?.error?.error || this.transloco.translate('broker.orderFailed');
+        this.orderError = serverError(this.transloco, err, 'broker.orderFailed');
         this.showOrderError(err);
       },
     });

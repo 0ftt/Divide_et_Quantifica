@@ -34,6 +34,7 @@ import {
 
 import { WidgetData, WidgetType } from '$core/models/widget.model';
 import { WidgetService } from '$core/services/widget.service';
+import { serverError } from '$core/errors/server-error';
 import { AuthService } from '$core/auth/auth.service';
 import {
   loginSchema,
@@ -578,7 +579,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     this.authLoading = false;
     this.wrongPassword = true;
     setTimeout(() => (this.wrongPassword = false), 800);
-    this.authError = err?.error?.error || this.transloco.translate('auth.failed');
+    this.authError = serverError(this.transloco, err, 'auth.failed');
   }
 
   private initGridSimulation(): void {
@@ -888,7 +889,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
       },
       error: (err) => {
         this.premiumBusy = false;
-        this.premiumError = err?.error?.error || this.transloco.translate('dashboard.premiumFailed');
+        this.premiumError = serverError(this.transloco, err, 'dashboard.premiumFailed');
       },
     });
   }

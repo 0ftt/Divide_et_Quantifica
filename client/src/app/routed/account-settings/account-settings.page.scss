@@ -75,3 +75,49 @@
   --glow-2: var(--ion-color-warning);
   --glow-3: var(--ion-color-warning-tint);
 }
+
+.accessory-box {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--deq-border);
+}
+.accessory-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.accessory-box.locked .accessory-img {
+  filter: grayscale(0.7) blur(3px) brightness(0.8);
+}
+.accessory-lock {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 2.4rem;
+    color: var(--deq-text-bright);
+    opacity: 0.9;
+  }
+}
+.accessory-note {
+  margin: 10px 2px 0;
+  font-size: 0.85rem;
+  color: var(--deq-text-muted);
+
+  &.ok {
+    color: var(--deq-success);
+    font-weight: 600;
+  }
+}
+.accessory-reqs {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 0.82rem;
+  color: var(--deq-text-muted);
+
+  li.done { color: var(--deq-success); }
+}

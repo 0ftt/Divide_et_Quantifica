@@ -14,13 +14,13 @@ export async function purchasePremium(req: Request, res: Response): Promise<void
     [userId],
   );
   if (!user) {
-    throw new AppError(404, 'Utente non trovato.');
+    throw new AppError(404, 'user_not_found');
   }
   if (user.is_premium) {
-    throw new AppError(409, 'Licenza Premium gia attiva.');
+    throw new AppError(409, 'premium_already_active');
   }
   if (Number(user.credit) < price) {
-    throw new AppError(402, `Credito insufficiente: servono ${price} €.`);
+    throw new AppError(402, 'insufficient_credit_amount', { price });
   }
 
   const rows = await query<{ credit: string }>(

@@ -32,12 +32,12 @@ async function fetchYahooQuote(ticker: string): Promise<Quote> {
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=1d&interval=1d`;
   const res = await fetch(url, { headers: YAHOO_HEADERS });
   if (!res.ok) {
-    throw new AppError(502, `Yahoo Finance non raggiungibile (${res.status}).`);
+    throw new AppError(502, 'yahoo_unreachable');
   }
   const data = (await res.json()) as any;
   const meta = data?.chart?.result?.[0]?.meta;
   if (!meta || typeof meta.regularMarketPrice !== 'number') {
-    throw new AppError(404, `Ticker "${ticker}" non trovato su Yahoo Finance.`);
+    throw new AppError(404, 'ticker_not_found', { ticker });
   }
   return {
     ticker: ticker.toUpperCase(),
@@ -52,14 +52,14 @@ async function fetchYahooChart(ticker: string, timeframe: string): Promise<Candl
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=${range}&interval=${interval}`;
   const res = await fetch(url, { headers: YAHOO_HEADERS });
   if (!res.ok) {
-    throw new AppError(502, `Yahoo Finance non raggiungibile (${res.status}).`);
+    throw new AppError(502, 'yahoo_unreachable');
   }
   const data = (await res.json()) as any;
   const result = data?.chart?.result?.[0];
   const timestamps: number[] = result?.timestamp ?? [];
   const q = result?.indicators?.quote?.[0] ?? {};
   if (!timestamps.length) {
-    throw new AppError(404, `Serie storica non disponibile per "${ticker}".`);
+    throw new AppError(404, 'history_unavailable', { ticker });
   }
 
   const candles: Candle[] = [];
@@ -114,7 +114,7 @@ export async function searchSymbols(q: string): Promise<SymbolHit[]> {
   const url = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(q)}&quotesCount=10&newsCount=0`;
   const res = await fetch(url, { headers: YAHOO_HEADERS });
   if (!res.ok) {
-    throw new AppError(502, `Yahoo Finance non raggiungibile (${res.status}).`);
+    throw new AppError(502, 'yahoo_unreachable');
   }
   const data = (await res.json()) as any;
   const quotes: any[] = Array.isArray(data?.quotes) ? data.quotes : [];

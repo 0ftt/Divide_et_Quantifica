@@ -122,7 +122,13 @@
     "profileSaveFailed": "Salvataggio profilo non riuscito.",
     "avatarUpdated": "✅ Immagine profilo aggiornata.",
     "avatarFailed": "⚠️ Caricamento immagine non riuscito.",
-    "deleteFailed": "Eliminazione account non riuscita."
+    "deleteFailed": "Eliminazione account non riuscita.",
+    "accessoryTitle": "Accessorio",
+    "accessoryName": "Braccialetto DeQ",
+    "accessoryUnlocked": "Complimenti! Hai sbloccato il braccialetto DeQ.",
+    "accessoryLocked": "Ottieni il braccialetto DeQ dopo aver acquistato il Premium e compilato tutti i campi del profilo.",
+    "accessoryReqPremium": "Licenza Premium attiva",
+    "accessoryReqProfile": "Profilo completo"
   },
   "common": {
     "loading": "Caricamento...",
@@ -292,5 +298,35 @@
     "marqueeAddQ": "Vuoi aggiungere {{ticker}} (1 unità) al carrello del broker?",
     "premiumFailed": "Acquisto non riuscito: credito insufficiente.",
     "premiumTabGate": "Terza scheda riservata alla Licenza Premium DeQ."
+  },
+  "errors": {
+    "auth_required": "Autenticazione richiesta.",
+    "invalid_token": "Token non valido o scaduto.",
+    "session_expired": "Sessione scaduta: accesso effettuato da un altro dispositivo.",
+    "admin_only": "Operazione riservata agli amministratori.",
+    "email_taken": "Email già registrata.",
+    "username_taken": "Username già in uso.",
+    "invalid_credentials": "Credenziali non valide.",
+    "invalid_reset_token": "Link di reset non valido o scaduto.",
+    "user_not_found": "Utente non trovato.",
+    "no_fields_to_update": "Nessun campo da aggiornare.",
+    "cannot_delete_self": "Non puoi eliminare il tuo account da qui.",
+    "asset_not_found": "Asset non trovato.",
+    "asset_not_listed": "Asset non presente nel listino.",
+    "insufficient_credit": "Credito insufficiente per l'acquisto.",
+    "insufficient_holdings": "Quantità in portafoglio insufficiente.",
+    "premium_already_active": "Licenza Premium già attiva.",
+    "insufficient_credit_amount": "Credito insufficiente: servono {{price}} €.",
+    "leaderboard_label_taken": "Hai già condiviso una scheda chiamata \"{{label}}\". Rescindila prima di ricondividerla.",
+    "leaderboard_entry_not_found": "Scheda di classifica non trovata.",
+    "yahoo_unreachable": "Servizio dati di mercato non raggiungibile. Riprova più tardi.",
+    "ticker_not_found": "Ticker \"{{ticker}}\" non trovato.",
+    "history_unavailable": "Serie storica non disponibile per \"{{ticker}}\".",
+    "ticker_format": "Ticker non valido.",
+    "cap_format": "CAP: 5 cifre.",
+    "username_format": "L'username può contenere solo lettere, numeri e underscore (3–20).",
+    "validation_error": "Dati non validi.",
+    "server_error": "Errore interno del server.",
+    "unknown": "Si è verificato un errore. Riprova."
   }
 }

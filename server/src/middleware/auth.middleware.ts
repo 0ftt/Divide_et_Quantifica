@@ -24,13 +24,13 @@ export const requireAuth = asyncHandler(
   async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
     const token = extractToken(req);
     if (!token) {
-      throw new AppError(401, 'Autenticazione richiesta.');
+      throw new AppError(401, 'auth_required');
     }
     let payload: JwtPayload;
     try {
       payload = verifyToken(token);
     } catch {
-      throw new AppError(401, 'Token non valido o scaduto.');
+      throw new AppError(401, 'invalid_token');
     }
 
     const row = await queryOne<{ token_version: number }>(
@@ -38,7 +38,7 @@ export const requireAuth = asyncHandler(
       [payload.sub],
     );
     if (!row || row.token_version !== (payload.tv ?? 0)) {
-      throw new AppError(401, 'Sessione scaduta: accesso effettuato altrove.');
+      throw new AppError(401, 'session_expired');
     }
     req.user = payload;
     next();
@@ -47,7 +47,7 @@ export const requireAuth = asyncHandler(
 
 export function requireAdmin(req: Request, _res: Response, next: NextFunction): void {
   if (req.user?.role !== 'admin') {
-    throw new AppError(403, 'Operazione riservata agli amministratori.');
+    throw new AppError(403, 'admin_only');
   }
   next();
 }

@@ -122,7 +122,13 @@
     "profileSaveFailed": "Profile save failed.",
     "avatarUpdated": "✅ Profile image updated.",
     "avatarFailed": "⚠️ Image upload failed.",
-    "deleteFailed": "Account deletion failed."
+    "deleteFailed": "Account deletion failed.",
+    "accessoryTitle": "Accessory",
+    "accessoryName": "DeQ Bracelet",
+    "accessoryUnlocked": "Congratulations! You've unlocked the DeQ bracelet.",
+    "accessoryLocked": "Get the DeQ bracelet after buying Premium and filling in every profile field.",
+    "accessoryReqPremium": "Active Premium license",
+    "accessoryReqProfile": "Complete profile"
   },
   "common": {
     "loading": "Loading...",
@@ -292,5 +298,35 @@
     "marqueeAddQ": "Add {{ticker}} (1 unit) to the broker cart?",
     "premiumFailed": "Purchase failed: insufficient credit.",
     "premiumTabGate": "Third tab reserved for the DeQ Premium License."
+  },
+  "errors": {
+    "auth_required": "Authentication required.",
+    "invalid_token": "Invalid or expired token.",
+    "session_expired": "Session expired: signed in from another device.",
+    "admin_only": "Admins only.",
+    "email_taken": "Email already registered.",
+    "username_taken": "Username already taken.",
+    "invalid_credentials": "Invalid credentials.",
+    "invalid_reset_token": "Reset link is invalid or expired.",
+    "user_not_found": "User not found.",
+    "no_fields_to_update": "No fields to update.",
+    "cannot_delete_self": "You can't delete your own account from here.",
+    "asset_not_found": "Asset not found.",
+    "asset_not_listed": "Asset not in the market list.",
+    "insufficient_credit": "Not enough credit for this purchase.",
+    "insufficient_holdings": "Not enough units in your portfolio.",
+    "premium_already_active": "Premium license already active.",
+    "insufficient_credit_amount": "Not enough credit: {{price}} € required.",
+    "leaderboard_label_taken": "You already shared a board named \"{{label}}\". Withdraw it before sharing again.",
+    "leaderboard_entry_not_found": "Leaderboard entry not found.",
+    "yahoo_unreachable": "Market data service unavailable. Try again later.",
+    "ticker_not_found": "Ticker \"{{ticker}}\" not found.",
+    "history_unavailable": "Historical data unavailable for \"{{ticker}}\".",
+    "ticker_format": "Invalid ticker.",
+    "cap_format": "Postal code: 5 digits.",
+    "username_format": "Username may contain only letters, numbers and underscore (3–20).",
+    "validation_error": "Invalid data.",
+    "server_error": "Internal server error.",
+    "unknown": "Something went wrong. Please try again."
   }
 }

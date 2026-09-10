@@ -1,0 +1,5 @@
+.reset-wrap { display: flex; align-items: center; justify-content: center; min-height: 100%; padding: 24px; }
+.reset-card { width: 100%; max-width: 380px; padding: 24px; }
+h2 { color: var(--deq-accent-neon); margin: 0 0 16px; font-size: 1.1rem; }
+.reset-error { color: var(--deq-error); font-size: 0.85rem; }
+.reset-ok { color: var(--deq-success); font-size: 0.9rem; margin-bottom: 16px; }

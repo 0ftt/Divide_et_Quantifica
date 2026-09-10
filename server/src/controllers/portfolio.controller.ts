@@ -65,7 +65,7 @@ export async function buy(req: Request, res: Response): Promise<void> {
     [symbol],
   );
   if (!asset) {
-    throw new AppError(404, 'Asset non presente nel listino.');
+    throw new AppError(404, 'asset_not_listed');
   }
 
   const price = Number(asset.last_price);
@@ -75,7 +75,7 @@ export async function buy(req: Request, res: Response): Promise<void> {
     userId,
   ]);
   if (!user || Number(user.credit) < cost) {
-    throw new AppError(402, 'Credito insufficiente per l\'acquisto.');
+    throw new AppError(402, 'insufficient_credit');
   }
 
   await query('update users set credit = credit - $1 where id = $2', [cost, userId]);
@@ -121,7 +121,7 @@ export async function sell(req: Request, res: Response): Promise<void> {
     [userId, symbol],
   );
   if (!holding || Number(holding.quantity) < quantity) {
-    throw new AppError(400, 'Quantita in portafoglio insufficiente.');
+    throw new AppError(400, 'insufficient_holdings');
   }
 
   const asset = await queryOne<{ last_price: string }>(
