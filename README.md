@@ -262,6 +262,6 @@ Disaccoppiamento Logico (Senza FK): Tabelle come market_cache, price_history e a
 
 - Meno codice ripetuto: le parti comuni dei widget (trascinamento, ridimensionamento e intestazione) ora sono componenti e direttive riusabili, invece di essere copiate in ognuno.
 - Tolto codice e stili non più usati e uniformati alcuni nomi.
-- Rimosso il widget orologio, che non serviva.
+- Rimosso il widget orologio, che aveva poco uso.
 - I messaggi di errore del server ora sono codici tradotti dal client, così seguono la lingua scelta.
 - Aggiunto il braccialetto DeQ nel profilo, che si sblocca con il Premium e il profilo completo.
