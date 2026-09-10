@@ -52,9 +52,6 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
 
   netRows: NetRow[] = [];
 
-  clockTime = '';
-  clockDate = '';
-
   private timer?: ReturnType<typeof setInterval>;
   private assets = inject(AssetService);
   // Prezzo e variazione % reali per ticker, dall'endpoint /assets.
@@ -73,9 +70,6 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
     if (this.widget.type === 'net') {
       this.refreshNet();
       this.timer = setInterval(() => this.refreshNet(), NET_REFRESH_SECS * 1000);
-    } else if (this.widget.type === 'clock') {
-      this.refreshClock();
-      this.timer = setInterval(() => this.refreshClock(), 1000);
     }
   }
 
@@ -107,12 +101,6 @@ export class UtilityWidgetComponent implements OnInit, OnDestroy {
   private priceOf(ticker: string): number {
     const real = this.prices.get(ticker);
     return real !== undefined ? real : this.lastClose(ticker);
-  }
-
-  private refreshClock(): void {
-    const now = new Date();
-    this.clockTime = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    this.clockDate = now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
   }
 
   ngOnDestroy(): void {

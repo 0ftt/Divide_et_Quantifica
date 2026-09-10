@@ -315,7 +315,7 @@
             }
 
             @default {
-              @if (w.type === 'text' || w.type === 'net' || w.type === 'average' || w.type === 'clock') {
+              @if (w.type === 'text' || w.type === 'net' || w.type === 'average') {
                 <app-utility-widget [widget]="w" [zoomLevel]="canvasZoom" [allWidgets]="widgetList" [tabName]="activeTab.name"
                                     [style.position]="'absolute'" [style.left.px]="w.posX"
                                     [style.top.px]="w.posY" [style.z-index]="w.zIndex || 10" [attr.data-wid]="w.id"
@@ -403,9 +403,6 @@
           </div>
           <div class="drawer-item" (click)="spawnNewWidget('MEDIA', 'average', '')">
             <ion-icon class="item-icon" name="calculator-outline"></ion-icon><span class="item-name">{{ 'dashboard.wAverage' | transloco }}</span>
-          </div>
-          <div class="drawer-item" (click)="spawnNewWidget('OROLOGIO', 'clock', '')">
-            <ion-icon class="item-icon" name="time-outline"></ion-icon><span class="item-name">{{ 'dashboard.wClock' | transloco }}</span>
           </div>
         </div>
       </div>

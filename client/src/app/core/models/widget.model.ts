@@ -14,7 +14,6 @@ export type WidgetType =
   | 'text'
   | 'net'
   | 'average'
-  | 'clock'
   | ChartWidgetType;
 
 export const CHART_WIDGET_TYPES: readonly ChartWidgetType[] = [
@@ -102,8 +101,6 @@ export function widgetNameKey(type: WidgetType): string {
       return 'dashboard.wNet';
     case 'average':
       return 'dashboard.wAverage';
-    case 'clock':
-      return 'dashboard.wClock';
     default:
       return 'dashboard.wAzione';
   }
@@ -135,8 +132,6 @@ export function widgetIcon(type: WidgetType): string {
       return 'swap-vertical-outline';
     case 'average':
       return 'calculator-outline';
-    case 'clock':
-      return 'time-outline';
     default:
       return 'ellipse-outline';
   }

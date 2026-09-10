@@ -4,7 +4,7 @@ import { addIcons } from 'ionicons';
 import {
   gitNetworkOutline, copyOutline, removeOutline, addOutline, closeOutline,
   pulseOutline, pricetagOutline, walletOutline, documentTextOutline,
-  swapVerticalOutline, calculatorOutline, timeOutline,
+  swapVerticalOutline, calculatorOutline,
 } from 'ionicons/icons';
 import { TranslocoModule } from '@jsverse/transloco';
 import { WidgetData, widgetIcon, widgetNameKey, DuplicatePayload } from '$core/models/widget.model';
@@ -50,7 +50,7 @@ export class WidgetHeaderComponent {
     addIcons({
       gitNetworkOutline, copyOutline, removeOutline, addOutline, closeOutline,
       pulseOutline, pricetagOutline, walletOutline, documentTextOutline,
-      swapVerticalOutline, calculatorOutline, timeOutline,
+      swapVerticalOutline, calculatorOutline,
     });
   }
 

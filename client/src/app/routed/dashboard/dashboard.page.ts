@@ -29,7 +29,7 @@ import {
   analyticsOutline, barChartOutline, pieChartOutline, chevronUpOutline,
   chevronDownOutline, moonOutline, sunnyOutline, walletOutline, trophyOutline,
   optionsOutline, searchOutline, documentTextOutline, swapVerticalOutline, calculatorOutline,
-  pricetagOutline, homeOutline, timeOutline, albumsOutline, documentOutline, createOutline,
+  pricetagOutline, homeOutline, albumsOutline, documentOutline, createOutline,
 } from 'ionicons/icons';
 
 import { WidgetData, WidgetType } from '$core/models/widget.model';
@@ -243,7 +243,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
       analyticsOutline, barChartOutline, pieChartOutline, chevronUpOutline,
       chevronDownOutline, moonOutline, sunnyOutline, walletOutline, trophyOutline,
       optionsOutline, searchOutline, documentTextOutline, swapVerticalOutline, calculatorOutline,
-      pricetagOutline, homeOutline, timeOutline, albumsOutline, documentOutline, createOutline,
+      pricetagOutline, homeOutline, albumsOutline, documentOutline, createOutline,
     });
   }
 
@@ -956,9 +956,6 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     }
     if (tipo === 'inventory') {
       return { width: 280, height: 240 };
-    }
-    if (tipo === 'clock') {
-      return { width: 240, height: 140 };
     }
     return { width: 380, height: 300 };
   }
