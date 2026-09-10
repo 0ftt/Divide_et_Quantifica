@@ -46,37 +46,6 @@
 .net-delta { font-weight: 700; font-variant-numeric: tabular-nums; }
 .up { color: var(--deq-success); }
 .down { color: var(--deq-error); }
-.al-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 10px;
-  font-size: 0.9rem;
-}
-.al-state { font-weight: 700; font-size: 0.8rem; color: var(--deq-text-muted); }
-.al-range { display: flex; gap: 8px; }
-.al-range .util-field { flex: 1; }
-.util-field {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  text-align: left;
-  margin-bottom: 8px;
-  font-size: 0.75rem;
-  color: var(--deq-text-muted);
-}
-.util-field input {
-  background: color-mix(in srgb, var(--deq-bg-base) 30%, transparent);
-  border: 1px solid var(--deq-border);
-  border-radius: 6px;
-  color: var(--deq-text-bright);
-  font-size: 0.9rem;
-  padding: 6px 8px;
-  width: 100%;
-  box-sizing: border-box;
-}
-.util-field input:focus { outline: none; border-color: var(--deq-accent-main); }
 .util-hint { margin: 8px 0 0; font-size: 0.72rem; color: var(--deq-text-muted); }
 .avg-sources { display: flex; flex-wrap: wrap; gap: 5px; }
 .avg-chip {
