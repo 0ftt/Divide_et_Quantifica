@@ -250,13 +250,11 @@ erDiagram
 In alternativa è visualizzabile da https://drawsql.app/teams/0ftt/diagrams/deq
 
 ### 🔑 Legenda Relazioni e Vincoli
-Propagazione Eliminazioni (ON DELETE CASCADE): Eliminando un utente dalla tabella users, vengono eliminati a cascata i record associati in holdings, transactions, workspaces, leaderboard_entries, leaderboard_history, password_resets e leaderboard_reviews (sia come autore che come utente recensito). L'eliminazione di un asset distrugge le relative holdings.
 
-Mantenimento Storico (ON DELETE SET NULL): Le relazioni verso assets (added_by) e asset_events (actor_id) preservano lo storico di auditing anche qualora l'account amministratore venga rimosso.
-
-Vincoli di Unicità: Sono applicati vincoli univoci su users.email, users.username, sulle posizioni in portafoglio holdings (user_id, ticker), sulla cache market_cache (ticker, timeframe) e sulle strategie condivise leaderboard_entries (user_id, label) per consentire configurazioni di rete multiple per lo stesso utente.
-
-Disaccoppiamento Logico (Senza FK): Tabelle come market_cache, price_history e asset_events referenziano logicamente il ticker tramite stringa di testo senza costrizioni di chiave esterna, garantendo l'integrità dei dati pregressi anche in caso di delisting dell'asset dal database. app_revenue è un'entità del tutto autonoma e append-only per preservare il tracciamento degli incassi storici.
+- **ON DELETE CASCADE:** eliminando un utente si cancellano i suoi dati collegati (posizioni, transazioni, workspace, voci e recensioni di classifica, token di reset); eliminando un asset spariscono le relative posizioni.
+- **ON DELETE SET NULL:** i riferimenti a chi ha aggiunto un asset o compiuto un'azione (`added_by`, `actor_id`) diventano NULL se quell'admin viene eliminato, così lo storico resta.
+- **Unicità:** su email e username, sulle posizioni (`user_id`, `ticker`), sulla cache (`ticker`, `timeframe`) e sulle schede di classifica (`user_id`, `label`).
+- **Senza chiave esterna:** `market_cache`, `price_history` e `asset_events` legano il ticker come semplice testo (lo storico resta anche dopo un delisting); `app_revenue` è a sé e solo-append.
 
 ## Changelog
 
